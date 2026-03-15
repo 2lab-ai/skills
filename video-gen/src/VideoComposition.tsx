@@ -7,7 +7,10 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { Hero, List, Grid, Code, Flow, Chat, Stat } from "./scenes";
+import {
+  Hero, List, Grid, Code, Flow, Chat, Stat,
+  Quote, Timeline, Comparison, Emoji, ImageScene, BigText,
+} from "./scenes";
 import { Subtitle } from "./components/Subtitle";
 import type {
   VideoConfig,
@@ -20,6 +23,12 @@ import type {
   FlowData,
   ChatData,
   StatData,
+  QuoteData,
+  TimelineData,
+  ComparisonData,
+  EmojiData,
+  ImageData,
+  BigTextData,
   SubtitleCue,
 } from "./types";
 
@@ -28,8 +37,9 @@ interface CompositionProps {
   ttsData: TTSMetadata[];
 }
 
-function renderScene(scene: SceneConfig, accentColor: string) {
-  const props = { accentColor };
+function renderScene(scene: SceneConfig, accentColor: string, globalTheme?: string) {
+  const themeName = scene.theme || globalTheme;
+  const props = { accentColor, themeName };
 
   switch (scene.type) {
     case "hero":
@@ -46,6 +56,18 @@ function renderScene(scene: SceneConfig, accentColor: string) {
       return <Chat data={scene.data as unknown as ChatData} {...props} />;
     case "stat":
       return <Stat data={scene.data as unknown as StatData} {...props} />;
+    case "quote":
+      return <Quote data={scene.data as unknown as QuoteData} {...props} />;
+    case "timeline":
+      return <Timeline data={scene.data as unknown as TimelineData} {...props} />;
+    case "comparison":
+      return <Comparison data={scene.data as unknown as ComparisonData} {...props} />;
+    case "emoji":
+      return <Emoji data={scene.data as unknown as EmojiData} {...props} />;
+    case "image":
+      return <ImageScene data={scene.data as unknown as ImageData} {...props} />;
+    case "bigtext":
+      return <BigText data={scene.data as unknown as BigTextData} {...props} />;
     default:
       return (
         <AbsoluteFill
@@ -96,6 +118,7 @@ export const VideoComposition: React.FC<CompositionProps> = ({ config, ttsData }
   }
 
   const accentColor = config.defaultStyle.accentColor;
+  const globalTheme = config.theme;
 
   return (
     <AbsoluteFill>
@@ -107,7 +130,11 @@ export const VideoComposition: React.FC<CompositionProps> = ({ config, ttsData }
           name={`${layout.scene.type}: ${layout.scene.id}`}
         >
           <AbsoluteFill>
-            {renderScene(layout.scene, layout.scene.style?.accentColor ?? accentColor)}
+            {renderScene(
+              layout.scene,
+              layout.scene.style?.accentColor ?? accentColor,
+              globalTheme,
+            )}
           </AbsoluteFill>
 
           {/* Audio */}
