@@ -1,5 +1,7 @@
-import type { EntranceType } from "./utils/animations";
+import type { EntranceType, ExitType } from "./utils/animations";
 import type { ThemeName } from "./utils/colors";
+
+export type SubtitleVariant = "box" | "stroke" | "minimal";
 
 export type SceneType =
   | "hero" | "list" | "grid" | "code" | "flow" | "chat" | "stat"
@@ -22,8 +24,9 @@ export interface SceneConfig {
     accentColor?: string;
     textColor?: string;
   };
-  entrance?: EntranceType;  // scene-level entrance animation
-  theme?: ThemeName;        // per-scene theme override
+  entrance?: EntranceType;       // scene entrance animation
+  exit?: ExitType;               // scene exit animation
+  theme?: ThemeName;             // per-scene theme override
 }
 
 export interface VideoConfig {
@@ -31,7 +34,8 @@ export interface VideoConfig {
   fps: number;
   width: number;
   height: number;
-  theme?: ThemeName;        // global theme
+  theme?: ThemeName;               // global theme
+  subtitleVariant?: SubtitleVariant; // global subtitle style
   defaultStyle: {
     background: string;
     accentColor: string;

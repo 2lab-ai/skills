@@ -99,6 +99,29 @@ stat:       default | donut | bar
 | `flipIn`        | 3D 플립           |
 | `none`          | 즉시 표시         |
 
+## Exit Animations (씬 종료 효과)
+
+각 scene에 `exit` 필드로 종료 애니메이션 지정:
+
+| Exit             | 효과              |
+|-----------------|-------------------|
+| `fadeOut`        | 페이드아웃 (기본)  |
+| `blurOut`        | 블러 아웃 (시네마틱)|
+| `zoomOut`        | 확대되며 사라짐    |
+| `slideOutLeft`   | 왼쪽으로 슬라이드  |
+| `slideOutUp`     | 위로 슬라이드      |
+| `none`           | 즉시 종료         |
+
+## Subtitle Variants (자막 스타일)
+
+전역 설정: `config.subtitleVariant`
+
+| Variant   | 설명                                    |
+|-----------|----------------------------------------|
+| `stroke`  | 듀얼레이어 텍스트 (스트로크+필 / 기본)     |
+| `box`     | 반투명 박스 배경 (전통 스타일)            |
+| `minimal` | 텍스트 쉐도우만 (깔끔)                   |
+
 ## GIF 삽입
 
 ### GIF 검색

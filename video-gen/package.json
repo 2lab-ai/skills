@@ -14,17 +14,19 @@
     "generate": "bash scripts/build-video.sh"
   },
   "dependencies": {
+    "@remotion/animation-utils": "^4.0.435",
     "@remotion/cli": "4.0.261",
+    "@remotion/layout-utils": "^4.0.435",
     "@remotion/player": "4.0.261",
-    "remotion": "4.0.261",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "remotion": "4.0.261",
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@remotion/bundler": "4.0.261",
     "@types/react": "^18.3.0",
-    "typescript": "^5.5.0",
     "tsx": "^4.19.0",
-    "@remotion/bundler": "4.0.261"
+    "typescript": "^5.5.0"
   }
 }

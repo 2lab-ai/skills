@@ -6,6 +6,8 @@ import {
   staticFile,
   useCurrentFrame,
   useVideoConfig,
+  interpolate,
+  Easing,
 } from "remotion";
 import {
   Hero, List, Grid, Code, Flow, Chat, Stat,
@@ -86,6 +88,65 @@ function renderScene(scene: SceneConfig, accentColor: string, globalTheme?: stri
   }
 }
 
+// Scene wrapper that handles entrance + exit animations
+const SceneWrapper: React.FC<{
+  scene: SceneConfig;
+  durationFrames: number;
+  children: React.ReactNode;
+}> = ({ scene, durationFrames, children }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const exitType = scene.exit || "none";
+  const exitDuration = 12; // frames
+
+  // Exit animation
+  let exitOpacity = 1;
+  let exitTransform = "none";
+  let exitFilter = "none";
+
+  if (exitType !== "none") {
+    const exitStart = durationFrames - exitDuration;
+    const progress = interpolate(frame, [exitStart, durationFrames], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
+
+    switch (exitType) {
+      case "fadeOut":
+        exitOpacity = 1 - progress;
+        break;
+      case "blurOut":
+        exitOpacity = 1 - progress * 0.5;
+        exitFilter = `blur(${progress * 25}px)`;
+        break;
+      case "zoomOut":
+        exitOpacity = 1 - progress;
+        exitTransform = `scale(${1 + progress * 0.2})`;
+        break;
+      case "slideOutLeft":
+        exitOpacity = 1 - progress;
+        exitTransform = `translateX(${-progress * 100}px)`;
+        break;
+      case "slideOutUp":
+        exitOpacity = 1 - progress;
+        exitTransform = `translateY(${-progress * 60}px)`;
+        break;
+    }
+  }
+
+  return (
+    <AbsoluteFill
+      style={{
+        opacity: exitOpacity,
+        transform: exitTransform,
+        filter: exitFilter,
+      }}
+    >
+      {children}
+    </AbsoluteFill>
+  );
+};
+
 export const VideoComposition: React.FC<CompositionProps> = ({ config, ttsData }) => {
   const { fps } = useVideoConfig();
 
@@ -119,6 +180,7 @@ export const VideoComposition: React.FC<CompositionProps> = ({ config, ttsData }
 
   const accentColor = config.defaultStyle.accentColor;
   const globalTheme = config.theme;
+  const subtitleVariant = config.subtitleVariant || "stroke";
 
   return (
     <AbsoluteFill>
@@ -129,13 +191,16 @@ export const VideoComposition: React.FC<CompositionProps> = ({ config, ttsData }
           durationInFrames={layout.durationFrames}
           name={`${layout.scene.type}: ${layout.scene.id}`}
         >
-          <AbsoluteFill>
+          <SceneWrapper
+            scene={layout.scene}
+            durationFrames={layout.durationFrames}
+          >
             {renderScene(
               layout.scene,
               layout.scene.style?.accentColor ?? accentColor,
               globalTheme,
             )}
-          </AbsoluteFill>
+          </SceneWrapper>
 
           {/* Audio */}
           {layout.tts && (
@@ -144,7 +209,7 @@ export const VideoComposition: React.FC<CompositionProps> = ({ config, ttsData }
 
           {/* Subtitles */}
           {layout.subtitles.length > 0 && (
-            <Subtitle subtitles={layout.subtitles} />
+            <Subtitle subtitles={layout.subtitles} variant={subtitleVariant} />
           )}
         </Sequence>
       ))}

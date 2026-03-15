@@ -242,6 +242,111 @@ export function useSceneEntrance(type: EntranceType = "fadeSlideUp", delay = 0) 
 }
 
 // ============================================================
+// EXIT ANIMATIONS (play at end of scene)
+// ============================================================
+
+export type ExitType = "fadeOut" | "blurOut" | "zoomOut" | "slideOutLeft" | "slideOutUp" | "none";
+
+export function useSceneExit(
+  type: ExitType = "fadeOut",
+  totalFrames: number,
+  exitDuration = 15,
+) {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const exitStart = totalFrames - exitDuration;
+  const progress = interpolate(frame, [exitStart, totalFrames], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  switch (type) {
+    case "fadeOut":
+      return { opacity: 1 - progress, transform: "none", filter: "none" };
+    case "blurOut":
+      return {
+        opacity: 1 - progress * 0.5,
+        transform: "none",
+        filter: `blur(${progress * 25}px)`,
+      };
+    case "zoomOut":
+      return {
+        opacity: 1 - progress,
+        transform: `scale(${1 + progress * 0.2})`,
+        filter: "none",
+      };
+    case "slideOutLeft":
+      return {
+        opacity: 1 - progress,
+        transform: `translateX(${-progress * 100}px)`,
+        filter: "none",
+      };
+    case "slideOutUp":
+      return {
+        opacity: 1 - progress,
+        transform: `translateY(${-progress * 60}px)`,
+        filter: "none",
+      };
+    case "none":
+      return { opacity: 1, transform: "none", filter: "none" };
+    default:
+      return { opacity: 1 - progress, transform: "none", filter: "none" };
+  }
+}
+
+// ============================================================
+// BLUR TRANSITION (cinematic focus/defocus)
+// ============================================================
+
+export function useBlurTransition(totalFrames: number, transitionMs = 500) {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const transitionFrames = Math.ceil((transitionMs / 1000) * fps);
+  const maxBlur = 20;
+
+  // Blur in at start
+  const enterBlur = interpolate(frame, [0, transitionFrames], [maxBlur, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+
+  // Blur out at end
+  const exitBlur = interpolate(
+    frame,
+    [totalFrames - transitionFrames, totalFrames],
+    [0, maxBlur],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
+
+  return Math.max(enterBlur, exitBlur);
+}
+
+// ============================================================
+// ALTERNATING ZOOM (Ken Burns effect)
+// ============================================================
+
+export function useAlternatingZoom(sceneIndex: number, totalFrames: number) {
+  const frame = useCurrentFrame();
+  const zoomIn = sceneIndex % 2 === 0;
+  const extraScale = 0.15;
+
+  if (zoomIn) {
+    // Zoom in: start big, settle small
+    return interpolate(frame, [0, totalFrames], [1 + extraScale, 1], {
+      extrapolateRight: "clamp",
+      easing: Easing.out(Easing.cubic),
+    });
+  } else {
+    // Zoom out: start small, grow
+    return interpolate(frame, [0, totalFrames], [1, 1 + extraScale], {
+      extrapolateRight: "clamp",
+      easing: Easing.out(Easing.cubic),
+    });
+  }
+}
+
+// ============================================================
 // PARTICLE / DECORATIVE
 // ============================================================
 
