@@ -1,0 +1,11 @@
+# Intermediate/generated files — all work done in /tmp workspace
+out
+video-config.json
+configs/
+node_modules/
+node_modules.ci2/
+.claude/
+public/tts
+public/media
+public/render-config.json
+public/tts-metadata.json

@@ -13,12 +13,11 @@ timeline.md
 
 .claude/
 
-# video-gen intermediate files
+# video-gen — all intermediate/generated files
 video-gen/video-config.json
 video-gen/public/render-config.json
 video-gen/public/tts-metadata.json
-video-gen/out
 video-gen/public/tts
 video-gen/public/media
-video-gen/configs/*
-!video-gen/configs/showcase-all-features.json
+video-gen/out
+video-gen/configs/

@@ -153,21 +153,46 @@ hero, grid 카드에서도 `gifUrl` 사용 가능.
 - **텍스트**: typewriter, wordReveal, countUp
 - **장식**: clipReveal, revealLine, particlePosition
 
-## Default Flow
+## Default Flow (Workspace Pattern)
 
-1. **video-config.json 생성**:
+스킬 폴더(`~/2lab.ai/skills/video-gen/`)는 **소스 코드 + 템플릿만** 보관.
+실제 영상 생성은 `/tmp` 워크스페이스에서 수행 → 스킬 폴더 오염 없음.
+
+1. **video-config.json 작성** (아무 위치):
    - 사용자가 주제를 알려주면 적절한 scene 구성
    - 각 scene에 narration 텍스트 작성 (한국어)
    - theme 선택 (기본: "default")
    - 5~8개 scene이 2~3분 영상에 적절
+   - `/tmp/my-video-config.json` 등 원하는 곳에 저장
 
-2. **영상 생성** (전체 파이프라인):
+2. **영상 생성** (워크스페이스 자동 생성):
    ```bash
-   cd ~/2lab.ai/skills/video-gen
-   bash scripts/build-video.sh video-config.json out/video.mp4
+   bash ~/2lab.ai/skills/video-gen/scripts/build-video.sh /tmp/my-video-config.json /tmp/output.mp4
    ```
+   내부 동작:
+   - `/tmp/video-gen-{timestamp}/` 워크스페이스 생성
+   - 스킬 소스 복사 + node_modules symlink
+   - TTS → render → 최종 mp4를 지정 경로로 복사
 
-3. **결과 확인**: `out/video.mp4`
+3. **결과 확인**: 지정한 output 경로 (예: `/tmp/output.mp4`)
+
+### 워크스페이스 구조
+```
+/tmp/video-gen-1710550000/     ← 자동 생성, 일회용
+├── src/                       ← 스킬에서 복사
+├── public/fonts/              ← 스킬에서 복사
+├── public/tts/                ← TTS 생성 (임시)
+├── public/render-config.json  ← 생성 (임시)
+├── public/tts-metadata.json   ← 생성 (임시)
+├── video-config.json          ← 입력 config 복사
+├── node_modules → symlink     ← 스킬 node_modules 참조
+└── out/render.mp4             ← 렌더 결과 (임시)
+```
+
+### 주의
+- **스킬 폴더 안에서 직접 build-video.sh 실행하지 말 것** — 워크스페이스가 알아서 생성됨
+- 워크스페이스는 `/tmp`에 남으므로 재부팅 시 자동 정리됨
+- 수동 정리: `rm -rf /tmp/video-gen-*`
 
 ## video-config.json Schema
 

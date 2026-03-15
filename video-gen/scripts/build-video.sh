@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Video Generation Pipeline
-# Usage: ./scripts/build-video.sh [video-config.json] [output.mp4]
+# Video Generation Pipeline (Workspace Pattern)
+# Usage: ./scripts/build-video.sh <video-config.json> [output.mp4]
+#
+# Creates a temporary workspace in /tmp, copies skill skeleton,
+# runs TTS + Remotion render there, then copies final mp4 to output path.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 VENV_PYTHON="${HOME}/2lab.ai/.venv/bin/python3"
 FFMPEG="${HOME}/.local/bin/ffmpeg"
 
-CONFIG_FILE="${1:-${PROJECT_DIR}/video-config.json}"
-OUTPUT_FILE="${2:-${PROJECT_DIR}/out/video.mp4}"
-PUBLIC_DIR="${PROJECT_DIR}/public"
-TTS_DIR="${PUBLIC_DIR}/tts"
+CONFIG_FILE="${1:?Usage: build-video.sh <config.json> [output.mp4]}"
+OUTPUT_FILE="${2:-$(pwd)/video-output.mp4}"
+
+# Make config path absolute
+[[ "$CONFIG_FILE" != /* ]] && CONFIG_FILE="$(pwd)/$CONFIG_FILE"
+[[ "$OUTPUT_FILE" != /* ]] && OUTPUT_FILE="$(pwd)/$OUTPUT_FILE"
 
 # Colors
 BLUE='\033[34m'
@@ -34,22 +39,56 @@ fi
 
 if [ ! -f "$VENV_PYTHON" ]; then
   error "Python venv not found at $VENV_PYTHON"
-  error "Run: python3 -m venv ~/2lab.ai/.venv && ~/2lab.ai/.venv/bin/pip install edge-tts"
   exit 1
 fi
 
+# === Create workspace ===
+WORKSPACE="/tmp/video-gen-$(date +%s)-$$"
 info "=== Video Generation Pipeline ==="
-info "Config: $CONFIG_FILE"
-info "Output: $OUTPUT_FILE"
+info "Skill:     $SKILL_DIR"
+info "Config:    $CONFIG_FILE"
+info "Workspace: $WORKSPACE"
+info "Output:    $OUTPUT_FILE"
 echo ""
 
-# Step 1: Generate TTS
+info "Setting up workspace..."
+mkdir -p "$WORKSPACE/public/tts" "$WORKSPACE/public/fonts" "$WORKSPACE/out"
+
+# Copy source code (lightweight — no generated files)
+cp -r "$SKILL_DIR/src" "$WORKSPACE/src"
+cp "$SKILL_DIR/package.json" "$WORKSPACE/"
+cp "$SKILL_DIR/package-lock.json" "$WORKSPACE/" 2>/dev/null || true
+cp "$SKILL_DIR/tsconfig.json" "$WORKSPACE/"
+cp "$SKILL_DIR/remotion.config.ts" "$WORKSPACE/" 2>/dev/null || true
+
+# Copy fonts (required for rendering)
+cp "$SKILL_DIR/public/fonts/"* "$WORKSPACE/public/fonts/" 2>/dev/null || true
+
+# Copy scripts
+cp -r "$SKILL_DIR/scripts" "$WORKSPACE/scripts"
+
+# Symlink node_modules (don't copy 200MB+)
+if [ -d "$SKILL_DIR/node_modules" ] || [ -L "$SKILL_DIR/node_modules" ]; then
+  ln -sf "$(readlink -f "$SKILL_DIR/node_modules")" "$WORKSPACE/node_modules"
+elif [ -d "$SKILL_DIR/node_modules.ci2" ]; then
+  ln -sf "$SKILL_DIR/node_modules.ci2" "$WORKSPACE/node_modules"
+else
+  warn "No node_modules found, running npm install..."
+  cd "$WORKSPACE" && npm install 2>&1 | tail -3
+fi
+
+# Copy config to workspace
+cp "$CONFIG_FILE" "$WORKSPACE/video-config.json"
+
+PUBLIC_DIR="$WORKSPACE/public"
+TTS_DIR="$PUBLIC_DIR/tts"
+
+# === Step 1: Generate TTS ===
 info "Step 1/3: Generating TTS audio..."
-mkdir -p "$TTS_DIR"
-"$VENV_PYTHON" "$SCRIPT_DIR/generate-tts.py" "$CONFIG_FILE" "$TTS_DIR"
+"$VENV_PYTHON" "$WORKSPACE/scripts/generate-tts.py" "$WORKSPACE/video-config.json" "$TTS_DIR"
 echo ""
 
-# Step 2: Verify render data
+# === Step 2: Verify render data ===
 info "Step 2/3: Verifying render data..."
 if [ ! -f "$PUBLIC_DIR/render-config.json" ]; then
   error "render-config.json not generated!"
@@ -65,24 +104,16 @@ AUDIO_COUNT=$(ls -1 "$TTS_DIR"/*.mp3 2>/dev/null | wc -l)
 success "  Scenes: $SCENE_COUNT, Audio files: $AUDIO_COUNT"
 echo ""
 
-# Step 3: Render with Remotion
+# === Step 3: Render with Remotion ===
 info "Step 3/3: Rendering video with Remotion..."
-mkdir -p "$(dirname "$OUTPUT_FILE")"
-
-cd "$PROJECT_DIR"
-
-# Check if node_modules exists
-if [ ! -d "node_modules" ]; then
-  warn "Installing dependencies first..."
-  npm install 2>&1 | tail -3
-fi
+cd "$WORKSPACE"
 
 # Add ffmpeg to PATH if it exists in local bin
 if [ -f "$FFMPEG" ]; then
   export PATH="${HOME}/.local/bin:$PATH"
 fi
 
-# v8 heap memory fix: default 4GB, override with VIDEO_GEN_HEAP_MB
+# v8 heap memory fix
 HEAP_SIZE="${VIDEO_GEN_HEAP_MB:-4096}"
 export NODE_OPTIONS="--max-old-space-size=${HEAP_SIZE}"
 info "Node heap limit: ${HEAP_SIZE}MB"
@@ -96,7 +127,9 @@ elif command -v google-chrome &>/dev/null; then
   BROWSER_EXEC="--browser-executable $(command -v google-chrome)"
 fi
 
-npx remotion render src/Root.tsx VideoComposition "$OUTPUT_FILE" \
+RENDER_OUTPUT="$WORKSPACE/out/render.mp4"
+
+npx remotion render src/Root.tsx VideoComposition "$RENDER_OUTPUT" \
   --codec h264 \
   --image-format jpeg \
   --concurrency 1 \
@@ -104,10 +137,15 @@ npx remotion render src/Root.tsx VideoComposition "$OUTPUT_FILE" \
   $BROWSER_EXEC
 
 echo ""
-if [ -f "$OUTPUT_FILE" ]; then
+if [ -f "$RENDER_OUTPUT" ]; then
+  # Copy final output to requested location
+  mkdir -p "$(dirname "$OUTPUT_FILE")"
+  cp "$RENDER_OUTPUT" "$OUTPUT_FILE"
+
   FILE_SIZE=$(du -h "$OUTPUT_FILE" | cut -f1)
   success "=== Done! ==="
   success "Output: $OUTPUT_FILE ($FILE_SIZE)"
+  success "Workspace: $WORKSPACE (can be cleaned up)"
 else
   error "Render failed - output not found"
   exit 1
