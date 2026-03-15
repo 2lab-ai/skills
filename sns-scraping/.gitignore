@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.json
+!evals/evals.json
+node_modules/
+.DS_Store
+*.log
+output/

@@ -1,0 +1,9 @@
+node_modules/
+out/
+*.pyc
+__pycache__/
+.env
+*.json.bak
+tweets.json
+posts.json
+timeline.md

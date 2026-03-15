@@ -1,0 +1,30 @@
+{
+  "name": "video-gen",
+  "version": "1.0.0",
+  "description": "Remotion-based video generation pipeline with Korean TTS",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "NODE_OPTIONS='--max-old-space-size=4096' remotion render VideoComposition",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' remotion render VideoComposition out/video.mp4",
+    "render:part": "NODE_OPTIONS='--max-old-space-size=4096' node scripts/render-parts.mjs",
+    "render:all": "NODE_OPTIONS='--max-old-space-size=4096' bash scripts/render-all-parts.sh",
+    "validate": "tsx scripts/validate-config.ts",
+    "tts": "python3 scripts/generate-tts.py",
+    "generate": "bash scripts/build-video.sh"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.261",
+    "@remotion/player": "4.0.261",
+    "remotion": "4.0.261",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "typescript": "^5.5.0",
+    "tsx": "^4.19.0",
+    "@remotion/bundler": "4.0.261"
+  }
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "twitter-karpathy-month",
+    "description": "Scrape Karpathy's last 30 days of tweets and organize by date with thread connections",
+    "prompt": "Scrape @karpathy's Twitter for the last month. Organize by date, connect threads with 1/N labels.",
+    "expected_behavior": "Should collect 10+ tweets, identify autoresearch thread (5 posts), present in dated markdown format",
+    "verification": "Check that output contains dates, full tweet texts, and thread labels for multi-part posts"
+  },
+  {
+    "id": "twitter-single-thread",
+    "description": "Find and reconstruct a specific known thread",
+    "prompt": "Find Karpathy's autoresearch thread from March 2026 and show all parts connected",
+    "expected_behavior": "Should find 5 connected posts about autoresearch (Mar 5-11, 2026), labeled 1/5 through 5/5",
+    "verification": "All thread parts present: benchmark meta, post-agi, repo release, SETI@home, results, agenthub, IDE"
+  },
+  {
+    "id": "twitter-profile-basic",
+    "description": "Basic profile scrape with profile scroll only",
+    "prompt": "Quick scan @karpathy's Twitter profile and show what's visible",
+    "expected_behavior": "Should collect 30-100 tweets from profile page scroll, including popular older tweets",
+    "verification": "Output includes tweet text, dates, and URLs"
+  },
+  {
+    "id": "threads-zhugehyuk-3months",
+    "description": "Scrape @zhugehyuk's Threads posts for last 3 months with thread reconstruction",
+    "prompt": "쓰레드에서 @zhugehyuk 3개월치 글 긁어서 날짜별로 정리해줘. 스레드 연결도 해줘.",
+    "expected_behavior": "Should collect 20+ posts, identify MiroFish thread (4 posts), mRNA vaccine thread (4 posts), present by date",
+    "verification": "Contains dates, full post texts from og:description, thread labels for multi-part posts"
+  },
+  {
+    "id": "threads-profile-basic",
+    "description": "Basic Threads profile scrape",
+    "prompt": "Quick scan @zhugehyuk's Threads profile and list all visible posts",
+    "expected_behavior": "Should collect 20-40 post IDs from profile scroll, fetch text for each",
+    "verification": "Output includes post text, dates, and URLs"
+  }
+]
