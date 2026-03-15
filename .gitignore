@@ -11,6 +11,8 @@ tweets.json
 posts.json
 timeline.md
 
+.claude/
+
 # video-gen intermediate files
 video-gen/video-config.json
 video-gen/public/render-config.json
