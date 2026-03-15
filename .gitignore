@@ -20,3 +20,5 @@ video-gen/public/tts-metadata.json
 video-gen/out
 video-gen/public/tts
 video-gen/public/media
+video-gen/configs/*
+!video-gen/configs/showcase-all-features.json
