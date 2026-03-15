@@ -5,6 +5,7 @@ import {
   interpolate,
   useVideoConfig,
   Img,
+  OffthreadVideo,
   staticFile,
   Easing,
 } from "remotion";
@@ -41,7 +42,22 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
       ? imgSrc
       : staticFile(imgSrc);
 
-  // Animations
+  // Determine if this is a video file (mp4/webm from GIF conversion)
+  const isVideo = /\.(mp4|webm|mov)$/i.test(imgSrc);
+
+  // Unified media renderer — video files use OffthreadVideo, images use Img
+  const MediaElement: React.FC<{ style: React.CSSProperties }> = ({ style }) =>
+    isVideo ? (
+      <OffthreadVideo
+        src={resolvedSrc}
+        style={style}
+        muted
+      />
+    ) : (
+      <Img src={resolvedSrc} style={style} />
+    );
+
+  // Animations (all hooks called unconditionally at top level)
   const imageFade = useFadeIn(0, 20);
   const titleFade = useFadeIn(8, 15);
   const titleSlide = useSlideUp(8, 30);
@@ -59,6 +75,10 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
   // Image reveal clip
   const clipReveal = useClipReveal(0, 25, "left");
 
+  // Split layout hooks (always called regardless of layout)
+  const slideRight = useSlideRight(0, 50);
+  const slideLeft = useSlideLeft(0, 50);
+
   // --- FULLSCREEN LAYOUT ---
   if (layout === "fullscreen") {
     return (
@@ -71,16 +91,15 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
             overflow: "hidden",
           }}
         >
-          {/* Fullscreen image */}
-          <Img
-            src={resolvedSrc}
+          {/* Fullscreen media (image or animated GIF/video) */}
+          <MediaElement
             style={{
               width: "100%",
               height: "100%",
               objectFit: "cover",
               opacity: imageFade,
               transform: `scale(${imageScale})`,
-              clipPath: clipReveal,
+              clipPath: isVideo ? undefined : clipReveal,
             }}
           />
 
@@ -112,7 +131,8 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
                 <h2
                   style={{
                     color: "#ffffff",
-                    fontSize: 52,
+                    fontFamily: theme.headingFont,
+                    fontSize: 46,
                     fontWeight: 700,
                     margin: 0,
                     marginBottom: data.caption ? 12 : 0,
@@ -129,7 +149,8 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
                 <p
                   style={{
                     color: "rgba(255,255,255,0.8)",
-                    fontSize: 26,
+                    fontFamily: theme.fontFamily,
+                    fontSize: 24,
                     fontWeight: 400,
                     margin: 0,
                     opacity: captionFade,
@@ -150,7 +171,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
   // --- SPLIT LAYOUTS ---
   if (layout === "split-left" || layout === "split-right") {
     const imageOnLeft = layout === "split-left";
-    const imgSlide = imageOnLeft ? useSlideRight(0, 50) : useSlideLeft(0, 50);
+    const imgSlide = imageOnLeft ? slideRight : slideLeft;
 
     const imageElement = (
       <div
@@ -161,8 +182,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
           position: "relative",
         }}
       >
-        <Img
-          src={resolvedSrc}
+        <MediaElement
           style={{
             width: "100%",
             height: "100%",
@@ -200,7 +220,8 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
           <h2
             style={{
               color: theme.textPrimary,
-              fontSize: 48,
+              fontFamily: theme.headingFont,
+              fontSize: 42,
               fontWeight: 700,
               margin: 0,
               opacity: titleFade,
@@ -216,7 +237,8 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
           <p
             style={{
               color: theme.textSecondary,
-              fontSize: 26,
+              fontFamily: theme.fontFamily,
+              fontSize: 23,
               fontWeight: 400,
               margin: 0,
               opacity: captionFade,
@@ -268,7 +290,8 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
           <h2
             style={{
               color: theme.textPrimary,
-              fontSize: 48,
+              fontFamily: theme.headingFont,
+              fontSize: 42,
               fontWeight: 700,
               margin: 0,
               opacity: titleFade,
@@ -292,8 +315,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
             boxShadow: `0 20px 60px ${hexToRgba("#000", 0.4)}, 0 0 40px ${hexToRgba(accent, 0.1)}`,
           }}
         >
-          <Img
-            src={resolvedSrc}
+          <MediaElement
             style={{
               maxWidth: "100%",
               maxHeight: 500,
@@ -301,7 +323,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
               display: "block",
               opacity: imageFade,
               transform: `scale(${imageScale})`,
-              clipPath: clipReveal,
+              clipPath: isVideo ? undefined : clipReveal,
             }}
           />
 
@@ -322,7 +344,8 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
           <p
             style={{
               color: theme.textSecondary,
-              fontSize: 24,
+              fontFamily: theme.fontFamily,
+              fontSize: 22,
               fontWeight: 400,
               margin: 0,
               opacity: captionFade,

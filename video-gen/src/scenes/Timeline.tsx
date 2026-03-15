@@ -59,9 +59,10 @@ export const Timeline: React.FC<TimelineProps> = ({
           <h2
             style={{
               color: theme.textPrimary,
-              fontSize: 52,
+              fontSize: 44,
+              fontFamily: theme.headingFont,
               fontWeight: 700,
-              marginBottom: 60,
+              marginBottom: 48,
               opacity: titleFade,
               letterSpacing: "-0.02em",
             }}
@@ -140,7 +141,8 @@ export const Timeline: React.FC<TimelineProps> = ({
                       color: accent,
                       padding: "4px 14px",
                       borderRadius: 8,
-                      fontSize: 16,
+                      fontFamily: theme.fontFamily,
+                      fontSize: 15,
                       fontWeight: 600,
                     }}
                   >
@@ -151,7 +153,8 @@ export const Timeline: React.FC<TimelineProps> = ({
                   <h4
                     style={{
                       color: theme.textPrimary,
-                      fontSize: 22,
+                      fontFamily: theme.headingFont,
+                      fontSize: 20,
                       fontWeight: 700,
                       margin: 0,
                       textAlign: "center",
@@ -165,10 +168,11 @@ export const Timeline: React.FC<TimelineProps> = ({
                     <p
                       style={{
                         color: theme.textSecondary,
-                        fontSize: 17,
+                        fontFamily: theme.fontFamily,
+                        fontSize: 16,
                         margin: 0,
                         textAlign: "center",
-                        lineHeight: 1.4,
+                        lineHeight: 1.5,
                         maxWidth: 180,
                       }}
                     >
@@ -201,9 +205,10 @@ export const Timeline: React.FC<TimelineProps> = ({
         <h2
           style={{
             color: theme.textPrimary,
-            fontSize: 52,
+            fontSize: 44,
+            fontFamily: theme.headingFont,
             fontWeight: 700,
-            marginBottom: 40,
+            marginBottom: 36,
             opacity: titleFade,
             letterSpacing: "-0.02em",
             textAlign: isAlternating ? "center" : "left",
@@ -287,8 +292,8 @@ export const Timeline: React.FC<TimelineProps> = ({
                         background: hexToRgba(theme.textPrimary, 0.04),
                         border: `1px solid ${hexToRgba(theme.textPrimary, 0.08)}`,
                         borderRadius: theme.borderRadius,
-                        padding: "20px 24px",
-                        maxWidth: 380,
+                        padding: "18px 22px",
+                        maxWidth: 360,
                       }}
                     >
                       {/* Emoji + Date row */}
@@ -311,10 +316,11 @@ export const Timeline: React.FC<TimelineProps> = ({
                       <h4
                         style={{
                           color: theme.textPrimary,
-                          fontSize: 24,
+                          fontFamily: theme.headingFont,
+                          fontSize: 21,
                           fontWeight: 700,
                           margin: 0,
-                          marginBottom: event.description ? 6 : 0,
+                          marginBottom: event.description ? 5 : 0,
                         }}
                       >
                         {event.title}
@@ -323,9 +329,10 @@ export const Timeline: React.FC<TimelineProps> = ({
                         <p
                           style={{
                             color: theme.textSecondary,
-                            fontSize: 18,
+                            fontFamily: theme.fontFamily,
+                            fontSize: 16,
                             margin: 0,
-                            lineHeight: 1.4,
+                            lineHeight: 1.5,
                           }}
                         >
                           {event.description}
@@ -382,10 +389,11 @@ export const Timeline: React.FC<TimelineProps> = ({
                     <h4
                       style={{
                         color: theme.textPrimary,
-                        fontSize: 24,
+                        fontFamily: theme.headingFont,
+                        fontSize: 21,
                         fontWeight: 700,
                         margin: 0,
-                        marginBottom: event.description ? 6 : 0,
+                        marginBottom: event.description ? 5 : 0,
                       }}
                     >
                       {event.title}
@@ -394,9 +402,10 @@ export const Timeline: React.FC<TimelineProps> = ({
                       <p
                         style={{
                           color: theme.textSecondary,
-                          fontSize: 18,
+                          fontFamily: theme.fontFamily,
+                          fontSize: 16,
                           margin: 0,
-                          lineHeight: 1.4,
+                          lineHeight: 1.5,
                         }}
                       >
                         {event.description}

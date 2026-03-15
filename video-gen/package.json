@@ -14,9 +14,7 @@
     "generate": "bash scripts/build-video.sh"
   },
   "dependencies": {
-    "@remotion/animation-utils": "^4.0.435",
     "@remotion/cli": "4.0.261",
-    "@remotion/layout-utils": "^4.0.435",
     "@remotion/player": "4.0.261",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

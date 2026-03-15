@@ -1,0 +1,33 @@
+{
+  "title": "Simple Test",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "theme": "default",
+  "defaultStyle": {
+    "background": "#0f0f23",
+    "accentColor": "#00d4ff",
+    "textColor": "#ffffff",
+    "fontFamily": "'Pretendard', 'Noto Sans KR', sans-serif"
+  },
+  "scenes": [
+    {
+      "id": "test-hero",
+      "type": "hero",
+      "narration": "테스트 영상입니다.",
+      "data": {
+        "title": "테스트",
+        "subtitle": "간단한 테스트"
+      }
+    },
+    {
+      "id": "test-list",
+      "type": "list",
+      "narration": "목록 테스트입니다.",
+      "data": {
+        "title": "테스트 목록",
+        "items": ["첫 번째", "두 번째", "세 번째"]
+      }
+    }
+  ]
+}

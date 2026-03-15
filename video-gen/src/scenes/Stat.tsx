@@ -3,11 +3,12 @@ import { useCurrentFrame, spring, interpolate, useVideoConfig } from "remotion";
 import { Background } from "../components/Background";
 import { useFadeIn } from "../utils/animations";
 import type { StatData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme } from "../utils/colors";
 
 interface StatProps {
   data: StatData;
   accentColor?: string;
+  themeName?: string;
 }
 
 const AnimatedNumber: React.FC<{
@@ -17,12 +18,14 @@ const AnimatedNumber: React.FC<{
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  // Always call spring unconditionally (Rules of Hooks)
+  const s = spring({
+    frame: Math.max(0, frame - delay),
+    fps,
+    config: { damping: 30, stiffness: 60 },
+  });
+
   if (typeof value === "number") {
-    const s = spring({
-      frame: frame - delay,
-      fps,
-      config: { damping: 30, stiffness: 60 },
-    });
     const animatedValue = Math.round(interpolate(s, [0, 1], [0, value]));
     return <>{animatedValue.toLocaleString()}</>;
   }
@@ -30,10 +33,11 @@ const AnimatedNumber: React.FC<{
   return <>{value}</>;
 };
 
-export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
+export const Stat: React.FC<StatProps> = ({ data, accentColor, themeName }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const accent = accentColor || palette.accent;
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
   const titleOpacity = useFadeIn(0, 12);
   const cols = data.stats.length <= 2 ? data.stats.length : data.stats.length <= 4 ? 2 : 3;
 
@@ -49,8 +53,9 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
       >
         <h2
           style={{
-            color: palette.white,
-            fontSize: 52,
+            color: theme.textPrimary,
+            fontSize: 44,
+            fontFamily: theme.headingFont,
             fontWeight: 700,
             marginBottom: 60,
             opacity: titleOpacity,
@@ -72,7 +77,7 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
           {data.stats.map((stat, i) => {
             const delay = i * 10 + 10;
             const s = spring({
-              frame: frame - delay,
+              frame: Math.max(0, frame - delay),
               fps,
               config: { damping: 18, stiffness: 90 },
             });
@@ -86,7 +91,7 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
                   background: hexToRgba(palette.white, 0.04),
                   border: `1px solid ${hexToRgba(palette.white, 0.08)}`,
                   borderRadius: 24,
-                  padding: "48px 40px",
+                  padding: "36px 32px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -100,7 +105,8 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
                   <span
                     style={{
                       color: accent,
-                      fontSize: 64,
+                      fontSize: 56,
+                      fontFamily: theme.headingFont,
                       fontWeight: 800,
                       letterSpacing: "-0.03em",
                     }}
@@ -110,8 +116,9 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
                   {stat.unit && (
                     <span
                       style={{
-                        color: palette.gray300,
-                        fontSize: 28,
+                        color: theme.textSecondary,
+                        fontSize: 22,
+                        fontFamily: theme.fontFamily,
                         fontWeight: 500,
                       }}
                     >
@@ -123,8 +130,9 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor }) => {
                 {/* Label */}
                 <span
                   style={{
-                    color: palette.gray300,
-                    fontSize: 24,
+                    color: theme.textSecondary,
+                    fontSize: 20,
+                    fontFamily: theme.fontFamily,
                     fontWeight: 500,
                     textAlign: "center",
                   }}

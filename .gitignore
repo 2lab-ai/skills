@@ -1,5 +1,8 @@
 node_modules/
+node_modules.ci2/
 out/
+tts/
+media/
 *.pyc
 __pycache__/
 .env
@@ -7,3 +10,11 @@ __pycache__/
 tweets.json
 posts.json
 timeline.md
+
+# video-gen intermediate files
+video-gen/video-config.json
+video-gen/public/render-config.json
+video-gen/public/tts-metadata.json
+video-gen/out
+video-gen/public/tts
+video-gen/public/media

@@ -117,7 +117,8 @@ export const Emoji: React.FC<EmojiProps> = ({ data, accentColor, themeName }) =>
           <p
             style={{
               color: theme.textSecondary,
-              fontSize: 28,
+              fontFamily: theme.fontFamily,
+              fontSize: 24,
               fontWeight: 500,
               margin: 0,
               marginBottom: 24,
@@ -152,7 +153,8 @@ export const Emoji: React.FC<EmojiProps> = ({ data, accentColor, themeName }) =>
           <h2
             style={{
               color: theme.textPrimary,
-              fontSize: 48,
+              fontFamily: theme.headingFont,
+              fontSize: 44,
               fontWeight: 700,
               margin: 0,
               marginTop: 32,
@@ -170,10 +172,11 @@ export const Emoji: React.FC<EmojiProps> = ({ data, accentColor, themeName }) =>
           <p
             style={{
               color: theme.textSecondary,
-              fontSize: 30,
+              fontFamily: theme.fontFamily,
+              fontSize: 26,
               fontWeight: 500,
               margin: 0,
-              marginTop: 24,
+              marginTop: 20,
               opacity: subtitleFade,
               transform: `translateY(${subtitleSlide}px)`,
             }}

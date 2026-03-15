@@ -57,15 +57,25 @@ export const BigText: React.FC<BigTextProps> = ({
   // Glow for certain variants
   const glowIntensity = useGlow(80);
 
+  // Variant-specific hooks (always called unconditionally)
+  const gradientPulse = usePulse(100);
+  const outlineSpring = spring({
+    frame: Math.max(0, frame - 5),
+    fps,
+    config: { damping: 15, stiffness: 70 },
+  });
+  const outlineStrokeWidth = interpolate(outlineSpring, [0, 1], [0, 3]);
+
   // Base text styles shared across variants
   const baseTextStyle: React.CSSProperties = {
-    fontSize: 120,
+    fontFamily: theme.headingFont,
+    fontSize: 110,
     fontWeight: 900,
     lineHeight: 1.05,
     letterSpacing: "-0.04em",
     margin: 0,
     textAlign: "center",
-    maxWidth: 1100,
+    maxWidth: 1060,
     textTransform: "uppercase",
   };
 
@@ -94,7 +104,6 @@ export const BigText: React.FC<BigTextProps> = ({
       // GRADIENT: Text filled with a colorful gradient
       // -----------------------------------------------------------
       case "gradient": {
-        const pulseValue = usePulse(100);
         return (
           <h1
             style={{
@@ -106,7 +115,7 @@ export const BigText: React.FC<BigTextProps> = ({
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               opacity: entryOpacity,
-              transform: `scale(${entryScale * pulseValue})`,
+              transform: `scale(${entryScale * gradientPulse})`,
               filter: `drop-shadow(0 0 ${20 * glowIntensity}px ${hexToRgba(accent, 0.3)})`,
             }}
           >
@@ -119,19 +128,12 @@ export const BigText: React.FC<BigTextProps> = ({
       // OUTLINE: Stroke-only text, no fill
       // -----------------------------------------------------------
       case "outline": {
-        const outlineSpring = spring({
-          frame: frame - 5,
-          fps,
-          config: { damping: 15, stiffness: 70 },
-        });
-        const strokeWidth = interpolate(outlineSpring, [0, 1], [0, 3]);
-
         return (
           <h1
             style={{
               ...baseTextStyle,
               color: "transparent",
-              WebkitTextStroke: `${strokeWidth}px ${accent}`,
+              WebkitTextStroke: `${outlineStrokeWidth}px ${accent}`,
               opacity: entryOpacity,
               transform: `scale(${entryScale})`,
               filter: `drop-shadow(0 0 ${15 * glowIntensity}px ${hexToRgba(accent, 0.25)})`,
@@ -146,13 +148,11 @@ export const BigText: React.FC<BigTextProps> = ({
       // GLITCH: Multi-layered offset text with color channels
       // -----------------------------------------------------------
       case "glitch": {
-        // Glitch offset that flickers
+        // Glitch offset that flickers (deterministic based on frame)
         const glitchCycle = Math.floor(frame / 4) % 8;
         const isGlitching = glitchCycle < 2;
-        const offsetX = isGlitching ? (Math.random() * 6 - 3) : 0;
-        const offsetY = isGlitching ? (Math.random() * 4 - 2) : 0;
 
-        // Use deterministic pseudo-random based on frame for consistent render
+        // Deterministic pseudo-random based on frame for consistent render
         const seed = Math.sin(frame * 0.73) * 43758.5453;
         const detOffsetX = isGlitching ? ((seed % 6) - 3) : 0;
         const detOffsetY = isGlitching ? (((seed * 1.3) % 4) - 2) : 0;
@@ -288,10 +288,11 @@ export const BigText: React.FC<BigTextProps> = ({
           <p
             style={{
               color: theme.textSecondary,
-              fontSize: 32,
+              fontFamily: theme.fontFamily,
+              fontSize: 28,
               fontWeight: 500,
               margin: 0,
-              marginTop: 28,
+              marginTop: 24,
               opacity: subtitleFade,
               transform: `translateY(${subtitleSlide}px)`,
               letterSpacing: "0.01em",

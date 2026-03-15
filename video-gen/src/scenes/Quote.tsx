@@ -32,7 +32,7 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
 
   const variant = data.variant ?? "default";
 
-  // --- shared animations ---
+  // --- ALL hooks called unconditionally at top level ---
   const quoteMarkFade = useFadeIn(0, 20);
   const quoteMarkFloat = useFloat(100, 6);
   const authorSlideUp = useSlideUp(30, 30);
@@ -45,47 +45,53 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
     config: { damping: 8, stiffness: 120, mass: 0.6 },
   });
   const glowIntensity = useGlow(90);
+  const dividerFade = useFadeIn(25, 20);
 
-  // --- variant-specific text rendering ---
+  // variant-specific hooks (always called regardless of variant)
+  const textFadeLarge = useFadeIn(8, 20);
+  const textSlideLarge = useSlideUp(8, 50);
+  const typed = useTypewriter(data.quote, 1.2);
+  const wordReveal = useWordReveal(data.quote, 4);
+  const textFadeDefault = useFadeIn(8, 18);
+  const textSlideDefault = useSlideUp(8, 40);
+
+  const cursorBlink = Math.floor(frame / 15) % 2 === 0;
+
+  const baseStyle: React.CSSProperties = {
+    color: theme.textPrimary,
+    fontFamily: theme.headingFont,
+    fontWeight: 600,
+    lineHeight: 1.5,
+    margin: 0,
+    maxWidth: 900,
+    textAlign: "center" as const,
+  };
+
   const renderQuoteText = () => {
-    const baseStyle: React.CSSProperties = {
-      color: theme.textPrimary,
-      fontWeight: 600,
-      lineHeight: 1.5,
-      margin: 0,
-      maxWidth: 1000,
-      textAlign: "center" as const,
-    };
-
     switch (variant) {
-      case "large": {
-        const textFade = useFadeIn(8, 20);
-        const textSlide = useSlideUp(8, 50);
+      case "large":
         return (
           <p
             style={{
               ...baseStyle,
-              fontSize: 64,
+              fontSize: 58,
               fontWeight: 700,
               letterSpacing: "-0.02em",
-              opacity: textFade,
-              transform: `translateY(${textSlide}px)`,
+              opacity: textFadeLarge,
+              transform: `translateY(${textSlideLarge}px)`,
             }}
           >
             {data.quote}
           </p>
         );
-      }
 
-      case "typewriter": {
-        const typed = useTypewriter(data.quote, 1.2);
-        const cursorBlink = Math.floor(frame / 15) % 2 === 0;
+      case "typewriter":
         return (
           <p
             style={{
               ...baseStyle,
-              fontSize: 42,
-              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 38,
+              fontFamily: theme.monoFont,
             }}
           >
             {typed}
@@ -100,15 +106,13 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
             </span>
           </p>
         );
-      }
 
-      case "highlight": {
-        const { words, visibleCount } = useWordReveal(data.quote, 4);
+      case "highlight":
         return (
-          <p style={{ ...baseStyle, fontSize: 44 }}>
-            {words.map((word, i) => {
-              const isVisible = i < visibleCount;
-              const isJustRevealed = i === visibleCount - 1;
+          <p style={{ ...baseStyle, fontSize: 40 }}>
+            {wordReveal.words.map((word, i) => {
+              const isVisible = i < wordReveal.visibleCount;
+              const isJustRevealed = i === wordReveal.visibleCount - 1;
               return (
                 <span key={i}>
                   <span
@@ -129,26 +133,21 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
             })}
           </p>
         );
-      }
 
-      default: {
-        // "default" -- centered fade-in
-        const textFade = useFadeIn(8, 18);
-        const textSlide = useSlideUp(8, 40);
+      default:
         return (
           <p
             style={{
               ...baseStyle,
-              fontSize: 44,
+              fontSize: 40,
               fontStyle: "italic",
-              opacity: textFade,
-              transform: `translateY(${textSlide}px)`,
+              opacity: textFadeDefault,
+              transform: `translateY(${textSlideDefault}px)`,
             }}
           >
             {data.quote}
           </p>
         );
-      }
     }
   };
 
@@ -161,7 +160,7 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
           alignItems: "center",
           justifyContent: "center",
           height: "100%",
-          padding: "0 120px",
+          padding: "0 140px",
           textAlign: "center",
           position: "relative",
         }}
@@ -183,15 +182,16 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
         {/* Opening quote mark */}
         <div
           style={{
-            fontSize: 160,
+            fontSize: 140,
+            fontFamily: theme.headingFont,
             fontWeight: 800,
             color: accent,
             lineHeight: 0.6,
-            opacity: quoteMarkFade * 0.4,
+            opacity: quoteMarkFade * 0.35,
             transform: `translateY(${quoteMarkFloat}px)`,
             textShadow: `0 0 ${40 * glowIntensity}px ${hexToRgba(accent, 0.4)}`,
             userSelect: "none",
-            marginBottom: 16,
+            marginBottom: 12,
           }}
         >
           {"\u201C"}
@@ -203,15 +203,16 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
         {/* Closing quote mark */}
         <div
           style={{
-            fontSize: 160,
+            fontSize: 140,
+            fontFamily: theme.headingFont,
             fontWeight: 800,
             color: accent,
             lineHeight: 0.6,
-            opacity: quoteMarkFade * 0.4,
+            opacity: quoteMarkFade * 0.35,
             transform: `translateY(${-quoteMarkFloat}px)`,
             textShadow: `0 0 ${40 * glowIntensity}px ${hexToRgba(accent, 0.4)}`,
             userSelect: "none",
-            marginTop: 16,
+            marginTop: 12,
           }}
         >
           {"\u201D"}
@@ -220,7 +221,7 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
         {/* Accent divider */}
         <div
           style={{
-            width: interpolate(useFadeIn(25, 20), [0, 1], [0, 120]),
+            width: interpolate(dividerFade, [0, 1], [0, 120]),
             height: 3,
             background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
             margin: "32px 0",
@@ -232,10 +233,11 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
         <p
           style={{
             color: accent,
-            fontSize: 28,
-            fontWeight: 700,
+            fontSize: 24,
+            fontFamily: theme.fontFamily,
+            fontWeight: 600,
             margin: 0,
-            letterSpacing: "0.02em",
+            letterSpacing: "0.03em",
             opacity: authorFade,
             transform: `translateY(${authorSlideUp}px)`,
           }}
@@ -248,7 +250,8 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
           <p
             style={{
               color: theme.textSecondary,
-              fontSize: 20,
+              fontSize: 18,
+              fontFamily: theme.fontFamily,
               fontWeight: 400,
               margin: 0,
               marginTop: 8,

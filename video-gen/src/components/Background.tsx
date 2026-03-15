@@ -25,6 +25,10 @@ export const Background: React.FC<BackgroundProps> = ({ background, themeName, c
         position: "relative",
         overflow: "hidden",
         fontFamily: theme.fontFamily,
+        // CSS custom properties for scene components to pick up
+        ["--heading-font" as string]: theme.headingFont,
+        ["--body-font" as string]: theme.fontFamily,
+        ["--mono-font" as string]: theme.monoFont,
       }}
     >
       {/* Subtle grid overlay (theme-dependent) */}

@@ -3,11 +3,12 @@ import { useCurrentFrame, spring, interpolate, useVideoConfig } from "remotion";
 import { Background } from "../components/Background";
 import { useFadeIn } from "../utils/animations";
 import type { ChatData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme } from "../utils/colors";
 
 interface ChatProps {
   data: ChatData;
   accentColor?: string;
+  themeName?: string;
 }
 
 const roleConfig = {
@@ -34,10 +35,11 @@ const roleConfig = {
   },
 };
 
-export const Chat: React.FC<ChatProps> = ({ data, accentColor }) => {
+export const Chat: React.FC<ChatProps> = ({ data, accentColor, themeName }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const accent = accentColor || palette.accent;
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
   const titleOpacity = useFadeIn(0, 12);
 
   return (
@@ -46,15 +48,16 @@ export const Chat: React.FC<ChatProps> = ({ data, accentColor }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          padding: "80px 200px",
+          padding: "80px 180px",
           height: "100%",
         }}
       >
         {data.title && (
           <h2
             style={{
-              color: palette.white,
-              fontSize: 44,
+              color: theme.textPrimary,
+              fontSize: 38,
+              fontFamily: theme.headingFont,
               fontWeight: 700,
               marginBottom: 40,
               opacity: titleOpacity,
@@ -100,7 +103,8 @@ export const Chat: React.FC<ChatProps> = ({ data, accentColor }) => {
                 <span
                   style={{
                     color: config.labelColor(accent),
-                    fontSize: 16,
+                    fontSize: 13,
+                    fontFamily: theme.fontFamily,
                     fontWeight: 600,
                     marginBottom: 6,
                     textTransform: "uppercase",
@@ -112,7 +116,7 @@ export const Chat: React.FC<ChatProps> = ({ data, accentColor }) => {
                 <div
                   style={{
                     background: config.bg(accent),
-                    padding: "18px 28px",
+                    padding: "16px 24px",
                     borderRadius: 20,
                     maxWidth: "75%",
                     border:
@@ -124,7 +128,8 @@ export const Chat: React.FC<ChatProps> = ({ data, accentColor }) => {
                   <span
                     style={{
                       color: config.color,
-                      fontSize: 26,
+                      fontSize: 22,
+                      fontFamily: theme.fontFamily,
                       lineHeight: 1.6,
                       fontWeight: 400,
                     }}

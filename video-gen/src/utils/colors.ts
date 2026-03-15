@@ -37,7 +37,30 @@ export const gradients = {
 };
 
 // ============================================================
-// THEME SYSTEM
+// FONT SYSTEM — 7 families loaded via @font-face in Root.tsx
+// ============================================================
+
+export const fontFamilies = {
+  /** Clean geometric sans — 한글+영문 기본 */
+  pretendard: "'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
+  /** Modern geometric sans — 영문 특화, 깔끔 */
+  inter: "'Inter', 'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
+  /** Elegant serif — 인용, 고급스러운 느낌 */
+  playfair: "'Playfair Display', 'Noto Serif KR', Georgia, serif",
+  /** Korean serif — 한글 세리프 */
+  serifKR: "'Noto Serif KR', 'Playfair Display', Georgia, serif",
+  /** Tech/modern grotesque — 테크 브랜딩 */
+  spaceGrotesk: "'Space Grotesk', 'Pretendard', system-ui, sans-serif",
+  /** Geometric display — 대담한 헤드라인 */
+  outfit: "'Outfit', 'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
+  /** Humanist sans — 따뜻하고 읽기 쉬운 */
+  dmSans: "'DM Sans', 'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
+  /** Monospace — 코드블록 전용 */
+  mono: "'JetBrains Mono', 'Fira Code', monospace",
+};
+
+// ============================================================
+// THEME SYSTEM — each theme has heading/body/mono font combos
 // ============================================================
 
 export type ThemeName = "default" | "notion" | "minimal" | "cinematic" | "playful" | "neon" | "warm" | "nature";
@@ -51,7 +74,12 @@ export interface Theme {
   textSecondary: string;
   accent: string;
   accentAlt: string;
+  /** Default font for body text */
   fontFamily: string;
+  /** Font for headings (h1, h2, h3) — different weight/style from body */
+  headingFont: string;
+  /** Font for code blocks */
+  monoFont: string;
   borderRadius: number;
   overlayGrid: boolean;
   orbEffect: boolean;
@@ -67,8 +95,10 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: palette.gray300,
     accent: "#00d4ff",
     accentAlt: "#7c3aed",
-    fontFamily: "'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
-    borderRadius: 20,
+    fontFamily: fontFamilies.pretendard,
+    headingFont: fontFamilies.inter,
+    monoFont: fontFamilies.mono,
+    borderRadius: 16,
     overlayGrid: true,
     orbEffect: true,
   },
@@ -81,8 +111,10 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#999999",
     accent: "#eb5757",
     accentAlt: "#2f80ed",
-    fontFamily: "'Pretendard', 'Noto Sans KR', Georgia, serif",
-    borderRadius: 8,
+    fontFamily: fontFamilies.dmSans,
+    headingFont: fontFamilies.serifKR,
+    monoFont: fontFamilies.mono,
+    borderRadius: 6,
     overlayGrid: false,
     orbEffect: false,
   },
@@ -95,8 +127,10 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#737373",
     accent: "#0066ff",
     accentAlt: "#6366f1",
-    fontFamily: "'Pretendard', 'Noto Sans KR', 'Helvetica Neue', sans-serif",
-    borderRadius: 12,
+    fontFamily: fontFamilies.inter,
+    headingFont: fontFamilies.inter,
+    monoFont: fontFamilies.mono,
+    borderRadius: 10,
     overlayGrid: false,
     orbEffect: false,
   },
@@ -109,7 +143,9 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#a89b8c",
     accent: "#e8a838",
     accentAlt: "#c44b2f",
-    fontFamily: "'Pretendard', 'Noto Serif KR', Georgia, serif",
+    fontFamily: fontFamilies.serifKR,
+    headingFont: fontFamilies.playfair,
+    monoFont: fontFamilies.mono,
     borderRadius: 4,
     overlayGrid: false,
     orbEffect: true,
@@ -123,8 +159,10 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#d4b8ff",
     accent: "#ff6b9d",
     accentAlt: "#c084fc",
-    fontFamily: "'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
-    borderRadius: 24,
+    fontFamily: fontFamilies.outfit,
+    headingFont: fontFamilies.outfit,
+    monoFont: fontFamilies.mono,
+    borderRadius: 20,
     overlayGrid: false,
     orbEffect: true,
   },
@@ -137,7 +175,9 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#888888",
     accent: "#00ffcc",
     accentAlt: "#ff00ff",
-    fontFamily: "'Pretendard', 'Noto Sans KR', monospace",
+    fontFamily: fontFamilies.spaceGrotesk,
+    headingFont: fontFamilies.spaceGrotesk,
+    monoFont: fontFamilies.mono,
     borderRadius: 2,
     overlayGrid: true,
     orbEffect: true,
@@ -151,8 +191,10 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#c4a882",
     accent: "#ff8c42",
     accentAlt: "#d45b0b",
-    fontFamily: "'Pretendard', 'Noto Serif KR', Georgia, serif",
-    borderRadius: 16,
+    fontFamily: fontFamilies.dmSans,
+    headingFont: fontFamilies.playfair,
+    monoFont: fontFamilies.mono,
+    borderRadius: 14,
     overlayGrid: false,
     orbEffect: true,
   },
@@ -165,8 +207,10 @@ export const themes: Record<ThemeName, Theme> = {
     textSecondary: "#86d99b",
     accent: "#4ade80",
     accentAlt: "#22d3ee",
-    fontFamily: "'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
-    borderRadius: 16,
+    fontFamily: fontFamilies.pretendard,
+    headingFont: fontFamilies.outfit,
+    monoFont: fontFamilies.mono,
+    borderRadius: 14,
     overlayGrid: false,
     orbEffect: true,
   },

@@ -3,17 +3,19 @@ import { useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { Background } from "../components/Background";
 import { useFadeIn } from "../utils/animations";
 import type { FlowData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme } from "../utils/colors";
 
 interface FlowProps {
   data: FlowData;
   accentColor?: string;
+  themeName?: string;
 }
 
-export const Flow: React.FC<FlowProps> = ({ data, accentColor }) => {
+export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const accent = accentColor || palette.accent;
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
   const titleOpacity = useFadeIn(0, 12);
   const isHorizontal = (data.direction ?? "horizontal") === "horizontal";
   const steps = data.steps;
@@ -30,8 +32,9 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor }) => {
       >
         <h2
           style={{
-            color: palette.white,
-            fontSize: 52,
+            color: theme.textPrimary,
+            fontSize: 44,
+            fontFamily: theme.headingFont,
             fontWeight: 700,
             marginBottom: 60,
             opacity: titleOpacity,
@@ -81,9 +84,9 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor }) => {
                   {/* Step number circle */}
                   <div
                     style={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: 32,
+                      width: 56,
+                      height: 56,
+                      borderRadius: 28,
                       background: `linear-gradient(135deg, ${accent}, ${hexToRgba(accent, 0.6)})`,
                       display: "flex",
                       alignItems: "center",
@@ -93,8 +96,9 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor }) => {
                   >
                     <span
                       style={{
-                        color: palette.white,
-                        fontSize: 28,
+                        color: theme.textPrimary,
+                        fontSize: 24,
+                        fontFamily: theme.headingFont,
                         fontWeight: 800,
                       }}
                     >
@@ -105,8 +109,9 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor }) => {
                   {/* Step label */}
                   <h3
                     style={{
-                      color: palette.white,
-                      fontSize: 26,
+                      color: theme.textPrimary,
+                      fontSize: 22,
+                      fontFamily: theme.headingFont,
                       fontWeight: 700,
                       textAlign: "center",
                       margin: 0,
@@ -119,12 +124,13 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor }) => {
                   {step.description && (
                     <p
                       style={{
-                        color: palette.gray300,
-                        fontSize: 20,
+                        color: theme.textSecondary,
+                        fontSize: 17,
+                        fontFamily: theme.fontFamily,
                         textAlign: "center",
                         margin: 0,
                         lineHeight: 1.5,
-                        maxWidth: 220,
+                        maxWidth: 200,
                       }}
                     >
                       {step.description}

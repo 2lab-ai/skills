@@ -2,11 +2,12 @@ import React from "react";
 import { Background } from "../components/Background";
 import { useStaggered, useFadeIn } from "../utils/animations";
 import type { GridData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme, type Theme } from "../utils/colors";
 
 interface GridProps {
   data: GridData;
   accentColor?: string;
+  themeName?: string;
 }
 
 const Card: React.FC<{
@@ -15,7 +16,8 @@ const Card: React.FC<{
   description: string;
   index: number;
   accent: string;
-}> = ({ icon, title, description, index, accent }) => {
+  theme: Theme;
+}> = ({ icon, title, description, index, accent, theme }) => {
   const anim = useStaggered(index, 8);
 
   return (
@@ -24,7 +26,7 @@ const Card: React.FC<{
         background: hexToRgba(palette.white, 0.04),
         border: `1px solid ${hexToRgba(palette.white, 0.08)}`,
         borderRadius: 20,
-        padding: "36px 32px",
+        padding: "28px 24px",
         display: "flex",
         flexDirection: "column",
         gap: 16,
@@ -36,8 +38,9 @@ const Card: React.FC<{
       )}
       <h3
         style={{
-          color: palette.white,
-          fontSize: 28,
+          color: theme.textPrimary,
+          fontSize: 24,
+          fontFamily: theme.headingFont,
           fontWeight: 700,
           margin: 0,
           letterSpacing: "-0.01em",
@@ -47,8 +50,9 @@ const Card: React.FC<{
       </h3>
       <p
         style={{
-          color: palette.gray300,
-          fontSize: 22,
+          color: theme.textSecondary,
+          fontSize: 18,
+          fontFamily: theme.fontFamily,
           fontWeight: 400,
           margin: 0,
           lineHeight: 1.6,
@@ -60,8 +64,9 @@ const Card: React.FC<{
   );
 };
 
-export const Grid: React.FC<GridProps> = ({ data, accentColor }) => {
-  const accent = accentColor || palette.accent;
+export const Grid: React.FC<GridProps> = ({ data, accentColor, themeName }) => {
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
   const titleOpacity = useFadeIn(0, 12);
   const cols = data.cards.length <= 3 ? data.cards.length : data.cards.length <= 4 ? 2 : 3;
 
@@ -77,8 +82,9 @@ export const Grid: React.FC<GridProps> = ({ data, accentColor }) => {
       >
         <h2
           style={{
-            color: palette.white,
-            fontSize: 52,
+            color: theme.textPrimary,
+            fontSize: 44,
+            fontFamily: theme.headingFont,
             fontWeight: 700,
             marginBottom: 48,
             opacity: titleOpacity,
@@ -92,13 +98,13 @@ export const Grid: React.FC<GridProps> = ({ data, accentColor }) => {
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: 24,
+            gap: 20,
             flex: 1,
             alignContent: "start",
           }}
         >
           {data.cards.map((card, i) => (
-            <Card key={i} {...card} index={i} accent={accent} />
+            <Card key={i} {...card} index={i} accent={accent} theme={theme} />
           ))}
         </div>
       </div>

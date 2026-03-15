@@ -72,11 +72,12 @@ export const Subtitle: React.FC<SubtitleProps> = ({
               left: 0,
               right: 0,
               color: "transparent",
-              fontSize: 44,
-              fontWeight: 800,
-              lineHeight: 1.4,
-              letterSpacing: "-0.02em",
-              WebkitTextStroke: "12px rgba(0,0,0,0.9)",
+              fontFamily: "'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
+              fontSize: 40,
+              fontWeight: 700,
+              lineHeight: 1.45,
+              letterSpacing: "-0.01em",
+              WebkitTextStroke: "10px rgba(0,0,0,0.85)",
               paintOrder: "stroke fill",
             }}
           >
@@ -87,11 +88,12 @@ export const Subtitle: React.FC<SubtitleProps> = ({
           <span
             style={{
               position: "relative",
+              fontFamily: "'Pretendard', 'Noto Sans KR', system-ui, sans-serif",
               color: palette.white,
-              fontSize: 44,
-              fontWeight: 800,
-              lineHeight: 1.4,
-              letterSpacing: "-0.02em",
+              fontSize: 40,
+              fontWeight: 700,
+              lineHeight: 1.45,
+              letterSpacing: "-0.01em",
               textShadow: "0 2px 8px rgba(0,0,0,0.5)",
             }}
           >

@@ -2,17 +2,19 @@ import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 import { Background } from "../components/Background";
 import type { HeroData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme } from "../utils/colors";
 
 interface HeroProps {
   data: HeroData;
   accentColor?: string;
+  themeName?: string;
 }
 
-export const Hero: React.FC<HeroProps> = ({ data, accentColor }) => {
+export const Hero: React.FC<HeroProps> = ({ data, accentColor, themeName }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const accent = accentColor || palette.accent;
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
 
   const titleSpring = spring({ frame, fps, config: { damping: 15, stiffness: 80 } });
   const subtitleSpring = spring({ frame: frame - 12, fps, config: { damping: 18, stiffness: 90 } });
@@ -29,7 +31,7 @@ export const Hero: React.FC<HeroProps> = ({ data, accentColor }) => {
           alignItems: "center",
           justifyContent: "center",
           height: "100%",
-          padding: "0 120px",
+          padding: "0 140px",
           textAlign: "center",
         }}
       >
@@ -39,7 +41,7 @@ export const Hero: React.FC<HeroProps> = ({ data, accentColor }) => {
             style={{
               opacity: badgeSpring,
               transform: `scale(${interpolate(badgeSpring, [0, 1], [0.8, 1])})`,
-              marginBottom: 32,
+              marginBottom: 24,
             }}
           >
             <span
@@ -63,8 +65,9 @@ export const Hero: React.FC<HeroProps> = ({ data, accentColor }) => {
         {/* Title */}
         <h1
           style={{
-            color: palette.white,
-            fontSize: 82,
+            color: theme.textPrimary,
+            fontSize: 76,
+            fontFamily: theme.headingFont,
             fontWeight: 800,
             lineHeight: 1.15,
             letterSpacing: "-0.03em",
@@ -83,7 +86,7 @@ export const Hero: React.FC<HeroProps> = ({ data, accentColor }) => {
             height: 4,
             background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
             borderRadius: 2,
-            margin: "28px 0",
+            margin: "20px 0",
           }}
         />
 
@@ -91,12 +94,13 @@ export const Hero: React.FC<HeroProps> = ({ data, accentColor }) => {
         {data.subtitle && (
           <p
             style={{
-              color: palette.gray300,
-              fontSize: 34,
+              color: theme.textSecondary,
+              fontSize: 28,
+              fontFamily: theme.fontFamily,
               fontWeight: 400,
               lineHeight: 1.6,
               margin: 0,
-              maxWidth: 900,
+              maxWidth: 800,
               opacity: subtitleSpring,
               transform: `translateY(${interpolate(subtitleSpring, [0, 1], [20, 0])}px)`,
             }}

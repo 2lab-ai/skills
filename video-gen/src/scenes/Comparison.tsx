@@ -32,10 +32,10 @@ const ComparisonItem: React.FC<{
   color: string;
   theme: ReturnType<typeof getTheme>;
 }> = ({ text, index, side, color, theme }) => {
-  const anim =
-    side === "left"
-      ? useStaggeredSlideRight(index, 10)
-      : useStaggeredSlideLeft(index, 10);
+  // Always call both hooks unconditionally to satisfy Rules of Hooks
+  const slideRight = useStaggeredSlideRight(index, 10);
+  const slideLeft = useStaggeredSlideLeft(index, 10);
+  const anim = side === "left" ? slideRight : slideLeft;
 
   return (
     <div
@@ -63,7 +63,8 @@ const ComparisonItem: React.FC<{
       <span
         style={{
           color: theme.textPrimary,
-          fontSize: 22,
+          fontFamily: theme.fontFamily,
+          fontSize: 20,
           fontWeight: 500,
           lineHeight: 1.4,
         }}
@@ -92,7 +93,7 @@ export const Comparison: React.FC<ComparisonProps> = ({
 
   // Center divider animation
   const dividerScale = spring({
-    frame: frame - 8,
+    frame: Math.max(0, frame - 8),
     fps,
     config: { damping: 12, stiffness: 100 },
   });
@@ -100,7 +101,7 @@ export const Comparison: React.FC<ComparisonProps> = ({
 
   // VS badge bounce
   const vsBounce = spring({
-    frame: frame - 15,
+    frame: Math.max(0, frame - 15),
     fps,
     config: { damping: 6, stiffness: 180, mass: 0.5 },
   });
@@ -137,9 +138,10 @@ export const Comparison: React.FC<ComparisonProps> = ({
         <h2
           style={{
             color: theme.textPrimary,
-            fontSize: 48,
+            fontSize: 42,
+            fontFamily: theme.headingFont,
             fontWeight: 700,
-            marginBottom: 40,
+            marginBottom: 36,
             opacity: titleFade,
             letterSpacing: "-0.02em",
             textAlign: "center",
@@ -184,7 +186,8 @@ export const Comparison: React.FC<ComparisonProps> = ({
               <h3
                 style={{
                   color: leftColor,
-                  fontSize: 32,
+                  fontFamily: theme.headingFont,
+                  fontSize: 28,
                   fontWeight: 700,
                   margin: 0,
                 }}
@@ -283,7 +286,8 @@ export const Comparison: React.FC<ComparisonProps> = ({
                   <span
                     style={{
                       color: "#fff",
-                      fontSize: isVersus ? 24 : 18,
+                      fontFamily: theme.headingFont,
+                      fontSize: isVersus ? 22 : 16,
                       fontWeight: 900,
                       letterSpacing: "0.05em",
                     }}
@@ -322,7 +326,8 @@ export const Comparison: React.FC<ComparisonProps> = ({
               <h3
                 style={{
                   color: rightColor,
-                  fontSize: 32,
+                  fontFamily: theme.headingFont,
+                  fontSize: 28,
                   fontWeight: 700,
                   margin: 0,
                 }}

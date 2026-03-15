@@ -3,11 +3,12 @@ import { useCurrentFrame, interpolate } from "remotion";
 import { Background } from "../components/Background";
 import { useFadeIn } from "../utils/animations";
 import type { CodeData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme } from "../utils/colors";
 
 interface CodeProps {
   data: CodeData;
   accentColor?: string;
+  themeName?: string;
 }
 
 // Simple syntax-like coloring by token type
@@ -55,9 +56,10 @@ function tokenize(line: string): Array<{ text: string; color: string }> {
   return tokens.length ? tokens : [{ text: remaining, color: palette.white }];
 }
 
-export const Code: React.FC<CodeProps> = ({ data, accentColor }) => {
+export const Code: React.FC<CodeProps> = ({ data, accentColor, themeName }) => {
   const frame = useCurrentFrame();
-  const accent = accentColor || palette.accent;
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
   const titleOpacity = useFadeIn(0, 12);
   const lines = data.code.split("\n");
   const highlights = new Set(data.highlights || []);
@@ -84,8 +86,9 @@ export const Code: React.FC<CodeProps> = ({ data, accentColor }) => {
         {data.title && (
           <h2
             style={{
-              color: palette.white,
-              fontSize: 44,
+              color: theme.textPrimary,
+              fontSize: 40,
+              fontFamily: theme.headingFont,
               fontWeight: 700,
               marginBottom: 36,
               opacity: titleOpacity,
@@ -124,7 +127,7 @@ export const Code: React.FC<CodeProps> = ({ data, accentColor }) => {
                 color: palette.gray500,
                 fontSize: 14,
                 marginLeft: 12,
-                fontFamily: "monospace",
+                fontFamily: theme.monoFont,
               }}
             >
               {data.language}
@@ -153,7 +156,7 @@ export const Code: React.FC<CodeProps> = ({ data, accentColor }) => {
                     style={{
                       color: palette.gray500,
                       fontSize: 18,
-                      fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                      fontFamily: theme.monoFont,
                       width: 48,
                       textAlign: "right",
                       marginRight: 24,
@@ -165,7 +168,7 @@ export const Code: React.FC<CodeProps> = ({ data, accentColor }) => {
                   <span
                     style={{
                       fontSize: 20,
-                      fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                      fontFamily: theme.monoFont,
                       whiteSpace: "pre",
                     }}
                   >

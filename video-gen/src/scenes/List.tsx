@@ -2,18 +2,20 @@ import React from "react";
 import { Background } from "../components/Background";
 import { useStaggered, useFadeIn } from "../utils/animations";
 import type { ListData } from "../types";
-import { palette, hexToRgba } from "../utils/colors";
+import { palette, hexToRgba, getTheme, type Theme } from "../utils/colors";
 
 interface ListProps {
   data: ListData;
   accentColor?: string;
+  themeName?: string;
 }
 
-const ListItem: React.FC<{ text: string; index: number; accent: string; ordered: boolean }> = ({
+const ListItem: React.FC<{ text: string; index: number; accent: string; ordered: boolean; theme: Theme }> = ({
   text,
   index,
   accent,
   ordered,
+  theme,
 }) => {
   const anim = useStaggered(index, 10);
 
@@ -23,15 +25,15 @@ const ListItem: React.FC<{ text: string; index: number; accent: string; ordered:
         display: "flex",
         alignItems: "center",
         gap: 24,
-        padding: "20px 0",
+        padding: "16px 0",
         borderBottom: `1px solid ${hexToRgba(palette.white, 0.06)}`,
         ...anim,
       }}
     >
       <div
         style={{
-          width: 44,
-          height: 44,
+          width: 38,
+          height: 38,
           borderRadius: ordered ? 12 : 22,
           background: hexToRgba(accent, 0.15),
           border: `1px solid ${hexToRgba(accent, 0.3)}`,
@@ -47,8 +49,9 @@ const ListItem: React.FC<{ text: string; index: number; accent: string; ordered:
       </div>
       <span
         style={{
-          color: palette.white,
-          fontSize: 30,
+          color: theme.textPrimary,
+          fontSize: 26,
+          fontFamily: theme.fontFamily,
           fontWeight: 500,
           lineHeight: 1.5,
         }}
@@ -59,8 +62,9 @@ const ListItem: React.FC<{ text: string; index: number; accent: string; ordered:
   );
 };
 
-export const List: React.FC<ListProps> = ({ data, accentColor }) => {
-  const accent = accentColor || palette.accent;
+export const List: React.FC<ListProps> = ({ data, accentColor, themeName }) => {
+  const theme = getTheme(themeName);
+  const accent = accentColor || theme.accent;
   const titleOpacity = useFadeIn(0, 12);
 
   return (
@@ -69,14 +73,15 @@ export const List: React.FC<ListProps> = ({ data, accentColor }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          padding: "80px 140px",
+          padding: "80px 160px",
           height: "100%",
         }}
       >
         <h2
           style={{
-            color: palette.white,
-            fontSize: 52,
+            color: theme.textPrimary,
+            fontSize: 44,
+            fontFamily: theme.headingFont,
             fontWeight: 700,
             marginBottom: 48,
             opacity: titleOpacity,
@@ -94,6 +99,7 @@ export const List: React.FC<ListProps> = ({ data, accentColor }) => {
               index={i}
               accent={accent}
               ordered={data.ordered ?? false}
+              theme={theme}
             />
           ))}
         </div>
