@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "text": "안녕하세요, 오늘 날씨가 참 좋네요.",
+    "voice": "cwon",
+    "audio_path": "/home/zhugehyuk/2lab.ai/skills/cohere-stt/output/benchmark/sample_000_cwon.wav"
+  },
+  {
+    "id": 1,
+    "text": "감사합니다. 다음에 또 뵙겠습니다.",
+    "voice": "elon",
+    "audio_path": "/home/zhugehyuk/2lab.ai/skills/cohere-stt/output/benchmark/sample_001_elon.wav"
+  }
+]

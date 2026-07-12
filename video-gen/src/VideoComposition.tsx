@@ -12,6 +12,10 @@ import {
 import {
   Hero, List, Grid, Code, Flow, Chat, Stat,
   Quote, Timeline, Comparison, Emoji, ImageScene, BigText,
+  Terminal, TokenPredict, MatrixRain, ProgressBar,
+  Radar, Countdown, Map, Callout, SplitScreen,
+  Typewriter, Pyramid, Reveal, Infographic,
+  TrainingData, SystemPrompt, Conversation, FlowchartTrace,
 } from "./scenes";
 import { Subtitle } from "./components/Subtitle";
 import type {
@@ -31,6 +35,23 @@ import type {
   EmojiData,
   ImageData,
   BigTextData,
+  TerminalData,
+  TokenPredictData,
+  MatrixRainData,
+  ProgressBarData,
+  RadarData,
+  CountdownData,
+  MapData,
+  CalloutData,
+  SplitScreenData,
+  TypewriterData,
+  PyramidData,
+  RevealData,
+  InfographicData,
+  TrainingDataData,
+  SystemPromptData,
+  ConversationData,
+  FlowchartData,
   SubtitleCue,
 } from "./types";
 
@@ -70,6 +91,40 @@ function renderScene(scene: SceneConfig, accentColor: string, globalTheme?: stri
       return <ImageScene data={scene.data as unknown as ImageData} {...props} />;
     case "bigtext":
       return <BigText data={scene.data as unknown as BigTextData} {...props} />;
+    case "terminal":
+      return <Terminal data={scene.data as unknown as TerminalData} {...props} />;
+    case "tokenPredict":
+      return <TokenPredict data={scene.data as unknown as TokenPredictData} {...props} />;
+    case "matrixRain":
+      return <MatrixRain data={scene.data as unknown as MatrixRainData} {...props} />;
+    case "progressBar":
+      return <ProgressBar data={scene.data as unknown as ProgressBarData} {...props} />;
+    case "radar":
+      return <Radar data={scene.data as unknown as RadarData} {...props} />;
+    case "countdown":
+      return <Countdown data={scene.data as unknown as CountdownData} {...props} />;
+    case "map":
+      return <Map data={scene.data as unknown as MapData} {...props} />;
+    case "callout":
+      return <Callout data={scene.data as unknown as CalloutData} {...props} />;
+    case "splitScreen":
+      return <SplitScreen data={scene.data as unknown as SplitScreenData} {...props} />;
+    case "typewriter":
+      return <Typewriter data={scene.data as unknown as TypewriterData} {...props} />;
+    case "pyramid":
+      return <Pyramid data={scene.data as unknown as PyramidData} {...props} />;
+    case "reveal":
+      return <Reveal data={scene.data as unknown as RevealData} {...props} />;
+    case "infographic":
+      return <Infographic data={scene.data as unknown as InfographicData} {...props} />;
+    case "trainingData":
+      return <TrainingData data={scene.data as unknown as TrainingDataData} {...props} />;
+    case "systemPrompt":
+      return <SystemPrompt data={scene.data as unknown as SystemPromptData} {...props} />;
+    case "conversation":
+      return <Conversation data={scene.data as unknown as ConversationData} {...props} />;
+    case "flowchart":
+      return <FlowchartTrace data={scene.data as unknown as FlowchartData} {...props} />;
     default:
       return (
         <AbsoluteFill

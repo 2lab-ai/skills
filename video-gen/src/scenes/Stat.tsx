@@ -42,7 +42,7 @@ export const Stat: React.FC<StatProps> = ({ data, accentColor, themeName }) => {
   const cols = data.stats.length <= 2 ? data.stats.length : data.stats.length <= 4 ? 2 : 3;
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",

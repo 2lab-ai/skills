@@ -1,0 +1,248 @@
+diff --git a/SKILL.md b/SKILL.md
+index 82451f0..4b6e145 100644
+--- a/SKILL.md
++++ b/SKILL.md
+@@ -1,34 +1,223 @@
+ ---
+-name: verticals
+-description: "AI-native vertical video engine with niche intelligence. Takes a one-line topic and a niche profile, and outputs a finished YouTube Short/Reel/TikTok with AI-generated b-roll, voiceover, burned-in captions, background music, and thumbnail. Supports multiple LLM providers (Claude, Gemini, GPT, Ollama), TTS providers (Edge TTS, ElevenLabs), and 15+ content niches."
++name: shorts
++description: "AI 유튜브 쇼츠/릴스/틱톡 자동 생성 엔진. 토픽 하나로 리서치→스크립트→비주얼→보이스→캡션→음악→영상 조립→업로드까지 자동화."
++triggers: "쇼츠, shorts, 유튜브 쇼츠, 숏폼, short video, 릴스, reels, tiktok, 숏츠"
+ ---
+ 
+-# Verticals v3
++# Shorts — AI YouTube Shorts Pipeline
+ 
+-AI-native vertical video engine: topic + niche -> research -> script -> visuals -> voice -> captions -> music -> thumbnail -> upload.
++토픽 + 니치 → 리서치 → 스크립트 → 비주얼 → 보이스 → 캡션 → 음악 → 조립 → 업로드
++
++Based on [Verticals v3](https://github.com/rushindrasinha/youtube-shorts-pipeline)
++
++## Architecture
++
++```
++Topic ──► Research (DuckDuckGo)
++              │
++              ▼
++          Script (Claude/Gemini/GPT/Ollama)
++              │
++              ▼
++          B-roll (Gemini Imagen / Pexels / ComfyUI)
++              │
++              ▼
++          Voice (Edge TTS / ElevenLabs / Kokoro)
++              │
++              ▼
++          Captions (Whisper → ASS + SRT)
++              │
++              ▼
++          Music (royalty-free + voice ducking)
++              │
++              ▼
++          Assemble (ffmpeg → 9:16 MP4)
++              │
++              ▼
++          Upload (YouTube / TikTok / Reels)
++```
++
++## Quick Start
++
++```bash
++# 래퍼 스크립트 사용
++~/2lab.ai/skills/shorts/scripts/run.sh run --news "Elon Musk launches new AI" --niche tech --lang en
++
++# 또는 직접 실행
++cd ~/2lab.ai/skills/shorts
++.venv/bin/python -m verticals run --news "headline" --niche tech
++
++# 드래프트만 (영상 생성 없이 스크립트만)
++.venv/bin/python -m verticals draft --news "headline" --niche tech
++
++# 트렌딩 토픽 검색
++.venv/bin/python -m verticals topics --niche tech --limit 10
++
++# 니치 목록 보기
++.venv/bin/python -m verticals niches
++```
+ 
+ ## Commands
+ 
++| Command | Description |
++|---------|-------------|
++| `run` | 풀 파이프라인: draft → produce → upload |
++| `draft` | 스크립트 + 메타데이터 생성만 |
++| `produce` | 드래프트 → 영상 생성 |
++| `upload` | 영상 → YouTube 업로드 |
++| `topics` | 트렌딩 토픽 검색 |
++| `niches` | 사용 가능한 니치 프로필 목록 |
++
++## Key Flags
++
++| Flag | Options | Default |
++|------|---------|---------|
++| `--niche` | tech, gaming, finance, fitness, cooking, travel, etc. | general |
++| `--provider` | claude, gemini, openai, ollama | claude |
++| `--voice` | edge, elevenlabs, say, kokoro | edge |
++| `--platform` | shorts, reels, tiktok, all | shorts |
++| `--lang` | en, ko, ja, hi, es, pt, de, fr | en |
++| `--dry-run` | 드래프트만 생성 | - |
++| `--discover` | 트렌딩 토픽 자동 검색 | - |
++| `--auto-pick` | LLM이 최적 토픽 선택 | - |
++
++## Available Niches (16+)
++
++tech, gaming, finance, fitness, cooking, travel, true_crime, science, politics, entertainment, sports, fashion, education, motivation, comedy, general, **textcard** (1:1 정사각형)
++
++## Cost
++
++| Setup | LLM | Image | TTS | Cost/video |
++|-------|-----|-------|-----|------------|
++| Premium | Claude | Gemini Imagen | ElevenLabs | ~$0.11 |
++| Budget | Gemini | Gemini Imagen | Edge TTS | ~$0.04 |
++| Free | Ollama | Pexels | Edge TTS | $0.00 |
++| CLI | Claude CLI | Pexels | Edge TTS | $0.00 (Claude Max 구독 필요) |
++
++## Configuration
++
++API 키: `~/.verticals/config.json` (0600 permissions)
++
++```json
++{
++  "ANTHROPIC_API_KEY": "sk-ant-...",
++  "GEMINI_API_KEY": "AI...",
++  "ELEVENLABS_API_KEY": "..."
++}
++```
++
++환경변수 우선: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY` 등
++
++Claude CLI (`claude` command)가 있으면 API 키 없이 사용 가능.
++
++## File Structure
++
++```
++~/2lab.ai/skills/shorts/
++├── SKILL.md                    # 이 파일
++├── verticals/                  # 메인 소스
++│   ├── __main__.py             # CLI 엔트리포인트
++│   ├── config.py               # 설정 & API 키
++│   ├── draft.py                # 스크립트 생성
++│   ├── research.py             # 리서치 (DuckDuckGo)
++│   ├── broll.py                # B-roll 이미지 생성
++│   ├── tts.py                  # TTS 보이스 생성
++│   ├── captions.py             # Whisper 캡션
++│   ├── music.py                # 배경 음악
++│   ├── assemble.py             # ffmpeg 영상 조립
++│   ├── upload.py               # YouTube 업로드
++│   ├── niche.py                # 니치 프로필 로더
++│   └── topics/                 # 토픽 엔진
++├── niches/                     # 15+ YAML 니치 프로필
++├── scripts/
++│   ├── run.sh                  # 래퍼 스크립트
++│   ├── textcard.py             # 텍스트 카드 영상 생성기 (1:1)
++│   └── setup_youtube_oauth.py  # YouTube OAuth 설정
++├── .venv/                      # Python venv
++├── output/                     # 생성된 영상
++└── references/                 # 설정 가이드
++```
++
++## Text Card Template (NEW)
++
++정사각형(1:1) 텍스트 카드 영상 — Substack/블로그 리더 스타일.
++
++```
++Dark BG ──► Text Rendering (Pillow)
++               │
++               ▼
++           Voice (Fish TTS / Edge TTS)
++               │
++               ▼
++           Timestamps (Whisper)
++               │
++               ▼
++           Frame-per-word rendering
++               │
++               ▼
++           Assembly (ffmpeg → 1:1 MP4)
++```
++
++### Quick Start
++
+ ```bash
+-python -m verticals run --news "headline" --niche tech
+-python -m verticals run --discover --auto-pick --niche gaming
+-python -m verticals draft --news "headline" --niche finance --provider gemini
+-python -m verticals produce --draft <path> --voice edge
+-python -m verticals topics --niche tech --limit 20
+-python -m verticals niches
++# 드래프트 기반
++.venv/bin/python scripts/textcard.py --draft ~/.verticals/drafts/123.json \
++  --source "TECHCRUNCH.COM" --tts fish --voice cwon
++
++# 직접 텍스트 입력
++.venv/bin/python scripts/textcard.py \
++  --text "Your script text here." \
++  --source "BLOOMBERG.COM" --title "Article Title" \
++  --tts edge --output /tmp/output.mp4
++
++# Fish TTS + 커스텀 색상
++.venv/bin/python scripts/textcard.py --draft draft.json \
++  --tts fish --voice cwon --accent-color "#00D9FF"
+ ```
+ 
+-## Key flags
++### Text Card Flags
++
++| Flag | Options | Default |
++|------|---------|---------|
++| `--draft` | 드래프트 JSON 경로 | - |
++| `--text` | 직접 스크립트 텍스트 | - |
++| `--source` | 출처 (상단 표시) | "" |
++| `--title` | 제목 (출처 아래) | draft의 youtube_title |
++| `--tts` | edge, fish | edge |
++| `--voice` | cwon, iu, karina (fish) / en-US-GuyNeural (edge) | cwon/GuyNeural |
++| `--accent-color` | 하이라이트 색상 hex | #C85050 |
++| `--group-size` | 한 화면 단어 수 | 4 |
++| `--output` | 출력 경로 | ~/.verticals/media/textcard_latest.mp4 |
++| `--music` | 배경 음악 경로 | none |
++
++### Visual Style
++
++- **포맷**: 1080x1080 (1:1 정사각형)
++- **배경**: #0A0A0E (near-black)
++- **텍스트**: 흰색 bold, 중앙 정렬
++- **하이라이트**: 현재 단어 코랄 색상 강조
++- **출처**: 상단 좌측 회색 텍스트
++
++## Output
++
++생성된 영상: `~/.verticals/media/work_{job_id}_{lang}/`
++드래프트: `~/.verticals/drafts/{job_id}.json`
++텍스트카드: `~/.verticals/media/textcard_latest.mp4`
+ 
+---niche NAME: Content niche (tech, gaming, finance, fitness, cooking, travel, etc.)
+---provider NAME: LLM provider (claude, gemini, openai, ollama)
+---voice NAME: TTS provider (edge, elevenlabs, say)
+---platform NAME: Target platform (shorts, reels, tiktok, all)
+---lang CODE: Language (en, hi, es, pt, de, fr, ja, ko)
++## Dependencies
+ 
+-## $0.00 mode
++- Python 3.10+
++- ffmpeg (시스템)
++- openai-whisper (캡션)
++- edge-tts (무료 TTS)
++- anthropic / google-generativeai (LLM)
+ 
+-python -m verticals run --topic "X" --niche tech --provider ollama --voice edge
++## Troubleshooting
+ 
+-Docs: https://github.com/rushindrasinha/verticals
+-Product: https://verticals.gg
++| Error | Solution |
++|-------|----------|
++| No Claude access | `ANTHROPIC_API_KEY` 설정 또는 `claude` CLI 설치 |
++| ffmpeg not found | `apt install ffmpeg` 또는 빌드 |
++| Whisper OOM | 작은 모델 사용: `--whisper-model base` |
++| YouTube upload fail | `python3 scripts/setup_youtube_oauth.py` 실행 |

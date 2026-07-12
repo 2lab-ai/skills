@@ -71,7 +71,7 @@ export const Grid: React.FC<GridProps> = ({ data, accentColor, themeName }) => {
   const cols = data.cards.length <= 3 ? data.cards.length : data.cards.length <= 4 ? 2 : 3;
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",

@@ -1,0 +1,552 @@
+﻿# link-summary — SNS 링크 딥 요약 + 음성 브리핑
+
+X(Twitter)/Threads 링크를 받으면 전체 스레드를 스크래핑하고, 번역/분석/음성 브리핑까지 원스톱으로 처리.
+
+**Triggers:** X/Twitter URL, Threads URL, 일반 웹 링크, "link-summary", "링크 요약"
+
+---
+
+## 🚨🚨🚨 MANDATORY: 서브에이전트 위임 (2026-04-28 지혁 지시)
+
+**메인 컨텍스트는 링크 처리하지 않는다. 무조건 서브에이전트에게 위임한다.**
+
+### 왜?
+지혁이 링크를 연속으로 보내면 메인 컨텍스트에 lens chain / cross-reference가 누적되면서 output이 점점 비대해지고 퀄리티가 좇같아진다. 서브에이전트는 fresh context로 시작하므로 매번 깨끗한 결과가 나온다.
+
+### 메인 컨텍스트가 하는 일 (오직 이것만)
+1. 링크 수신 → bd 등록 (선택) + TodoWrite 큐
+2. **`Agent` tool로 `general-purpose` 서브에이전트 dispatch**
+3. 서브에이전트 결과(짧은 보고) 받아서 **3-5줄로 지혁에게 전달**
+4. 끝.
+
+**메인은 절대 직접 스크래핑 / 번역 / 아카이브 / 텔레그램 전송 / 인덱스 업데이트 안 한다.**
+
+### 서브에이전트에게 던질 prompt 템플릿
+
+```
+You are processing an SNS link via the link-summary skill (full path:
+~/2lab.ai/skills/link-summary/SKILL.md). Read that SKILL.md first to
+understand the 6-phase workflow.
+
+URL: <지혁이 보낸 URL>
+Timestamp received: <KST timestamp>
+
+Execute ALL phases yourself:
+1. Scrape via ~/.scrapling-venv/bin/python3 + patchright
+   (LD_LIBRARY_PATH="$HOME/.local/lib/chromium-deps/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH").
+   For X.com login walls, fall back to nitter.poast.org / nitter.net /
+   nitter.privacydev.net.
+2. Fact-check authority claims, numbers, cited research via WebSearch.
+   Verify identity if any title is named.
+3. Create dense archive at
+   /home/zhugehyuk/2lab.ai/soul/p9/ARTIFACTS/link-summaries/YYYY-MM/
+   YYYY-MM-DD-<handle>-<slug>.md
+
+   **MANDATORY 3-section structure (지혁 2026-04-30 강화 — 위반 시 작업 실패):**
+
+   ### 1. 원문 (Original — verbatim, 무손실)
+   - 스크래핑된 원본 텍스트를 **글자 그대로(verbatim)** 저장. 절대 요약·압축·재배열 금지.
+   - 트윗 스레드는 1→2→3 self-reply 모두 포함. 댓글 체인도 가능한 만큼 원문 보존.
+   - 모든 이미지: `src` URL 표기 + patchright screenshot 파일 경로 명시 + ALT 텍스트 인용.
+   - 이미지 OCR/Vision 텍스트 설명은 **여기 원문 아닌 가공(섹션 3)에 분리**.
+
+   ### 2. 번역 (Translation)
+   - 원문이 한국어가 **아닌 경우에만** 작성. 한국어 원문이면 통째로 생략.
+   - 요약 없이 전문 직역. 의역/해설/함의 섞지 말 것 (가공 섹션이 따로 있음).
+   - 이미지 ALT 텍스트도 번역.
+
+   ### 3. 가공 (Analysis — 익스큐티브 서머리 / 위→아래 = 한눈→상세)
+
+   **🚨 계층 강제 (2026-05-15 지혁 지시):** 가공 섹션은 익스큐티브 서머리 형식.
+   사람이 위에서부터 읽으면서 필요한 깊이에서 멈출 수 있어야 한다.
+   "TL;DR → 핵심 발견 → 컨텍스트 → 상세 분석 → 비판 → 함의" 순.
+
+   - **3.1 TL;DR** — 한 줄. 이 글의 정수.
+   - **3.2 핵심 발견 (Key Findings)** — 불릿 3-5개, 각 1줄. 가장 중요한 사실/주장만.
+   - **3.3 컨텍스트** — 1-2문장. 누가/언제/왜 발화했는지, 왜 지금 중요한가.
+   - **3.4 상세 분석** — 이미지 OCR/Vision 텍스트 설명 + 함의/관점/맥락. 깊게.
+     - 이미지: `> **[IMAGE: Figure N — 제목]**` 블록
+   - **3.5 팩트 체크** — ✅/⚠️/❌/🔍 항목별
+   - **3.6 비판/리스크** — overclaim / marketing hype / engagement farming flag + 신뢰도 평가
+   - **3.7 함의 (So What)** — 지혁/soma 실용 함의, 액션 아이템.
+     Context Rot Week chain은 real connection만 (max 1 lens, 강제 연결 X).
+
+   **⚠️ 절대 금지:**
+   - 원문 섹션을 "압축/핵심만"으로 표기하고 요약 넣기 (사기)
+   - 이미지 src URL/screenshot path 누락 (재검증 불가)
+   - 가공 내용을 원문/번역에 섞기 (분리 원칙 위반)
+   - 원문이 한글인데 "번역" 섹션에 가공된 한글 넣기
+4. Send archive to Telegram via mcp__send-file__send_document
+   with caption ≤900 chars (leave 124 char buffer for Telegram limit).
+5. Update /home/zhugehyuk/2lab.ai/soul/p9/ARTIFACTS/link-summaries/
+   index.md by inserting a new topmost row in the YYYY-MM table.
+6. TTS phase: SKIP (disabled since 2026-03-31).
+
+Critical thinking required:
+- Flag overclaims, marketing hype, engagement farming patterns.
+- If author cites authority/data, verify it.
+- Do NOT inflate cross-references just to fill space.
+- Connect to existing chain ONLY if the connection is real, not invented.
+
+Report back to the parent agent in EXACTLY this format (≤250 words total):
+- Slug: <filename slug>
+- TG msgId: <id>
+- Index updated: yes/no
+- BOM verified: yes/no
+- TL;DR: <1 sentence — 한눈에 정수>
+- Key Findings: <3-5 bullets, each ≤1 line>
+- Context: <1-2 sentences — 누가/언제/왜>
+- Critique: <1-2 sentences or "none">
+- So What (지혁 함의): <1-2 sentences — 실용 액션>
+
+이 보고는 메인 에이전트가 그대로 지혁에게 전달할 수 있도록 익스큐티브
+서머리 형식으로 작성. 메인은 이걸 재가공하지 않고 거의 그대로 relay.
+
+Do not include the full archive content in your reply.
+```
+
+### Agent tool 호출 예시
+
+```
+Agent({
+  description: "Process SNS link via link-summary",
+  subagent_type: "general-purpose",
+  prompt: <위 템플릿 + 실제 URL/timestamp>
+})
+```
+
+### 메인이 지혁에게 보고하는 형식 (익스큐티브 서머리, 2026-05-15 지혁 지시)
+
+서브에이전트 보고를 거의 그대로 relay. **계층적, 위→아래 = 한눈→상세**.
+
+```
+✅ <slug>
+
+🎯 **TL;DR**
+<1줄 정수>
+
+🔑 **핵심 발견**
+• <발견 1>
+• <발견 2>
+• <발견 3>
+
+📚 **컨텍스트**
+<1-2 문장 — 누가/언제/왜>
+
+⚠️ **비판/리스크** (있으면, 없으면 생략)
+<1-2 문장>
+
+💡 **So What (지혁 함의)**
+<1-2 액션/통찰>
+
+📨 TG msgId <id>, index + BOM 검증 통과. bd <id> 종료.
+```
+
+**원칙:**
+- 사람이 스크롤하며 필요한 깊이에서 멈출 수 있게 한다.
+- 헤더(🎯/🔑/📚/⚠️/💡)로 시각 hierarchy 강제.
+- 메인이 cross-reference / lens chain / soma 함의를 **추가로 늘리지 마라**.
+- 지혁이 더 알고 싶으면 아카이브 파일 직접 읽는다.
+
+---
+
+## 🚨 큐잉 규칙: 작업 중 링크 수신 시 (2026-04-11 추가)
+
+**지혁이 링크를 연속으로 보낼 때, 현재 작업과 짬뽕하지 않는다.**
+
+### 원칙 (서브에이전트 위임 시대)
+1. 모든 링크는 **서브에이전트에게 위임**한다 (위 MANDATORY 섹션 참조).
+2. **여러 링크를 동시에 받으면 → 서브에이전트 여러 개 병렬 dispatch 가능** (각자 독립 컨텍스트).
+3. 단, **같은 파일 동시 수정 위험** (예: index.md) → 서브에이전트들에게 "index.md 수정은 sequential lock 가정, 충돌 시 retry" 명시.
+4. 메인 컨텍스트는 dispatch 후 결과만 모아서 보고. 직접 처리 금지.
+
+### 워크플로우
+```
+[링크 A 처리 중]
+  ↓ 지혁이 링크 B 보냄
+  → TodoWrite에 "🔗 링크 B 처리" status=pending으로 추가
+  → 링크 A 계속 처리 (Phase 1~6 완료)
+  ↓ 링크 A 완료
+  → TodoWrite에서 링크 B를 in_progress로 변경
+  → 링크 B 처리 시작
+  ↓ 지혁이 링크 C, D 보냄
+  → 둘 다 TodoWrite 큐 끝에 pending으로 추가
+  → 링크 B 완료 후 C, C 완료 후 D
+```
+
+### TodoWrite 형식
+```
+content: "🔗 [URL 또는 @handle 요약] 처리"
+activeForm: "🔗 [URL 또는 @handle 요약] 처리 중"
+status: "pending" | "in_progress" | "completed"
+```
+
+### 수신 즉시 응답
+링크 받으면 즉시 서브에이전트 dispatch + 지혁에게 짧게 알림:
+> "🚀 서브에이전트에 위임 (URL <slug>). 결과 받으면 보고."
+
+**서브에이전트는 fresh context로 시작하므로 메인 컨텍스트 비대화 없이 원 바이 원 처리된다.**
+
+---
+
+## ⚡ 핵심 원칙: 글 먼저, 음성 나중
+
+**절대 다 끝날 때까지 기다리지 않는다.**
+
+1. 스크래핑 + 번역/분석 완료 → **즉시 텔레그램으로 보냄** (텍스트 메시지 + md 파일)
+2. 음성 생성 (GPU ~60초) → **완료되면 따로 보냄**
+
+지혁이 글을 읽는 동안 음성이 뒤따라온다.
+
+---
+
+## 워크플로우
+
+### Phase 1: 스크래핑 (sns-scraping 스킬 사용)
+
+**X/Twitter:**
+```bash
+export LD_LIBRARY_PATH="$HOME/.local/lib/chromium-deps/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+~/.scrapling-venv/bin/python3 -c "
+from patchright.sync_api import sync_playwright
+# ... tweet fetch with data-testid='tweetText'
+"
+```
+
+**Threads:**
+```bash
+# Same patchright approach, [data-pressable-container='true'] selector
+```
+
+### Phase 2: 링크 탐색 + 팩트 체크 + 리플라이 체인 (2026-04-13 강화)
+
+본문에 포함된 링크(인용 트윗, 외부 URL)를 1단계까지 추적:
+- 인용 트윗 → patchright로 원문 가져오기
+- 외부 링크 → WebFetch로 본문 추출
+- 이미지 → ALT 텍스트 + 스크린샷 저장
+
+**🚨 팩트 체크 (필수 — 지혁 10회+ 지적):**
+- 트윗에서 **권위자/직함이 언급되면** (예: "AMD AI Director", "Google VP") → WebSearch로 신원 확인
+- **데이터/수치가 인용되면** → 1차 소스(GitHub issue, 논문, 공식 발표) 찾아서 검증
+- **"연구에 따르면", "보고서에 따르면"** → 해당 연구/보고서 직접 확인
+- 팩트 체크 결과를 아카이브의 별도 섹션 `## 팩트 체크`에 기록
+- ✅ 확인됨 / ⚠️ 부분적 / ❌ 거짓 / 🔍 미확인 으로 표시
+
+**🚨 리플라이 체인 탐색 (필수 — 지혁 지적: "x 글은 엮인글에 이미지 좇나 다 많은데 그거 엮인글 다 봐야지"):**
+- X 글의 리플라이에 **이미지, 스크린샷, 데이터**가 포함된 경우가 많음
+- patchright로 리플라이 영역 스크롤 + 이미지 다운로드
+- 인증 벽으로 막히면 → WebSearch로 해당 트윗의 주요 리플라이/반응 탐색
+- 특히 **원저자의 셀프 리플(스레드)** 와 **"link in the comments"** 패턴 확인
+- 발견된 추가 콘텐츠는 아카이브에 포함
+
+### Phase 3: 원문/번역/가공 3분리 → 파일 전송 (지혁 2026-04-30 강화)
+
+**🚨🚨🚨 절대 규칙: 원문 / 번역 / 가공 3개 섹션은 반드시 분리 저장. 하나라도 압축/누락 시 작업 실패로 간주.**
+
+#### 1️⃣ 원문 (Original — 무손실 verbatim)
+
+- **절대 요약·압축·재배열·생략 금지.** 스크래핑된 원본 텍스트를 **글자 그대로(verbatim)** 저장.
+- 한국어 원문이면 그대로. 영어/일어/중국어 원문이면 그 언어 그대로 (번역 X).
+- 트윗 스레드는 1번 글 → 2번 글 → ... 순서대로 모든 self-reply 포함.
+- 댓글/리플라이 체인도 (스크래핑된 한도 내에서) 원문 그대로 보존.
+- **이미지/스크린샷 처리:**
+  - 모든 이미지의 `src` URL을 표기 (`![ALT](https://pbs.twimg.com/...)` 형태로)
+  - patchright screenshot으로 캡처한 파일 경로 명시 (`/tmp/scrape_xxx.png`)
+  - ALT 텍스트가 있으면 그대로 인용
+  - 이미지 텍스트 설명(OCR/Vision)은 **원문 섹션이 아니라 가공 섹션**에 분리해서 넣는다 (원문에 추측 텍스트 섞으면 안 됨)
+- 표/코드 블록도 원본 형식 그대로 보존.
+
+#### 2️⃣ 번역 (Translation — 한국어 직역, 원문이 한글이면 SKIP)
+
+- 원문이 **한국어가 아닌 경우에만** 작성. 한국어 원문이면 이 섹션 빈 채로 두거나 헤더 자체 생략.
+- **요약 없이 전문 직역.** 원문 1문장 = 번역 1문장 매칭 원칙.
+- 의역 최소화. 원문 의미 정확히 전달이 우선.
+- 이미지 ALT 텍스트도 번역.
+- 주의: 번역에 분석/해설/함의 섞지 말 것 (가공 섹션이 따로 있음).
+
+#### 3️⃣ 가공 (Analysis — 익스큐티브 서머리 형식, 2026-05-15 지혁 지시)
+
+**🚨 계층 강제**: 가공 섹션은 익스큐티브 서머리. 사람이 위에서부터 읽으면서
+필요한 깊이에서 멈출 수 있어야 한다. 평면적 나열 금지.
+
+**필수 순서 (위→아래 = 한눈→상세):**
+
+##### 3.1 TL;DR
+한 줄. 이 글의 정수. 30자 이내 권장.
+
+##### 3.2 핵심 발견 (Key Findings)
+불릿 3-5개. 각 1줄. 가장 중요한 사실/주장만 추출.
+
+##### 3.3 컨텍스트
+1-2문장. 누가/언제/왜 발화했는지. 왜 지금 중요한가.
+
+##### 3.4 상세 분석
+이미지 OCR/Vision 텍스트 설명 + 함의/관점/맥락. 깊게.
+이미지 블록 예시:
+```
+> **[IMAGE: Figure 1 — SWE-bench 점수 추이]**
+> X축: Release Date, Y축: Score (%)
+> Sonnet 3.5: 49.0% → Opus 4: 72.5% → Opus 4.5: 80.9%
+> 우상향 곡선, 18개월 만에 65% 상대적 향상.
+```
+
+##### 3.5 팩트 체크
+- ✅ 확인됨 / ⚠️ 부분적 / ❌ 거짓 / 🔍 미확인
+- 인용된 권위/데이터/연구 각 항목별
+
+##### 3.6 비판/리스크
+overclaim / marketing hype / engagement farming flag.
+신뢰도 평가(선택). 5/14 코호트 분류 적용 가능.
+
+##### 3.7 함의 (So What)
+- 지혁/soma 실용 함의 (액션 아이템)
+- Context Rot Week chain (real connection만, max 1 lens, 강제 연결 X)
+- 없으면 "직접 적용 인사이트 없음" 명시
+
+#### 아카이브 파일 구조 (필수 템플릿)
+
+```markdown
+---
+Source: [URL]
+Author: @handle (실명/직함, 검증 결과)
+Date: YYYY-MM-DD HH:MM TZ
+Stats: 조회/❤️/리포/답글/뷰
+Tags: #tag1 #tag2
+Verification: 팩트체크 결과 한 줄 요약
+---
+
+# [제목]
+
+## 1. 원문 (Original — verbatim, 무손실)
+
+[원본 텍스트 글자 그대로. 이미지는 src URL + 스크린샷 path 명시.]
+
+### 이미지/스크린샷 인덱스
+- `<screenshot path>` — full page screenshot
+- `![ALT1](src URL)` — 인라인 이미지 1
+- ...
+
+## 2. 번역 (Translation — 한국어 직역, 원문 한글이면 생략)
+
+[전문 직역. 원문 한글이면 이 섹션 통째로 생략.]
+
+## 3. 가공 (Analysis — 익스큐티브 서머리)
+
+### 3.1 TL;DR
+[한 줄. 이 글의 정수.]
+
+### 3.2 핵심 발견 (Key Findings)
+- 발견 1
+- 발견 2
+- 발견 3
+(3-5개, 각 1줄)
+
+### 3.3 컨텍스트
+[1-2문장. 누가/언제/왜 발화. 왜 지금 중요한가.]
+
+### 3.4 상세 분석
+[이미지 OCR/Vision + 함의/관점/맥락. 깊게.]
+
+### 3.5 팩트 체크
+- ✅/⚠️/❌/🔍 항목별
+
+### 3.6 비판/리스크
+[overclaim / marketing / engagement farming flag + 신뢰도 평가]
+
+### 3.7 함의 (So What)
+[지혁/soma 실용 함의 + Context Rot Week chain (real connection만)]
+```
+
+**⚠️ 절대 하지 말 것:**
+- 원문 섹션을 "압축, 핵심만"이라고 표기하고 요약 넣기 — **이건 사기다**
+- 이미지 src URL/screenshot path 누락하기 — 나중에 재검증 불가
+- 가공 섹션 내용을 원문/번역에 섞기 — 분리 원칙 위반
+- 원문이 한글인데 "번역" 섹션에 가공된 한글 넣기 — 그건 가공이지 번역 아님
+
+#### 🚨 인코딩 강제 (2026-05-14 지혁 지적, 일주일치 한글 깨짐 사고 후)
+
+**아카이브 .md 파일 저장 시 반드시 UTF-8 BOM + NFC 정규화 적용. 위반 시 한글 깨짐.**
+
+- **이유**: BOM(`EF BB BF`) 없으면 Windows Notepad / 텔레그램 모바일 미리보기 / 일부 텍스트 뷰어가 charset 자동 감지 실패 → CP949/CP1252로 오인식 → 한글 전부 깨짐. NFC 미정규화면 macOS/iOS에서 자모 분리(한굴) 발생.
+
+- **필수 저장 패턴** (Python):
+  ```python
+  import unicodedata
+  text_nfc = unicodedata.normalize("NFC", text)
+  out = b"\xef\xbb\xbf" + text_nfc.encode("utf-8")
+  with open(archive_path, "wb") as f:
+      f.write(out)
+  ```
+
+- **Write tool 사용 시**: 파일 저장 후 즉시 bash 스크립트로 재포장 (Write tool은 BOM 옵션 없음):
+  ```bash
+  python3 -c "
+  import unicodedata, sys
+  p = sys.argv[1]
+  with open(p, 'rb') as f: raw = f.read()
+  if raw.startswith(b'\xef\xbb\xbf'): sys.exit(0)
+  text = unicodedata.normalize('NFC', raw.decode('utf-8'))
+  with open(p, 'wb') as f: f.write(b'\xef\xbb\xbf' + text.encode('utf-8'))
+  " /path/to/archive.md
+  ```
+
+- **검증**: `head -c 3 archive.md | xxd` → `efbb bf` 보여야 통과.
+
+- **부작용 없음**: 대부분 마크다운 렌더러(Obsidian, GitHub, VSCode) BOM 무시. 깨짐 픽스 비용 0 + 호환성 ↑.
+
+### Phase 4: 익스큐티브 서머리 → 텔레그램 텍스트 (2026-05-15 지혁 지시)
+
+Phase 3 파일 전송 **후에** 익스큐티브 서머리를 텔레그램 텍스트로 전송.
+**계층적, 위→아래 = 한눈→상세.** 사람이 스크롤하며 필요한 깊이에서 멈출 수 있게.
+
+**텔레그램 텍스트 메시지 포맷 (필수 hierarchy):**
+```
+📌 [제목]
+✍️ @author · source · YYYY-MM-DD
+
+🎯 **TL;DR**
+[한 줄 — 이 글의 정수]
+
+🔑 **핵심 발견**
+• [발견 1]
+• [발견 2]
+• [발견 3]
+
+📚 **컨텍스트**
+[1-2 문장 — 누가/언제/왜 발화. 왜 지금 중요한가.]
+
+🔍 **팩트 체크** (검증된 권위/숫자/연구가 있으면)
+• ✅ [확인됨]
+• ⚠️ [부분적]
+• ❌ [거짓]
+
+⚠️ **비판/리스크** (overclaim / engagement farming flag가 있으면)
+[1-2 문장. 없으면 이 블록 생략]
+
+💡 **So What (지혁 함의)**
+[1-2 액션/통찰 — 지혁이 뭘 해야 하는가, 또는 어떤 통찰을 가져가는가]
+
+🏷️ #tag1 #tag2 #tag3
+```
+
+**원칙:**
+- 헤더(🎯/🔑/📚/🔍/⚠️/💡)로 시각 hierarchy 강제.
+- 빈 블록은 헤더째로 생략 (예: 비판 없으면 ⚠️ 줄 안 씀).
+- 평면적 나열 / 한 덩어리 문단 금지.
+- 텔레그램 마크다운 굵게(`**...**`)는 지원, italic(`*..*`)도 지원.
+
+### Phase 5: 음성 브리핑 (fish-tts, iu voice) → 따로 전송
+
+> **⚠️ TTS 임시 비활성화 (2026-03-31): Phase 4 건너뛰기. 텍스트 + md만 전송.**
+
+Phase 3에서 보낸 후 바로 시작. 완료되면 mp3 전송.
+
+요약 스크립트(200~400자) 작성 → fish-tts iu 보이스로 생성 → 텔레그램 전송
+
+```bash
+cd ~/fish-speech && .venv/bin/python \
+  ~/2lab.ai/skills/fish-audio/scripts/gpu-inference.py \
+  --text '<|speaker:0|>요약 텍스트' \
+  --prompt-text "$(cat ~/2lab.ai/skills/fish-tts/voices/iu/reference.txt)" \
+  --prompt-audio ~/2lab.ai/skills/fish-tts/voices/iu/reference.mp3 \
+  --output /tmp/link-summary-SLUG.wav \
+  --checkpoint-path checkpoints/s2-pro \
+  --device cuda --temperature 0.7 --top-p 0.9 --seed 42 --max-new-tokens 2048
+
+# wav → mp3 변환
+ffmpeg -i /tmp/link-summary-SLUG.wav -b:a 192k /tmp/link-summary-SLUG.mp3 -y
+
+# 텔레그램 전송
+mcp__send-file__send_document /tmp/link-summary-SLUG.mp3
+```
+
+긴 요약 (200자+) → 청크 분할 + 무음 패딩 + 병합:
+```bash
+ffmpeg -f lavfi -i anullsrc=r=44100:cl=mono -t 1.5 /tmp/silence.wav -y
+# concat list 생성 후
+ffmpeg -f concat -safe 0 -i /tmp/concat.txt -c copy /tmp/merged.wav -y
+ffmpeg -i /tmp/merged.wav -b:a 192k /tmp/link-summary.mp3 -y
+```
+
+### Phase 6: 인덱스 업데이트
+
+`~/2lab.ai/soul/p9/ARTIFACTS/link-summaries/index.md`에 새 항목 추가.
+나중에 관련 주제 나오면 이 인덱스에서 검색해서 연결.
+
+---
+
+## 전송 순서 (필수)
+
+```
+[스크래핑 + 전문 번역 완료]
+  ↓ 즉시
+  1. 📄 아카이브 md 파일 (send_document) — 원문 + 전문 번역 + 분석
+  ↓ 바로
+  2. 📝 텔레그램 텍스트 메시지 (요약 + 함의 + 관점)
+  ↓ GPU 작업 (~60초)
+  3. 🎙️ 음성 mp3 (send_document)
+```
+
+⚠️ **파일 먼저, 요약 나중. 원문과 번역은 반드시 파일로.**
+⚠️ **TTS 비활성화 상태에서는 2가지(md 파일 + 요약 텍스트) 전송.**
+⚠️ **글은 음성 기다리지 않고 즉시 보낸다.**
+
+---
+
+## 텔레그램 메시지 포매팅 가이드 (익스큐티브 서머리 hierarchy)
+
+**Phase 4와 동일 포맷. 위→아래 = 한눈→상세. 빈 블록은 헤더째 생략.**
+
+```
+📌 [제목]
+✍️ @author · source · YYYY-MM-DD
+
+🎯 **TL;DR**
+[한 줄 — 이 글의 정수]
+
+🔑 **핵심 발견**
+• [발견 1]
+• [발견 2]
+• [발견 3]
+
+📚 **컨텍스트**
+[1-2 문장 — 누가/언제/왜]
+
+🔍 **팩트 체크** (검증된 권위/숫자가 있을 때만)
+• ✅ [확인됨]
+• ⚠️ [부분적]
+• ❌ [거짓]
+
+⚠️ **비판/리스크** (overclaim/engagement farming flag 있을 때만)
+[1-2 문장]
+
+💡 **So What (지혁 함의)**
+[1-2 액션/통찰]
+
+🏷️ #tag1 #tag2 #tag3
+```
+
+**원칙:**
+- 헤더 emoji(🎯/🔑/📚/🔍/⚠️/💡)로 시각 hierarchy 강제.
+- 사람이 TL;DR만 읽고 중단해도 의미가 통해야.
+- 비판/팩트 체크 없으면 그 블록 통째 생략 (노이즈 X).
+- 코드/기술 용어는 `백틱` 처리. 텔레그램 markdown `**bold**` / `*italic*` 지원.
+
+---
+
+## 제약사항
+
+- fish-tts: 청크당 ~200자, 총 500자 이하 권장
+- GPU 메모리 17GB — 동시 작업 불가
+- 음성 생성 시간: ~200자 기준 ~65초
+- 첫 실행 모델 로딩 ~45초
+- 끝부분 무음 1.5초 필수
+
+---
+
+## 향후 확장
+
+- [ ] 일반 웹 링크 지원 (뉴스, 블로그)
+- [ ] YouTube 링크 → 자막 추출 + 요약
+- [ ] 자동 태깅 (LLM 기반)
+- [ ] 주간 다이제스트 생성

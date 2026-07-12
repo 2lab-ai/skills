@@ -1,0 +1,131 @@
+name: clumsy
+display_name: "Clumsy MS Paint"
+description: "Deliberately bad, scribbly MS-Paint-with-a-mouse aesthetic for B-roll. Vibe: 'pathetic redraw' meme. 9:16 vertical short."
+
+format:
+  width: 1080
+  height: 1920
+  aspect: "9:16"
+  fps: 30
+
+script:
+  tone: "self-deprecating, deadpan-funny, casual"
+  pacing: "fast, punchy"
+  perspective: "first person, ironic narrator"
+  word_count: "100 to 140"
+  sentence_style: "short, choppy sentences. Lean into awkward pauses."
+  hooks:
+    - id: roast
+      template: "I tried to draw {topic}. It went poorly."
+      when: "subject is recognizable"
+    - id: confession
+      template: "This is the worst {topic} drawing you'll see today."
+      when: "self-roast hook"
+    - id: challenge
+      template: "MS Paint, mouse only, 60 seconds. {topic}. Go."
+      when: "speedrun framing"
+  cta_variants:
+    - "Roast me in the comments."
+    - "Try doing worse. I dare you."
+    - "Follow for more crimes against art."
+  forbidden_phrases:
+    - "like and subscribe"
+    - "smash that bell"
+    - "without further ado"
+  structure:
+    opening: "Subject reveal in first 2 seconds."
+    middle: "Show base sketch → reveal clumsy redraw → react."
+    closing: "Self-deprecating punchline + CTA."
+
+visuals:
+  style: "clumsy, scribbly, MS Paint with a mouse, pathetic redraw meme"
+  mood: "low-effort, ironic, internet-native"
+  background_color: "#FFFFFF"
+  color_palette: ["#FFFFFF", "#000000", "#FF0000", "#00FF00", "#0000FF"]
+  pipeline: "two_stage_redraw"
+  base_prompt_template: |
+    A simple recognizable pencil sketch of {subject} on plain white paper,
+    childlike doodle style, soft graphite lines, plain white background,
+    casual notebook sketch, nothing fancy.
+  redraw_prompt: |
+    Redraw the attached image in the most clumsy, scribbly, and utterly
+    pathetic way possible. Use a white background, and make it look like
+    it was drawn in MS Paint with a mouse. It should be vaguely similar
+    but also not really, kind of matching but also off in a confusing,
+    awkward way, with that low-quality pixel-by-pixel feel that really
+    emphasizes how ridiculously bad it is. Actually, you know what,
+    whatever, just draw it however you want.
+  subjects:
+    prefer:
+      - "recognizable everyday objects (cat, dog, banana, car, house)"
+      - "famous landmarks (Eiffel tower, pyramids, Statue of Liberty)"
+      - "iconic characters drawn at concept level only"
+    avoid:
+      - "copyrighted character likenesses"
+      - "real human faces"
+      - "complex multi-element scenes"
+  prompt_suffix: ""
+
+voice:
+  pace: "casual, approximately 150 words per minute"
+  energy: "deadpan, slightly defeated"
+  suggested_voices:
+    edge_tts:
+      en: "en-US-GuyNeural"
+      ko: "ko-KR-InJoonNeural"
+    fish_tts:
+      voice: "cwon"
+
+captions:
+  mode: "centered"
+  highlight_color: "#FF0000"
+  text_color: "#000000"
+  font_size: 72
+  font_weight: "black"
+  words_per_group: 3
+  line_max_words: 4
+  position: "lower_third"
+  background: "white_box"
+
+music:
+  mood: "playful, kazoo-ish, lo-fi, slightly silly"
+  energy: "medium-low"
+  tags: ["comedy", "lo-fi", "ukulele", "kazoo"]
+  duck_volume_speech: 0.10
+  duck_volume_gap: 0.25
+
+thumbnail:
+  style: "white background, big black scribble, hand-drawn arrow + text"
+  text_color: "#000000"
+  accent_color: "#FF0000"
+  max_words: 4
+
+assembly:
+  shot_pattern:
+    - kind: title_card
+      duration: 1.5
+      content: "{topic}"
+      style: "marker_handwriting"
+    - kind: base_sketch
+      duration: 2.5
+      effect: "fade_in"
+      label: "Step 1: try to draw it"
+    - kind: transition
+      duration: 0.5
+      effect: "scribble_wipe"
+    - kind: clumsy_redraw
+      duration: 4.0
+      effect: "zoom_in"
+      label: "Step 2: redraw it... badly"
+    - kind: side_by_side
+      duration: 3.0
+      effect: "split_screen"
+      label: "the verdict"
+    - kind: punchline
+      duration: 1.5
+      content: "{cta}"
+      style: "marker_handwriting"
+
+discovery:
+  reddit:
+    subreddits: ["delusionalartists", "mildlyinteresting", "shittydrawings"]

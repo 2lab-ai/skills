@@ -1,0 +1,15 @@
+[Unit]
+Description=Cohere STT API Server (local transcription)
+After=network.target
+
+[Service]
+Type=simple
+User=zhugehyuk
+WorkingDirectory=/home/zhugehyuk/2lab.ai/skills/cohere-stt
+ExecStart=/home/zhugehyuk/.cohere-stt-venv/bin/python /home/zhugehyuk/2lab.ai/skills/cohere-stt/scripts/transcribe_api.py --port 8787 --preload
+Restart=on-failure
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

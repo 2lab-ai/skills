@@ -63,8 +63,7 @@ const ComparisonItem: React.FC<{
       <span
         style={{
           color: theme.textPrimary,
-          fontFamily: theme.fontFamily,
-          fontSize: 20,
+          fontSize: 22,
           fontWeight: 500,
           lineHeight: 1.4,
         }}
@@ -125,11 +124,12 @@ export const Comparison: React.FC<ComparisonProps> = ({
   const isBeforeAfter = variant === "before-after";
 
   return (
-    <Background background={theme.background}>
+    <Background background={theme.background} themeName={themeName}>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
           padding: "70px 80px",
           height: "100%",
         }}
@@ -138,10 +138,9 @@ export const Comparison: React.FC<ComparisonProps> = ({
         <h2
           style={{
             color: theme.textPrimary,
-            fontSize: 42,
-            fontFamily: theme.headingFont,
+            fontSize: 48,
             fontWeight: 700,
-            marginBottom: 36,
+            marginBottom: 40,
             opacity: titleFade,
             letterSpacing: "-0.02em",
             textAlign: "center",
@@ -154,9 +153,8 @@ export const Comparison: React.FC<ComparisonProps> = ({
         <div
           style={{
             display: "flex",
-            flex: 1,
             gap: 0,
-            alignItems: "stretch",
+            alignItems: "center",
           }}
         >
           {/* LEFT SIDE */}
@@ -186,8 +184,7 @@ export const Comparison: React.FC<ComparisonProps> = ({
               <h3
                 style={{
                   color: leftColor,
-                  fontFamily: theme.headingFont,
-                  fontSize: 28,
+                  fontSize: 32,
                   fontWeight: 700,
                   margin: 0,
                 }}
@@ -286,8 +283,7 @@ export const Comparison: React.FC<ComparisonProps> = ({
                   <span
                     style={{
                       color: "#fff",
-                      fontFamily: theme.headingFont,
-                      fontSize: isVersus ? 22 : 16,
+                      fontSize: isVersus ? 24 : 18,
                       fontWeight: 900,
                       letterSpacing: "0.05em",
                     }}
@@ -326,8 +322,7 @@ export const Comparison: React.FC<ComparisonProps> = ({
               <h3
                 style={{
                   color: rightColor,
-                  fontFamily: theme.headingFont,
-                  fontSize: 28,
+                  fontSize: 32,
                   fontWeight: 700,
                   margin: 0,
                 }}

@@ -3,7 +3,7 @@ import { useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { Background } from "../components/Background";
 import { useFadeIn } from "../utils/animations";
 import type { FlowData } from "../types";
-import { palette, hexToRgba, getTheme } from "../utils/colors";
+import { palette, hexToRgba } from "../utils/colors";
 
 interface FlowProps {
   data: FlowData;
@@ -14,14 +14,13 @@ interface FlowProps {
 export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const theme = getTheme(themeName);
-  const accent = accentColor || theme.accent;
+  const accent = accentColor || palette.accent;
   const titleOpacity = useFadeIn(0, 12);
   const isHorizontal = (data.direction ?? "horizontal") === "horizontal";
   const steps = data.steps;
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",
@@ -32,9 +31,8 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
       >
         <h2
           style={{
-            color: theme.textPrimary,
-            fontSize: 44,
-            fontFamily: theme.headingFont,
+            color: palette.white,
+            fontSize: 52,
             fontWeight: 700,
             marginBottom: 60,
             opacity: titleOpacity,
@@ -48,7 +46,7 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
           style={{
             display: "flex",
             flexDirection: isHorizontal ? "row" : "column",
-            alignItems: isHorizontal ? "flex-start" : "stretch",
+            alignItems: isHorizontal ? "stretch" : "stretch",
             justifyContent: "center",
             gap: isHorizontal ? 16 : 24,
             flex: 1,
@@ -75,6 +73,7 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    justifyContent: "flex-start",
                     gap: 16,
                     flex: 1,
                     opacity,
@@ -84,9 +83,9 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
                   {/* Step number circle */}
                   <div
                     style={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 28,
+                      width: 64,
+                      height: 64,
+                      borderRadius: 32,
                       background: `linear-gradient(135deg, ${accent}, ${hexToRgba(accent, 0.6)})`,
                       display: "flex",
                       alignItems: "center",
@@ -96,9 +95,8 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
                   >
                     <span
                       style={{
-                        color: theme.textPrimary,
-                        fontSize: 24,
-                        fontFamily: theme.headingFont,
+                        color: palette.white,
+                        fontSize: 28,
                         fontWeight: 800,
                       }}
                     >
@@ -109,9 +107,8 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
                   {/* Step label */}
                   <h3
                     style={{
-                      color: theme.textPrimary,
-                      fontSize: 22,
-                      fontFamily: theme.headingFont,
+                      color: palette.white,
+                      fontSize: 26,
                       fontWeight: 700,
                       textAlign: "center",
                       margin: 0,
@@ -124,13 +121,12 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
                   {step.description && (
                     <p
                       style={{
-                        color: theme.textSecondary,
-                        fontSize: 17,
-                        fontFamily: theme.fontFamily,
+                        color: palette.gray300,
+                        fontSize: 20,
                         textAlign: "center",
                         margin: 0,
                         lineHeight: 1.5,
-                        maxWidth: 200,
+                        maxWidth: 220,
                       }}
                     >
                       {step.description}
@@ -146,7 +142,8 @@ export const Flow: React.FC<FlowProps> = ({ data, accentColor, themeName }) => {
                       alignItems: "center",
                       justifyContent: "center",
                       opacity: arrowOpacity,
-                      alignSelf: "center",
+                      alignSelf: "flex-start",
+                      marginTop: isHorizontal ? 16 : 0,
                       padding: isHorizontal ? "0" : "0 0",
                     }}
                   >

@@ -63,7 +63,7 @@ export const fontFamilies = {
 // THEME SYSTEM — each theme has heading/body/mono font combos
 // ============================================================
 
-export type ThemeName = "default" | "notion" | "minimal" | "cinematic" | "playful" | "neon" | "warm" | "nature";
+export type ThemeName = "default" | "notion" | "minimal" | "cinematic" | "playful" | "neon" | "warm" | "nature" | "neural" | "manuscript" | "evangelion" | "bigbrain";
 
 export interface Theme {
   name: ThemeName;
@@ -83,6 +83,8 @@ export interface Theme {
   borderRadius: number;
   overlayGrid: boolean;
   orbEffect: boolean;
+  /** CRT/scanline overlay effect (evangelion style) */
+  crtEffect?: boolean;
 }
 
 export const themes: Record<ThemeName, Theme> = {
@@ -214,6 +216,111 @@ export const themes: Record<ThemeName, Theme> = {
     overlayGrid: false,
     orbEffect: true,
   },
+  neural: {
+    name: "neural",
+    background: "#000000",
+    cardBg: hexToRgba("#ffffff", 0.03),
+    cardBorder: "#e8843a",
+    textPrimary: "#e8cdb5",
+    textSecondary: "#8a8a8a",
+    accent: "#e8843a",
+    accentAlt: "#ff6b2b",
+    fontFamily: fontFamilies.mono,
+    headingFont: fontFamilies.mono,
+    monoFont: fontFamilies.mono,
+    borderRadius: 12,
+    overlayGrid: false,
+    orbEffect: false,
+  },
+  evangelion: {
+    name: "evangelion",
+    background: "#000000",
+    cardBg: "rgba(255,106,0,0.06)",
+    cardBorder: "rgba(255,106,0,0.4)",
+    textPrimary: "#ff6a00",
+    textSecondary: "#00ff8c",
+    accent: "#ff6a00",
+    accentAlt: "#00e5ff",
+    fontFamily: fontFamilies.mono,
+    headingFont: fontFamilies.spaceGrotesk,
+    monoFont: fontFamilies.mono,
+    borderRadius: 0,
+    overlayGrid: true,
+    orbEffect: false,
+    crtEffect: true,
+  },
+  manuscript: {
+    name: "manuscript",
+    background: "#faf8f4",
+    cardBg: "#f0ece4",
+    cardBorder: "#c8b890",
+    textPrimary: "#1c1917",
+    textSecondary: "#57534e",
+    accent: "#7c2d12",
+    accentAlt: "#1e3a5f",
+    fontFamily: fontFamilies.serifKR,
+    headingFont: fontFamilies.playfair,
+    monoFont: fontFamilies.mono,
+    borderRadius: 2,
+    overlayGrid: false,
+    orbEffect: false,
+  },
+  bigbrain: {
+    name: "bigbrain",
+    background: "#000000",
+    cardBg: hexToRgba("#ffffff", 0.03),
+    cardBorder: hexToRgba("#ffffff", 0.06),
+    textPrimary: "#e0e0e0",
+    textSecondary: "#808080",
+    accent: "#00ff41",
+    accentAlt: "#ff4444",
+    fontFamily: fontFamilies.mono,
+    headingFont: fontFamilies.mono,
+    monoFont: fontFamilies.mono,
+    borderRadius: 0,
+    overlayGrid: false,
+    orbEffect: false,
+  },
+};
+
+export const neuralPalette = {
+  bg: "#000000",
+  bgCard: "#1a1a1e",
+  orange: "#e8843a",
+  orangeLight: "#f0a060",
+  orangeDim: "#a85a20",
+  textWarm: "#e8cdb5",
+  textDim: "#666666",
+  green: "#00ff41",
+  rainbow: ["#ff0000", "#ff8c00", "#ffff00", "#00ff00", "#0080ff", "#8000ff", "#ff00ff"],
+};
+
+/** @realbigbrainai style palette — semantic color system for AI-themed content */
+export const bigbrainPalette = {
+  bg: "#000000",
+  bgNavy: "#0d1117",
+  bgReddishBrown: "#1a0c0c",
+  green: "#00ff41",
+  red: "#ff4444",
+  blue: "#5b8dd9",
+  orange: "#e8a050",
+  gray: "#808080",
+  grayLight: "#c0c0c0",
+  white: "#e0e0e0",
+  /** Semantic: code/data/terminal/boot */
+  codeColor: "#00ff41",
+  /** Semantic: emphasis/warning/error/death */
+  emphasisColor: "#ff4444",
+  /** Semantic: user input */
+  userColor: "#5b8dd9",
+  /** Semantic: AI/assistant output */
+  assistantColor: "#e8a050",
+  /** Semantic: narration/existential */
+  narrationColor: "#808080",
+  /** Semantic: system prompt lines */
+  systemColor: "#c89050",
+  /** Training data text colors (chaotic mix) */
+  trainingColors: ["#00ff41", "#ffff00", "#ff4444", "#5b8dd9", "#e8a050", "#c0c0c0", "#ff8c00", "#ff00ff"],
 };
 
 export function getTheme(name?: string): Theme {

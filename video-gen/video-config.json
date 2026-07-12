@@ -1,168 +1,584 @@
 {
-  "title": "개발자의 하루 — 코드, 커피, 그리고 삽질",
+  "title": "일론 머스크 — 36개월 안에 AI는 우주로 간다",
   "fps": 30,
   "width": 1920,
   "height": 1080,
-  "theme": "playful",
+  "theme": "neural",
   "subtitleVariant": "stroke",
-  "defaultStyle": {
-    "background": "#0f0f23",
-    "accentColor": "#7C3AED",
-    "textColor": "#F5F0EB",
-    "fontFamily": "Outfit"
-  },
   "scenes": [
     {
-      "id": "s1-hero",
+      "id": "s01-opening",
+      "type": "matrixRain",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "때는 2026년 3월. 인류 역사상 가장 미친 인터뷰가 시작됩니다. 일론 머스크가 드워키시 파텔 팟캐스트에 출연해서 충격적인 선언을 합니다.",
+      "data": {
+        "color": "#ff6600",
+        "columns": 40,
+        "speed": 1.2,
+        "overlayText": "ELON MUSK × DWARKESH PATEL"
+      }
+    },
+    {
+      "id": "s02-title",
       "type": "hero",
-      "narration": "개발자의 하루. 코드, 커피, 그리고 끝없는 삽질의 기록.",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "36개월 안에, AI를 배치하기 가장 싼 곳은 우주가 될 것이다. 이것이 오늘의 주제입니다.",
       "data": {
-        "title": "개발자의 하루",
-        "subtitle": "코드, 커피, 그리고 삽질",
-        "badge": "⌨️ DEV LIFE",
-        "layout": "center"
-      },
-      "entrance": "fadeIn",
-      "exit": "blurOut"
+        "title": "36개월 안에 AI는 우주로 간다",
+        "subtitle": "Elon Musk — Dwarkesh Patel Interview 2026",
+        "emoji": "🚀",
+        "badge": "BREAKING"
+      }
     },
     {
-      "id": "s2-gif-coding",
-      "type": "image",
-      "narration": "아침 9시. 커피 한 잔과 함께 터미널을 켭니다. 오늘은 뭔가 될 것 같은 느낌이 듭니다.",
+      "id": "s03-elon-react",
+      "type": "quote",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[confused] 잠깐 잠깐, [pause] 이 나레이션 누구야? 나 인터뷰하는데 왜 딴 사람 목소리가 들려? [laughing]",
       "data": {
-        "src": "media/coding.mp4",
-        "title": "09:00 — 출근, 커피, 코드",
-        "caption": "오늘은 뭔가 될 것 같은 느낌이 든다",
-        "layout": "split-left"
-      },
-      "entrance": "slideUp",
-      "exit": "fadeOut"
+        "quote": "잠깐... 이 나레이션 누구야?",
+        "author": "Elon Musk",
+        "source": "4th Wall Break",
+        "variant": "large"
+      }
     },
     {
-      "id": "s3-stat",
+      "id": "s04-narrator-reply",
+      "type": "bigtext",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "네, 저는 이 영상의 나레이터입니다. 신경 쓰지 마시고 계속하세요, 머스크 씨.",
+      "data": {
+        "text": "나레이터입니다 😊",
+        "subtitle": "신경 쓰지 마세요",
+        "variant": "gradient"
+      }
+    },
+    {
+      "id": "s05-elon-ok",
+      "type": "emoji",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[skeptical] 아니 근데 진짜 이상한데... [pause] 뭐 됐고, 계속하자. 할 얘기가 산더미야.",
+      "data": {
+        "emoji": "🤔",
+        "title": "뭐 됐고...",
+        "animate": "float"
+      }
+    },
+    {
+      "id": "s06-context",
       "type": "stat",
-      "narration": "한국 개발자의 평균적인 하루를 숫자로 보면 이렇습니다. 커피 4잔, 스택오버플로우 23번, 그리고 진짜 코딩은 2시간.",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "먼저 배경을 이해해야 합니다. 현재 전 세계 데이터센터 전력 소비는 약 20에서 25기가와트. 미국 전체 평균 전력이 500기가와트인데, AI가 이 수준을 넘으려 하고 있습니다.",
       "data": {
-        "title": "개발자의 하루 — 숫자로 보면",
+        "title": "글로벌 AI 전력 현황",
         "stats": [
-          { "label": "커피 소비량", "value": "4.2", "unit": "잔", "emoji": "☕" },
-          { "label": "StackOverflow", "value": "23", "unit": "번", "emoji": "🔍" },
-          { "label": "실제 코딩", "value": "2.1", "unit": "시간", "emoji": "⌨️" },
-          { "label": "회의 시간", "value": "3.5", "unit": "시간", "emoji": "😵" }
-        ],
-        "variant": "default"
-      },
-      "entrance": "slideUp",
-      "exit": "fadeOut"
+          {"label": "데이터센터 전력", "value": "20-25", "unit": "GW", "emoji": "⚡"},
+          {"label": "미국 평균 전력", "value": "500", "unit": "GW", "emoji": "🇺🇸"},
+          {"label": "칩 생산 증가율", "value": "기하급수적", "emoji": "📈"}
+        ]
+      }
     },
     {
-      "id": "s4-flow",
-      "type": "flow",
-      "narration": "버그 수정의 5단계. 부정, 분노, 타협, 우울, 그리고 결국 세미콜론 하나 찾기.",
+      "id": "s07-problem",
+      "type": "bigtext",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "문제는 간단합니다. 칩은 기하급수적으로 늘어나는데, 전기는 안 늘어나요. 중국을 제외하면 전 세계 전력 생산량이 거의 플랫입니다.",
       "data": {
-        "title": "버그 수정의 5단계",
-        "steps": [
-          { "label": "부정", "description": "내 코드엔 버그가 없어", "emoji": "🙅" },
-          { "label": "분노", "description": "왜 안 돼!!!", "emoji": "😤" },
-          { "label": "타협", "description": "Stack Overflow 신이시여", "emoji": "🙏" },
-          { "label": "수용", "description": "세미콜론이었네...", "emoji": "😌" }
-        ],
-        "direction": "horizontal"
-      },
-      "entrance": "slideUp",
-      "exit": "fadeOut"
+        "text": "칩은 ↑↑↑ 전기는 →→→",
+        "subtitle": "이게 핵심 문제",
+        "variant": "glitch",
+        "emoji": "⚡"
+      }
     },
     {
-      "id": "s5-gif-ai",
-      "type": "image",
-      "narration": "2025년, AI가 코드를 대신 써준다고 합니다. 하지만 결국 AI가 쓴 코드를 디버깅하는 것도 우리 몫입니다.",
+      "id": "s08-elon-electricity",
+      "type": "quote",
+      "entrance": "fadeSlideLeft",
+      "voice": "elon",
+      "narration": "[speaking passionately] 중국 빼고 전 세계 전력 생산량이 거의 플랫이거든? 근데 칩 생산은 지수함수로 늘어나. 그럼 칩 어떻게 켜? [sarcastic] 마법의 전기 요정이 갖다줘?",
       "data": {
-        "src": "media/ai-brain.mp4",
-        "title": "AI가 코드를 써준다지만...",
-        "caption": "결국 AI 코드 디버깅도 내 몫",
-        "layout": "split-right"
-      },
-      "entrance": "slideUp",
-      "exit": "fadeOut"
+        "quote": "칩 어떻게 켜? 마법의 전기 요정이 갖다줘?",
+        "author": "Elon Musk",
+        "emoji": "🧚",
+        "variant": "typewriter"
+      }
     },
     {
-      "id": "s6-comparison",
+      "id": "s09-narrator-transition",
+      "type": "emoji",
+      "entrance": "bounceIn",
+      "voice": "iu",
+      "narration": "네 맞습니다. 캡이 아니라고 합니다. 전기 요정은 없다는 뜻이죠.",
+      "data": {
+        "emoji": "🧢",
+        "title": "No Cap",
+        "subtitle": "전기 요정 없음",
+        "animate": "bounce"
+      }
+    },
+    {
+      "id": "s10-elon-narration-again",
+      "type": "quote",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[annoyed] 야 또 나왔어 이 나레이션! [pause] [laughing] 아 진짜 이거 뭐냐고. 내가 인터뷰를 하는 건지 코미디를 하는 건지.",
+      "data": {
+        "quote": "야 또 나왔어 이 나레이션!",
+        "author": "Elon Musk",
+        "source": "심각하게 짜증남",
+        "variant": "large"
+      }
+    },
+    {
+      "id": "s11-solar-space",
       "type": "comparison",
-      "narration": "주니어와 시니어 개발자의 차이. 주니어는 동작하면 커밋하고, 시니어는 동작해도 의심합니다.",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "자 이제 핵심입니다. 왜 우주가 더 싼지. 태양광 패널의 지구 대 우주 비교를 해봅시다. 우주에서는 밤이 없고, 구름이 없고, 대기 손실이 없습니다.",
       "data": {
-        "title": "주니어 vs 시니어",
+        "title": "태양광: 지구 vs 우주",
         "left": {
-          "title": "주니어",
-          "emoji": "🐣",
-          "items": ["동작하면 커밋", "모든 걸 직접 구현", "야근 = 열정", "에러 → 패닉"],
-          "color": "#7C3AED"
+          "title": "🌍 지구",
+          "items": ["밤낮 사이클", "구름/날씨", "대기 30% 손실", "배터리 필요", "용량 계수 25%"],
+          "emoji": "🌍"
         },
         "right": {
-          "title": "시니어",
-          "emoji": "🦉",
-          "items": ["동작해도 의심", "라이브러리 먼저 검색", "야근 = 설계 실패", "에러 → 예상했다"],
-          "color": "#10B981"
+          "title": "🛸 우주",
+          "items": ["24시간 태양광", "구름 없음", "대기 없음", "배터리 불필요", "5배 효율"],
+          "emoji": "🛸"
         },
         "variant": "versus"
-      },
-      "entrance": "slideUp",
-      "exit": "fadeOut"
+      }
     },
     {
-      "id": "s7-chat",
-      "type": "chat",
-      "narration": "오후 5시 반. 매니저가 슬랙으로 묻습니다. 이거 오늘 돼? 개발자는 대답합니다. 기술적으로는 가능합니다.",
-      "data": {
-        "title": "17:30 — 그 슬랙 메시지",
-        "messages": [
-          { "role": "user", "content": "이거 오늘 배포 가능?" },
-          { "role": "assistant", "content": "기술적으로는 가능합니다" },
-          { "role": "user", "content": "그건 안 된다는 뜻이지?" },
-          { "role": "assistant", "content": "기술적으로는 가능합니다 (미소)" }
-        ]
-      },
-      "entrance": "slideUp",
-      "exit": "fadeOut"
-    },
-    {
-      "id": "s8-gif-mindblown",
-      "type": "image",
-      "narration": "그리고 밤 11시. 갑자기 깨닫습니다. 3일간 고민한 버그가 오타 하나였다는 것을.",
-      "data": {
-        "src": "media/mind-blown.mp4",
-        "title": "23:00 — 깨달음의 순간",
-        "caption": "3일간의 버그가 오타 하나였을 때",
-        "layout": "centered"
-      },
-      "entrance": "fadeIn",
-      "exit": "fadeOut"
-    },
-    {
-      "id": "s9-quote",
+      "id": "s12-elon-5x",
       "type": "quote",
-      "narration": "모든 위대한 개발자는 한때 초보였습니다. 중요한 건 멈추지 않는 것입니다.",
+      "entrance": "zoomIn",
+      "voice": "elon",
+      "narration": "[excited] 우주에서 태양광 패널은 지상보다 5배 효율이야! 밤낮 없고, 구름 없고, 대기 손실 없고. 배터리도 필요 없어. 그러니까 실질적으로 10배 싼 거지.",
       "data": {
-        "quote": "프로그래밍이란\n문제를 해결하는 기술이 아니라\n포기하지 않는 기술이다.",
-        "author": "모든 개발자",
-        "source": "새벽 3시의 깨달음",
-        "emoji": "💻",
-        "variant": "large"
-      },
-      "entrance": "fadeIn",
-      "exit": "fadeOut"
+        "quote": "우주에서 태양광은 5배. 배터리 빼면 10배 싸.",
+        "author": "Elon Musk",
+        "emoji": "☀️",
+        "variant": "highlight"
+      }
     },
     {
-      "id": "s10-bigtext",
+      "id": "s13-always-sunny",
       "type": "bigtext",
-      "narration": "내일도 코드를 씁니다. 왜냐면 이게 재밌으니까.",
+      "entrance": "bounceIn",
+      "voice": "iu",
+      "narration": "일론의 티셔츠에는 이렇게 적혀있었답니다. 잇츠 올웨이즈 써니 인 스페이스. 우주에서는 항상 맑음. 날씨 앱이 필요 없는 유일한 장소죠.",
       "data": {
-        "text": "KEEP\nCODING",
-        "subtitle": "내일도 코드를 쓴다. 이게 재밌으니까.",
-        "emoji": "🚀",
+        "text": "It's Always Sunny in Space ☀️",
+        "subtitle": "날씨 앱 필요 없음",
         "variant": "gradient"
-      },
-      "entrance": "fadeIn",
-      "exit": "fadeOut"
+      }
+    },
+    {
+      "id": "s14-hardware-lesson",
+      "type": "terminal",
+      "entrance": "fadeSlideUp",
+      "theme": "neural",
+      "voice": "iu",
+      "narration": "그리고 일론은 소프트웨어 업계에 따끔한 한마디를 날립니다. 소프트웨어만 하던 사람들은 곧 하드웨어의 현실을 마주할 거라고.",
+      "data": {
+        "lines": [
+          {"prompt": "$ ", "text": "LOADING REALITY CHECK...", "delay": 0.5},
+          {"prompt": "$ ", "text": "TARGET: SOFTWARE DEVELOPERS", "delay": 0.3},
+          {"prompt": "> ", "text": "WARNING: HARDWARE IS HARD", "color": "#ff6600"}
+        ],
+        "cursor": "block",
+        "speed": 0.5
+      }
+    },
+    {
+      "id": "s15-elon-hardware",
+      "type": "quote",
+      "entrance": "fadeSlideLeft",
+      "voice": "elon",
+      "narration": "[serious] 소프트웨어만 하던 애들은 곧 하드웨어의 쓴맛을 볼 거야. 발전소 짓는 게 얼마나 빡센지 몰라. [emphasis] 전기 트랜스포머가 있어야 AI 트랜스포머를 돌리지.",
+      "data": {
+        "quote": "전기 트랜스포머가 있어야 AI 트랜스포머를 돌리지.",
+        "author": "Elon Musk",
+        "source": "2026 명언 후보",
+        "variant": "typewriter"
+      }
+    },
+    {
+      "id": "s16-narrator-quote",
+      "type": "bigtext",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "전기 트랜스포머로 AI 트랜스포머를 돌린다. 이건 좀 명언이네요. 하드웨어와 소프트웨어의 관계를 이보다 잘 표현한 말이 있을까요.",
+      "data": {
+        "text": "명언 등장 🎤",
+        "subtitle": "Electrical Transformer → AI Transformer",
+        "variant": "impact"
+      }
+    },
+    {
+      "id": "s17-elon-annoyed",
+      "type": "emoji",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[irritated] 야! 너 자꾸 끼어들지 마! [pause] [calming down] 근데... 뭐 틀린 말은 아니네. 고마워.",
+      "data": {
+        "emoji": "😤",
+        "title": "끼어들지 마!",
+        "subtitle": "...근데 틀린 말은 아님",
+        "animate": "pulse"
+      }
+    },
+    {
+      "id": "s18-numbers-intro",
+      "type": "emoji",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "자, 이제 숫자 얘기를 해볼까요. 일론이 공개한 구체적인 숫자들이 정말 놀랍습니다.",
+      "data": {
+        "emoji": "🔢",
+        "title": "숫자로 보는 현실",
+        "animate": "float"
+      }
+    },
+    {
+      "id": "s19-gb300",
+      "type": "stat",
+      "entrance": "fadeSlideUp",
+      "voice": "elon",
+      "narration": "[speaking fast] 지비 300 33만 개를 돌리려면, 네트워킹이랑 쿨링이랑 서비싱 마진까지 다 포함하면, 대충 1기가와트 필요해. 미국 전체 평균 전력이 500기가와트인데.",
+      "data": {
+        "title": "GB300 전력 요구량",
+        "stats": [
+          {"label": "GB300", "value": "330,000", "unit": "개", "emoji": "🖥️"},
+          {"label": "필요 전력", "value": "~1", "unit": "GW", "emoji": "⚡"},
+          {"label": "미국 전체", "value": "500", "unit": "GW", "emoji": "🇺🇸"}
+        ]
+      }
+    },
+    {
+      "id": "s20-noob",
+      "type": "quote",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[sarcastic] 뉴비들은 GPU 전력만 보고 곱하기 하더라고. 야 그렇게 하면 진짜 하드웨어 뉴비인 거야. 쿨링에만 40퍼센트가 더 들어. 서비싱 마진 또 20에서 25퍼센트.",
+      "data": {
+        "quote": "GPU 전력만 보고 곱하기? 진짜 하드웨어 뉴비.",
+        "author": "Elon Musk",
+        "source": "뉴비들에게",
+        "variant": "highlight"
+      }
+    },
+    {
+      "id": "s21-power-breakdown",
+      "type": "list",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "일론이 말한 실제 전력 구성을 정리해보면 이렇습니다. GPU만이 아닙니다. 네트워킹 장비, CPU와 스토리지, 피크 쿨링, 서비스 마진까지. 실제 필요량은 계산의 3배입니다.",
+      "data": {
+        "title": "데이터센터 실제 전력 구성",
+        "items": [
+          "GPU 기본 전력: 100%",
+          "네트워킹 하드웨어: +15-20%",
+          "CPU + 스토리지: +10-15%",
+          "피크 쿨링 (최악의 날): +40%",
+          "서비스 마진 (정비용): +20-25%",
+          "실제 필요량 ≈ 계산의 약 3배"
+        ],
+        "ordered": true,
+        "variant": "cards"
+      }
+    },
+    {
+      "id": "s22-turbine-problem",
+      "type": "flow",
+      "entrance": "fadeSlideLeft",
+      "voice": "iu",
+      "narration": "지상에서 전력을 확보하는 게 왜 어려운지. 발전소를 짓고 싶어도 가스 터빈의 핵심 부품인 블레이드와 베인을 만드는 회사가 전 세계에 3곳뿐이고, 2030년까지 백로그가 꽉 차있습니다.",
+      "data": {
+        "title": "터빈 블레이드 병목현상",
+        "steps": [
+          {"label": "터빈 주문", "description": "GE, Siemens 등에 주문", "emoji": "📝"},
+          {"label": "블레이드 대기", "description": "전 세계 3개 캐스팅 업체만", "emoji": "⏳"},
+          {"label": "12-18개월 대기", "description": "다른 부품은 구할 수 있음", "emoji": "📦"},
+          {"label": "2030년까지 매진", "description": "백로그 풀", "emoji": "🚫"}
+        ],
+        "direction": "horizontal"
+      }
+    },
+    {
+      "id": "s23-xai-story",
+      "type": "timeline",
+      "entrance": "fadeSlideUp",
+      "voice": "elon",
+      "narration": "[excited] xAI 콜로서스 2 지을 때 기적의 연속이었어. 테네시에서 허가 문제 터져서 미시시피 주 경계 넘어가야 했고. 고압 전선 몇 마일 깔아야 했고. 1기가와트 전력 온라인에 올리는 게 얼마나 미친 짓인지 몰라.",
+      "data": {
+        "title": "xAI 콜로서스 건설기",
+        "events": [
+          {"date": "Phase 1", "title": "터빈 확보", "description": "가스 터빈 대량 묶음 계약", "emoji": "🔧"},
+          {"date": "Phase 2", "title": "테네시 허가 문제", "description": "환경 규제 충돌", "emoji": "⚠️"},
+          {"date": "Phase 3", "title": "미시시피로 이전", "description": "주 경계 몇 마일 넘어서", "emoji": "🏗️"},
+          {"date": "Phase 4", "title": "고압 전선 설치", "description": "자체 발전소 건설", "emoji": "⚡"},
+          {"date": "Complete", "title": "1GW 온라인", "description": "기적의 연속", "emoji": "🎯"}
+        ]
+      }
+    },
+    {
+      "id": "s24-space-solution",
+      "type": "bigtext",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "이 모든 문제의 해결책이 바로 우주입니다. 허가도 필요 없고, 터빈도 필요 없고, 냉각도 더 쉽고, 태양광은 5배 효율. 규제 플레이라고도 볼 수 있죠.",
+      "data": {
+        "text": "해결책 = 우주 🛸",
+        "subtitle": "허가 X, 터빈 X, 5배 효율",
+        "variant": "glitch",
+        "emoji": "🛸"
+      }
+    },
+    {
+      "id": "s25-starship",
+      "type": "stat",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "스페이스엑스의 계획은 더 놀랍습니다. 5년 안에 매년 우주로 보내는 AI 컴퓨팅이 지구 전체 누적량을 초과한다는 겁니다. 스타십 연간 만 회 발사. 매시간 한 대.",
+      "data": {
+        "title": "SpaceX 우주 AI 계획",
+        "stats": [
+          {"label": "스타십 발사", "value": "10,000+", "unit": "회/년", "emoji": "🚀"},
+          {"label": "필요 우주선", "value": "20-30", "unit": "대", "emoji": "🛸"},
+          {"label": "우주 AI 전력", "value": "200+", "unit": "GW/년", "emoji": "⚡"},
+          {"label": "지구 AI 초과", "value": "매년", "emoji": "📈"}
+        ]
+      }
+    },
+    {
+      "id": "s26-elon-starship",
+      "type": "quote",
+      "entrance": "fadeSlideLeft",
+      "voice": "elon",
+      "narration": "[excited] 5년 안에 매년 우주로 보내는 AI가 지구 전체 AI 총량보다 많아질 거야. 매년! 한 200기가와트는 될 듯. 스타십이 매시간 한 번씩 발사되는 세상이 와.",
+      "data": {
+        "quote": "매년 우주 AI > 지구 전체 AI. 스타십 매시간 발사.",
+        "author": "Elon Musk",
+        "emoji": "🚀",
+        "variant": "typewriter"
+      }
+    },
+    {
+      "id": "s27-narrator-scale",
+      "type": "bigtext",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "매시간 로켓 발사라니. 보통 사람은 상상도 못할 스케일이죠. 현재 전 세계 연간 로켓 발사가 약 200회인데, 이걸 만 회로 올리겠다는 겁니다.",
+      "data": {
+        "text": "매시간 🚀 발사",
+        "subtitle": "연 200회 → 10,000회",
+        "variant": "impact"
+      }
+    },
+    {
+      "id": "s28-elon-casual",
+      "type": "quote",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[casual] 항공기보다는 적은 빈도잖아. 뭐가 그리 놀라워. 공항은 엄청 많잖아.",
+      "data": {
+        "quote": "항공기보다 적은 빈도잖아. 뭐가 놀라워.",
+        "author": "Elon Musk",
+        "source": "역대급 언더스테이트먼트",
+        "variant": "large"
+      }
+    },
+    {
+      "id": "s29-solar-production",
+      "type": "list",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "태양광 생산 계획도 발표됐습니다. 테슬라와 스페이스엑스 모두 연 100기가와트 태양전지 생산 목표를 세웠습니다. 우주용 태양전지는 유리와 프레임이 필요 없어서 지상용보다 더 쌉니다.",
+      "data": {
+        "title": "태양광 생산 계획",
+        "items": [
+          "Tesla + SpaceX: 연 100GW 태양전지 생산 목표",
+          "우주용 패널: 유리/프레임 불필요 → 더 저렴",
+          "중국 태양전지: $0.25-0.30/W (이미 싼데)",
+          "우주 효율 5배 → 실효가격 10배 저렴",
+          "관세 문제로 미국 내 자체 생산 필수"
+        ],
+        "variant": "cards"
+      }
+    },
+    {
+      "id": "s30-chip-problem",
+      "type": "flow",
+      "entrance": "fadeSlideLeft",
+      "voice": "iu",
+      "narration": "하지만 전력만 해결된다고 끝이 아닙니다. 칩도 문제입니다. 현재 세계 컴퓨팅 용량은 약 20에서 25기가와트. 테라와트급으로 가려면 테라팹이 필요합니다. 일론은 테슬라 기가팩토리처럼 테라팹을 구상 중입니다.",
+      "data": {
+        "title": "칩 스케일링 과제",
+        "steps": [
+          {"label": "현재 용량", "description": "전 세계 20-25GW", "emoji": "📊"},
+          {"label": "목표", "description": "테라와트급 컴퓨팅", "emoji": "🎯"},
+          {"label": "병목", "description": "TSMC/삼성 풀가동 중", "emoji": "🏭"},
+          {"label": "해결책", "description": "TeraFab 건설", "emoji": "🔧"}
+        ]
+      }
+    },
+    {
+      "id": "s31-terafab",
+      "type": "quote",
+      "entrance": "zoomIn",
+      "voice": "elon",
+      "narration": "[excited] 테라팹이라는 개념을 공개적으로 언급했어. 테라가 새로운 기가야. TSMC한테 팹 더 지어달라고 돈 줄 테니까 하라고 했는데, 그 사람들도 이미 최대 속도로 짓고 있더라고.",
+      "data": {
+        "quote": "TSMC에 돈 줄 테니 팹 지어라 했는데, 이미 풀 스피드더라.",
+        "author": "Elon Musk",
+        "emoji": "🏭",
+        "variant": "typewriter"
+      }
+    },
+    {
+      "id": "s32-memory-meme",
+      "type": "quote",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[laughing] 근데 내 가장 큰 걱정은 메모리야. DDR 가격이 미쳤거든. 무인도에 표류해서 모래에 살려주세요 쓰면 아무도 안 와. 근데 DDR RAM이라고 쓰면 배가 몰려온대. [laughing]",
+      "data": {
+        "quote": "모래에 '살려주세요' → 아무도 안 옴. 'DDR RAM' → 배가 몰려옴.",
+        "author": "Elon Musk",
+        "source": "DDR 밈",
+        "emoji": "🏝️",
+        "variant": "large"
+      }
+    },
+    {
+      "id": "s33-kardashev",
+      "type": "progressBar",
+      "entrance": "fadeSlideUp",
+      "theme": "neural",
+      "voice": "iu",
+      "narration": "장기적으로 일론은 카르다셰프 스케일을 언급합니다. 태양 에너지의 백만분의 일만 활용해도 현재 지구 전체 전력의 10만 배입니다. 이 스케일은 우주 없이는 불가능합니다.",
+      "data": {
+        "title": "KARDASHEV SCALE PROGRESS",
+        "percent": 0.01,
+        "label": "인류는 아직 0.01%도 안 됨...",
+        "bigText": "0.0001%",
+        "animate": true
+      }
+    },
+    {
+      "id": "s34-moon",
+      "type": "flow",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "지구에서 발사하면 연간 약 1테라와트가 한계입니다. 그 이상은 달에 매스 드라이버를 설치해서 발사해야 합니다. 달에서 발사하면 연간 1페타와트까지 가능하다고 합니다.",
+      "data": {
+        "title": "스케일링 로드맵",
+        "steps": [
+          {"label": "3년 내", "description": "우주 데이터센터 시작", "emoji": "🛸"},
+          {"label": "5년 내", "description": "연 200GW+ 우주 배치", "emoji": "🚀"},
+          {"label": "지구 한계", "description": "연 ~1TW (로켓 연료 한계)", "emoji": "🌍"},
+          {"label": "달 매스드라이버", "description": "연 1PW 가능", "emoji": "🌙"},
+          {"label": "최종 목표", "description": "태양 에너지의 의미있는 비율", "emoji": "☀️"}
+        ]
+      }
+    },
+    {
+      "id": "s35-ipo",
+      "type": "list",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "자금 조달 이야기도 나왔습니다. 이 규모의 인프라를 건설하려면 민간 시장만으로는 부족합니다. 공개 시장에는 10배에서 100배 더 많은 자본이 있습니다. 스페이스엑스 IPO 가능성도 시사했죠.",
+      "data": {
+        "title": "자금 조달 전략",
+        "items": [
+          "민간 시장: 수백억 달러 (한계)",
+          "공개 시장: 10~100배 더 많은 자본",
+          "SpaceX IPO 가능성 시사",
+          "속도가 핵심 — 제한 요소를 계속 공략",
+          "데이터센터 부채 금융도 검토"
+        ],
+        "variant": "timeline"
+      }
+    },
+    {
+      "id": "s36-simulation",
+      "type": "matrixRain",
+      "entrance": "fadeSlideUp",
+      "theme": "neural",
+      "voice": "elon",
+      "narration": "[whispering] 이게 왜 시뮬레이션 같은지 알겠지? 우연이 너무 많이 겹쳐. 스타링크가 팔콘9의 수익원이 됐고, 이제 우주 데이터센터가 스타십의 수익원이 되는 거야. 매번 다음 단계의 수익모델이 알아서 등장해.",
+      "data": {
+        "color": "#00ff41",
+        "columns": 50,
+        "speed": 1.5,
+        "overlayText": "SIMULATION THEORY?"
+      }
+    },
+    {
+      "id": "s37-summary",
+      "type": "grid",
+      "entrance": "fadeSlideUp",
+      "voice": "iu",
+      "narration": "정리해봅시다. 일론 머스크의 우주 AI 계획의 핵심 포인트 네 가지입니다.",
+      "data": {
+        "title": "핵심 요약",
+        "cards": [
+          {"icon": "⚡", "title": "전력 병목", "description": "지상 전력은 플랫, 칩은 기하급수적 증가"},
+          {"icon": "☀️", "title": "우주 태양광", "description": "5배 효율, 배터리 불필요 = 10배 저렴"},
+          {"icon": "🚀", "title": "스타십 스케일", "description": "연 1만회 발사, 매년 지구 AI 초과"},
+          {"icon": "🏭", "title": "테라팹", "description": "칩 생산도 테라급으로 스케일업 필요"}
+        ]
+      }
+    },
+    {
+      "id": "s38-closing-narration",
+      "type": "bigtext",
+      "entrance": "zoomIn",
+      "voice": "iu",
+      "narration": "이것이 일론 머스크가 그리는 미래입니다. 36개월 안에 우주가 AI의 새로운 집이 됩니다. 미쳤다고 생각할 수도 있지만, 이 사람은 이전에도 미친 소리를 하고 실제로 해냈습니다. 시청해주셔서 감사합니다.",
+      "data": {
+        "text": "우주 = AI의 새로운 집",
+        "subtitle": "36개월 카운트다운 시작",
+        "variant": "gradient",
+        "emoji": "🚀"
+      }
+    },
+    {
+      "id": "s39-elon-twist",
+      "type": "quote",
+      "entrance": "bounceIn",
+      "voice": "elon",
+      "narration": "[sudden realization] 잠깐. [long pause] 이 나레이션... 혹시 AI야? [whispering] 설마 우주에서 돌아가고 있는 건 아니지? [laughing] [excited] 야 그러면 내 예측이 맞은 거잖아!",
+      "data": {
+        "quote": "이 나레이션... 혹시 AI야? 우주에서 돌아가는 거 아니지?",
+        "author": "Elon Musk",
+        "source": "반전 엔딩",
+        "emoji": "🤖",
+        "variant": "large"
+      }
+    },
+    {
+      "id": "s40-ending",
+      "type": "hero",
+      "entrance": "fadeSlideUp",
+      "exit": "blurOut",
+      "voice": "iu",
+      "narration": "[soft voice] 그건 비밀입니다. [pause] 다음 영상에서 만나요. 구독과 좋아요 부탁드려요.",
+      "data": {
+        "title": "그건 비밀입니다 🤫",
+        "subtitle": "다음 영상에서 만나요",
+        "emoji": "🤖",
+        "badge": "Subscribe"
+      }
     }
   ]
 }

@@ -1,0 +1,44 @@
+# 고양이 난입 믹싱 설정 템플릿
+# 각 도슨트 오디오북에 맞게 수정하여 사용
+
+book: 18  # 책 번호
+
+# 고양이 난입 포인트 (2-3회 권장)
+interrupts:
+  # 난입 1: 본문 중간 — 배경에서 가볍게 울음
+  - part: "D18c"                           # 파트 ID
+    pattern: "pattern3"                     # 배경 울음
+    cat_category: "meow-short"              # 소리 카테고리
+    # cat_sound: "meow-short/meow-short-07.wav"  # 특정 파일 지정 (선택)
+    insert_at_ms: 23500                     # 23.5초 지점에 삽입
+    volume_db: -8                           # 배경이라 작게
+
+  # 난입 2: 채원이 한눈 파는 장면 — 가까이서 울음
+  - part: "D18e"
+    pattern: "pattern1"                     # 짧은 주의 분산
+    cat_category: "meow-long"
+    insert_at_ms: 15200
+    volume_db: -3                           # 가까이서 운 것처럼
+
+  # 난입 3: 마무리 — 골골송과 함께 끝
+  - part: "D18g"
+    pattern: "pattern5"                     # 끝나갈 때 합류
+    cat_category: "purr"
+    insert_at_ms: 35000
+    volume_db: -10                          # 골골송은 작게
+
+# 패턴 참조:
+# pattern1: 짧은 주의 분산 (채원 리액션 3-5초)
+# pattern2: 고양이 올라옴 (채원 리액션 5-8초)
+# pattern3: 배경 울음 (채원 리액션 2-3초, 가장 자연스러움)
+# pattern4: 놀란 리액션 (채원 리액션 4-6초)
+# pattern5: 끝나갈 때 합류 (골골송 배경)
+
+# 카테고리:
+# meow-short: 짧은 야옹 (1-2초)
+# meow-long: 긴 야옹 (2-4초)
+# purr: 골골송 (3-8초)
+# mew: 짧은 냥 (0.5-1초)
+# play: 장난 소리
+# hiss: 하악/시
+# hungry: 밥달라

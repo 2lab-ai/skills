@@ -1,0 +1,21 @@
+[
+  {"text": "This ", "startMs": 500, "endMs": 800, "timestampMs": 500, "confidence": 0.95},
+  {"text": "is ", "startMs": 800, "endMs": 1000, "timestampMs": 800, "confidence": 0.95},
+  {"text": "a ", "startMs": 1000, "endMs": 1200, "timestampMs": 1000, "confidence": 0.95},
+  {"text": "sample ", "startMs": 1200, "endMs": 1600, "timestampMs": 1200, "confidence": 0.95},
+  {"text": "TikTok ", "startMs": 1600, "endMs": 2100, "timestampMs": 1600, "confidence": 0.95},
+  {"text": "style ", "startMs": 2100, "endMs": 2500, "timestampMs": 2100, "confidence": 0.95},
+  {"text": "caption ", "startMs": 2500, "endMs": 3000, "timestampMs": 2500, "confidence": 0.95},
+  {"text": "rendered ", "startMs": 3000, "endMs": 3500, "timestampMs": 3000, "confidence": 0.95},
+  {"text": "with ", "startMs": 3500, "endMs": 3800, "timestampMs": 3500, "confidence": 0.95},
+  {"text": "Remotion. ", "startMs": 3800, "endMs": 4500, "timestampMs": 3800, "confidence": 0.95},
+  {"text": "Each ", "startMs": 5000, "endMs": 5300, "timestampMs": 5000, "confidence": 0.95},
+  {"text": "word ", "startMs": 5300, "endMs": 5600, "timestampMs": 5300, "confidence": 0.95},
+  {"text": "highlights ", "startMs": 5600, "endMs": 6200, "timestampMs": 5600, "confidence": 0.95},
+  {"text": "as ", "startMs": 6200, "endMs": 6400, "timestampMs": 6200, "confidence": 0.95},
+  {"text": "it ", "startMs": 6400, "endMs": 6600, "timestampMs": 6400, "confidence": 0.95},
+  {"text": "plays. ", "startMs": 6600, "endMs": 7200, "timestampMs": 6600, "confidence": 0.95},
+  {"text": "Pretty ", "startMs": 7500, "endMs": 7900, "timestampMs": 7500, "confidence": 0.95},
+  {"text": "cool ", "startMs": 7900, "endMs": 8300, "timestampMs": 7900, "confidence": 0.95},
+  {"text": "right? ", "startMs": 8300, "endMs": 9000, "timestampMs": 8300, "confidence": 0.95}
+]

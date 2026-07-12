@@ -1,0 +1,158 @@
+diff --git a/SKILL.md b/SKILL.md
+index 1c0c309..9121a0e 100644
+--- a/SKILL.md
++++ b/SKILL.md
+@@ -1,7 +1,7 @@
+ ---
+ name: codex-image-generation
+-description: Generate images via OpenAI Responses API using the current Codex/ChatGPT OAuth session. Supports both text-to-image (prompt only) and image-to-image (reference image + prompt, forces edit action).
+-version: 1.1.0
++description: Generate images via OpenAI Responses API using the current Codex/ChatGPT OAuth session. Supports both text-to-image (prompt only) and image-to-image (reference image + prompt, forces edit action). Prints Codex plan + per-window quota usage on every call.
++version: 1.2.0
+ author: 솜
+ license: MIT
+ metadata:
+@@ -105,10 +105,32 @@ PNG, JPG/JPEG, WEBP, GIF (MIME auto-detected from file extension; falls back to
+ 
+ ## Expected result
+ 
++Stdout (final):
+ ```
+ Saved /path/to/output.png
+ ```
+ 
++Stderr (always, before stdout — quota line from Codex backend headers):
++```
++[Codex PRO] | 5h: 0% (resets in 4h48m) | 7d: 1% (resets in 6d16h)
++```
++
++The quota line is parsed from `x-codex-*` response headers exposed by the ChatGPT backend:
++
++| Header | Meaning |
++|--------|---------|
++| `x-codex-plan-type` | Account plan (e.g. `pro`, `plus`) |
++| `x-codex-active-limit` | Limit tier (`premium`, `standard`) |
++| `x-codex-primary-used-percent` | Short-window usage (default 5h / 300 min) |
++| `x-codex-primary-window-minutes` | Short window length |
++| `x-codex-primary-reset-after-seconds` | Seconds until short window resets |
++| `x-codex-secondary-used-percent` | Long-window usage (default 7d / 10080 min) |
++| `x-codex-secondary-window-minutes` | Long window length |
++| `x-codex-secondary-reset-after-seconds` | Seconds until long window resets |
++| `x-codex-credits-has-credits` / `-balance` / `-unlimited` | Add-on credit state |
++
++A ⚠ marker appears when either window crosses 80% used. Quota is also printed on `429`/HTTPError responses so you can see why a call was rejected.
++
+ Exit code 0 on success, 1 if no `image_generation_call` result was found (re-run with `--events` to inspect the raw stream).
+ 
+ ## Environment overrides
+@@ -145,6 +167,7 @@ The script expands `~` via `Path.expanduser()`. Prefer absolute paths for script
+ 
+ ## Changelog
+ 
++- **1.2.0** (2026-04-28): Print Codex plan + quota usage on every call (parsed from `x-codex-*` response headers). Quota also surfaced on HTTP errors. ⚠ marker at ≥80% in either window.
+ - **1.1.0** (2026-04-22): Added `--input-image` flag for image-to-image (repeatable, auto-switches to `action=edit`). Updated default endpoint to ChatGPT backend for OAuth tokens.
+ - **1.0.0** (initial): Text-to-image via `codex responses` subcommand.
+ 
+diff --git a/scripts/gen_image.py b/scripts/gen_image.py
+index 21a1335..ae1d446 100644
+--- a/scripts/gen_image.py
++++ b/scripts/gen_image.py
+@@ -99,7 +99,8 @@ def build_payload(args: argparse.Namespace) -> dict:
+     }
+ 
+ 
+-def post_responses(payload: dict, token: str, account_id: str | None) -> str:
++def post_responses(payload: dict, token: str, account_id: str | None) -> tuple[str, dict]:
++    """Return (events_text, response_headers)."""
+     headers = {
+         "Authorization": f"Bearer {token}",
+         "Content-Type": "application/json",
+@@ -116,14 +117,70 @@ def post_responses(payload: dict, token: str, account_id: str | None) -> str:
+     )
+     try:
+         with urllib.request.urlopen(req, timeout=300) as resp:
+-            return resp.read().decode("utf-8", errors="replace")
++            resp_headers = {k.lower(): v for k, v in resp.headers.items()}
++            body = resp.read().decode("utf-8", errors="replace")
++            return body, resp_headers
+     except urllib.error.HTTPError as e:
++        err_headers = {k.lower(): v for k, v in (e.headers.items() if e.headers else [])}
+         body = e.read().decode("utf-8", errors="replace")
++        # Still try to surface quota on errors (e.g. 429)
++        quota_line = format_quota_line(err_headers)
++        if quota_line:
++            sys.stderr.write(quota_line + "\n")
+         sys.exit(f"HTTP {e.code} from Responses API:\n{body}")
+     except urllib.error.URLError as e:
+         sys.exit(f"Network error: {e}")
+ 
+ 
++def _fmt_seconds(s: int) -> str:
++    if s <= 0:
++        return "0s"
++    d, rem = divmod(s, 86400)
++    h, rem = divmod(rem, 3600)
++    m, _ = divmod(rem, 60)
++    if d:
++        return f"{d}d{h}h"
++    if h:
++        return f"{h}h{m}m"
++    return f"{m}m"
++
++
++def format_quota_line(h: dict) -> str | None:
++    """Build a one-line quota summary from x-codex-* response headers."""
++    if "x-codex-plan-type" not in h and "x-codex-primary-used-percent" not in h:
++        return None
++    plan = h.get("x-codex-plan-type", "?").upper()
++    bits = [f"[Codex {plan}]"]
++
++    try:
++        p_pct = float(h.get("x-codex-primary-used-percent", "0"))
++        p_win = int(h.get("x-codex-primary-window-minutes", "0"))
++        p_reset = int(h.get("x-codex-primary-reset-after-seconds", "0"))
++        p_label = f"{p_win // 60}h" if p_win % 60 == 0 else f"{p_win}m"
++        warn = " ⚠" if p_pct >= 80 else ""
++        bits.append(f"{p_label}: {p_pct:g}%{warn} (resets in {_fmt_seconds(p_reset)})")
++    except (TypeError, ValueError):
++        pass
++
++    try:
++        s_pct = float(h.get("x-codex-secondary-used-percent", "0"))
++        s_win = int(h.get("x-codex-secondary-window-minutes", "0"))
++        s_reset = int(h.get("x-codex-secondary-reset-after-seconds", "0"))
++        s_label = f"{s_win // 1440}d" if s_win % 1440 == 0 else f"{s_win // 60}h"
++        warn = " ⚠" if s_pct >= 80 else ""
++        bits.append(f"{s_label}: {s_pct:g}%{warn} (resets in {_fmt_seconds(s_reset)})")
++    except (TypeError, ValueError):
++        pass
++
++    if h.get("x-codex-credits-unlimited", "").lower() == "true":
++        bits.append("credits: unlimited")
++    elif h.get("x-codex-credits-has-credits", "").lower() == "true":
++        bal = h.get("x-codex-credits-balance", "").strip()
++        bits.append(f"credits: {bal or 'available'}")
++
++    return " | ".join(bits)
++
++
+ def extract_image(events_text: str, events_path: Path | None) -> str | None:
+     if events_path:
+         events_path.write_text(events_text, encoding="utf-8")
+@@ -184,10 +241,15 @@ def main() -> int:
+ 
+     token, account_id, _mode = load_auth()
+     payload = build_payload(args)
+-    events_text = post_responses(payload, token, account_id)
++    events_text, resp_headers = post_responses(payload, token, account_id)
+ 
+     events_path = Path(args.events) if args.events else None
+     image_b64 = extract_image(events_text, events_path)
++
++    quota_line = format_quota_line(resp_headers)
++    if quota_line:
++        sys.stderr.write(quota_line + "\n")
++
+     if not image_b64:
+         sys.stderr.write("No image_generation_call result found.\n")
+         if not args.events:

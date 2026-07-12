@@ -23,7 +23,7 @@ export const Hero: React.FC<HeroProps> = ({ data, accentColor, themeName }) => {
   const lineWidth = interpolate(titleSpring, [0, 1], [0, 200]);
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",

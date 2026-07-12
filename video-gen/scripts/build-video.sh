@@ -6,6 +6,11 @@ set -euo pipefail
 #
 # Creates a temporary workspace in /tmp, copies skill skeleton,
 # runs TTS + Remotion render there, then copies final mp4 to output path.
+#
+# Environment Variables:
+#   VIDEO_GEN_MEDIA_DIR  - Directory containing media files (images, videos)
+#                          to copy into workspace's public/media/
+#   VIDEO_GEN_HEAP_MB    - Node.js heap size in MB (default: 4096)
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILL_DIR="$(dirname "$SCRIPT_DIR")"
@@ -79,6 +84,40 @@ fi
 
 # Copy config to workspace
 cp "$CONFIG_FILE" "$WORKSPACE/video-config.json"
+
+# Copy media files if VIDEO_GEN_MEDIA_DIR is set
+MEDIA_DIR="${VIDEO_GEN_MEDIA_DIR:-}"
+if [ -n "$MEDIA_DIR" ] && [ -d "$MEDIA_DIR" ]; then
+  mkdir -p "$WORKSPACE/public/media"
+  MEDIA_COUNT=$(ls -1 "$MEDIA_DIR"/*.{jpg,jpeg,png,gif,mp4,webm,webp} 2>/dev/null | wc -l || echo 0)
+  if [ "$MEDIA_COUNT" -gt 0 ]; then
+    cp "$MEDIA_DIR"/*.{jpg,jpeg,png,gif,mp4,webm,webp} "$WORKSPACE/public/media/" 2>/dev/null || true
+    success "  Copied $MEDIA_COUNT media files from $MEDIA_DIR"
+  else
+    warn "  VIDEO_GEN_MEDIA_DIR set but no media files found in $MEDIA_DIR"
+  fi
+elif [ -n "$MEDIA_DIR" ]; then
+  warn "  VIDEO_GEN_MEDIA_DIR=$MEDIA_DIR does not exist"
+fi
+
+# Also check if config references media/ paths and auto-detect media dir from config location
+if [ -z "$MEDIA_DIR" ]; then
+  CONFIG_DIR="$(dirname "$CONFIG_FILE")"
+  if [ -d "$CONFIG_DIR/media" ]; then
+    mkdir -p "$WORKSPACE/public/media"
+    cp "$CONFIG_DIR/media/"* "$WORKSPACE/public/media/" 2>/dev/null || true
+    AUTO_COUNT=$(ls -1 "$WORKSPACE/public/media/"* 2>/dev/null | wc -l || echo 0)
+    if [ "$AUTO_COUNT" -gt 0 ]; then
+      success "  Auto-detected media dir: $CONFIG_DIR/media/ ($AUTO_COUNT files)"
+    fi
+  fi
+fi
+
+# Copy skill's own public/media if exists (fallback)
+if [ -d "$SKILL_DIR/public/media" ]; then
+  mkdir -p "$WORKSPACE/public/media"
+  cp "$SKILL_DIR/public/media/"* "$WORKSPACE/public/media/" 2>/dev/null || true
+fi
 
 PUBLIC_DIR="$WORKSPACE/public"
 TTS_DIR="$PUBLIC_DIR/tts"

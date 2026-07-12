@@ -1,0 +1,107 @@
+diff --git a/scripts/last30days.py b/scripts/last30days.py
+index c9296cd..f9996ae 100644
+--- a/scripts/last30days.py
++++ b/scripts/last30days.py
+@@ -148,6 +148,7 @@ from lib import (
+     models,
+     normalize,
+     openai_reddit,
++    patchright_x,
+     reddit,
+     reddit_enrich,
+     render,
+@@ -340,6 +341,23 @@ def _search_x(
+         x_items = xai_x.parse_x_response(raw_response or {})
+         return x_items, raw_response, x_error
+ 
++    # Use patchright (headless browser scraping, no API keys)
++    if x_source == "patchright":
++        try:
++            raw_response = patchright_x.search_x(
++                topic, from_date, to_date, depth=depth,
++            )
++        except Exception as e:
++            raw_response = {"error": str(e)}
++            x_error = f"{type(e).__name__}: {e}"
++
++        x_items = patchright_x.parse_x_response(raw_response or {})
++
++        if raw_response and isinstance(raw_response, dict) and raw_response.get("error") and not x_error:
++            x_error = raw_response["error"]
++
++        return x_items, raw_response, x_error
++
+     # Use Bird if specified
+     if x_source == "bird":
+         try:
+@@ -1143,12 +1161,14 @@ def run_research(
+                 progress.end_reddit(len(reddit_items))
+ 
+         if x_future:
++            # patchright (headless browser) needs longer timeout for DDG search + tweet scraping
++            x_timeout = max(future_timeout, 120) if x_source == "patchright" else future_timeout
+             try:
+-                x_items, raw_xai, x_error = x_future.result(timeout=future_timeout)
++                x_items, raw_xai, x_error = x_future.result(timeout=x_timeout)
+                 if x_error and progress:
+                     progress.show_error(f"X error: {x_error}")
+             except TimeoutError:
+-                x_error = f"X search timed out after {future_timeout}s"
++                x_error = f"X search timed out after {x_timeout}s"
+                 if progress:
+                     progress.show_error(x_error)
+             except Exception as e:
+@@ -1544,6 +1564,15 @@ def main():
+     x_source_status = env.get_x_source_status(config)
+     x_source = x_source_status["source"]  # 'bird', 'xai', or None
+ 
++    # Fallback to patchright if no API keys available
++    if not x_source:
++        try:
++            import patchright  # noqa: F401
++            x_source = "patchright"
++            print("[X] Using patchright (headless browser) for X search", file=sys.stderr)
++        except ImportError:
++            pass
++
+     # Auto-detect yt-dlp for YouTube search
+     has_ytdlp = env.is_ytdlp_available()
+ 
+@@ -1605,7 +1634,7 @@ def main():
+         "openai": bool(config.get("OPENAI_API_KEY")),
+         "reddit_public": True,
+         "xai": bool(config.get("XAI_API_KEY")),
+-        "x_source": x_source_status["source"],
++        "x_source": x_source or x_source_status["source"],
+         "bird_installed": x_source_status["bird_installed"],
+         "bird_authenticated": x_source_status["bird_authenticated"],
+         "bird_username": x_source_status.get("bird_username"),
+@@ -1624,8 +1653,8 @@ def main():
+     # Check available sources (accounting for Bird auto-detection)
+     available = env.get_available_sources(config)
+ 
+-    # Override available if Bird provides X
+-    if x_source == 'bird':
++    # Override available if Bird or patchright provides X
++    if x_source in ('bird', 'patchright'):
+         if available == 'reddit':
+             available = 'both'  # Now have both Reddit + X
+         elif available == 'reddit-web':
+diff --git a/scripts/lib/ui.py b/scripts/lib/ui.py
+index f81e2da..98e1c4a 100644
+--- a/scripts/lib/ui.py
++++ b/scripts/lib/ui.py
+@@ -457,7 +457,12 @@ def show_diagnostic_banner(diag: dict):
+         if has_x:
+             source = diag.get("x_source", "")
+             username = diag.get("bird_username", "")
+-            label = f"Bird ({username})" if source == "bird" and username else source.upper()
++            if source == "bird" and username:
++                label = f"Bird ({username})"
++            elif source == "patchright":
++                label = "Patchright (DDG→scrape)"
++            else:
++                label = source.upper()
+             lines.append(f"{Colors.DIM}│{Colors.RESET}  {Colors.GREEN}✅ X/Twitter{Colors.RESET} — {label}                          {Colors.DIM}│{Colors.RESET}")
+         else:
+             lines.append(f"{Colors.DIM}│{Colors.RESET}  {Colors.RED}❌ X/Twitter{Colors.RESET} — No X auth or fallback key        {Colors.DIM}│{Colors.RESET}")

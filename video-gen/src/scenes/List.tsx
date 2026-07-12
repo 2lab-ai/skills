@@ -68,12 +68,14 @@ export const List: React.FC<ListProps> = ({ data, accentColor, themeName }) => {
   const titleOpacity = useFadeIn(0, 12);
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          padding: "80px 160px",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "80px 120px",
           height: "100%",
         }}
       >
@@ -86,12 +88,13 @@ export const List: React.FC<ListProps> = ({ data, accentColor, themeName }) => {
             marginBottom: 48,
             opacity: titleOpacity,
             letterSpacing: "-0.02em",
+            textAlign: "center",
           }}
         >
           {data.title}
         </h2>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexDirection: "column", width: "100%", maxWidth: 900 }}>
           {data.items.map((item, i) => (
             <ListItem
               key={i}

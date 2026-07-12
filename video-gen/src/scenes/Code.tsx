@@ -74,7 +74,7 @@ export const Code: React.FC<CodeProps> = ({ data, accentColor, themeName }) => {
   );
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",

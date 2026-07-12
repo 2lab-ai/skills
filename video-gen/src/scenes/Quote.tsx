@@ -152,7 +152,7 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
   };
 
   return (
-    <Background background={theme.background}>
+    <Background background={theme.background} themeName={themeName}>
       <div
         style={{
           display: "flex",
@@ -218,34 +218,38 @@ export const Quote: React.FC<QuoteProps> = ({ data, accentColor, themeName }) =>
           {"\u201D"}
         </div>
 
-        {/* Accent divider */}
-        <div
-          style={{
-            width: interpolate(dividerFade, [0, 1], [0, 120]),
-            height: 3,
-            background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
-            margin: "32px 0",
-            borderRadius: 2,
-          }}
-        />
+        {/* Accent divider - only show if author exists */}
+        {data.author && (
+          <div
+            style={{
+              width: interpolate(dividerFade, [0, 1], [0, 120]),
+              height: 3,
+              background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+              margin: "32px 0",
+              borderRadius: 2,
+            }}
+          />
+        )}
 
-        {/* Author */}
-        <p
-          style={{
-            color: accent,
-            fontSize: 24,
-            fontFamily: theme.fontFamily,
-            fontWeight: 600,
-            margin: 0,
-            letterSpacing: "0.03em",
-            opacity: authorFade,
-            transform: `translateY(${authorSlideUp}px)`,
-          }}
-        >
-          {"\u2014 "}{data.author}
-        </p>
+        {/* Author - only show if author exists */}
+        {data.author && (
+          <p
+            style={{
+              color: accent,
+              fontSize: 24,
+              fontFamily: theme.fontFamily,
+              fontWeight: 600,
+              margin: 0,
+              letterSpacing: "0.03em",
+              opacity: authorFade,
+              transform: `translateY(${authorSlideUp}px)`,
+            }}
+          >
+            {"\u2014 "}{data.author}
+          </p>
+        )}
 
-        {/* Source */}
+        {/* Source - only show if source exists */}
         {data.source && (
           <p
             style={{

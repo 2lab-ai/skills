@@ -2,10 +2,31 @@ import React from "react";
 import { Composition, registerRoot } from "remotion";
 import { VideoComposition } from "./VideoComposition";
 import type { VideoConfig, TTSMetadata } from "./types";
+import { ShortsPlayer } from "./shorts/ShortsPlayer";
+import type { ShortsStoryboard } from "./shorts/ShortsConfig";
 
 // These will be loaded from generated files at render time
 import configData from "../public/render-config.json";
 import ttsMetaData from "../public/tts-metadata.json";
+
+// Shorts storyboard (optional - may not exist)
+let shortsStoryboard: ShortsStoryboard | null = null;
+try {
+  // @ts-ignore - this file may not exist
+  const shortsData = require("../public/shorts-storyboard.json");
+  shortsStoryboard = shortsData as ShortsStoryboard;
+} catch {
+  // No shorts storyboard available
+}
+
+// Audio files mapping (optional - beat ID -> audio filename)
+let shortsAudioFiles: Record<string, string> | undefined;
+try {
+  // @ts-ignore - this file may not exist
+  shortsAudioFiles = require("../public/audio-files.json");
+} catch {
+  // No audio files mapping
+}
 
 const config = configData as VideoConfig;
 const ttsData = ttsMetaData as TTSMetadata[];
@@ -187,6 +208,10 @@ const fontFaceCSS = `
 const RemotionRoot: React.FC = () => {
   const totalFrames = calculateTotalFrames(config, ttsData);
 
+  const shortsDuration = shortsStoryboard
+    ? Math.ceil(shortsStoryboard.total_duration_seconds * 30)
+    : 30 * 60; // 1min fallback
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: fontFaceCSS }} />
@@ -200,6 +225,35 @@ const RemotionRoot: React.FC = () => {
         defaultProps={{
           config,
           ttsData,
+        }}
+      />
+      <Composition
+        id="ShortsPlayer"
+        component={ShortsPlayer}
+        durationInFrames={shortsDuration}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          storyboard: shortsStoryboard || {
+            id: "default",
+            title: "Default Short",
+            total_duration_seconds: 10,
+            beats: [
+              {
+                id: "b1",
+                start_seconds: 0,
+                end_seconds: 10,
+                visual: {
+                  type: "text_highlight",
+                  primary_text: "YouTube Shorts",
+                  secondary_text: "Powered by video-gen",
+                },
+                caption_text: "YouTube Shorts powered by video-gen",
+              },
+            ],
+          },
+          audioFiles: shortsAudioFiles,
         }}
       />
     </>

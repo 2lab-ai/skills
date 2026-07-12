@@ -86,7 +86,7 @@ export const Emoji: React.FC<EmojiProps> = ({ data, accentColor, themeName }) =>
   const glowPulse = usePulse(80);
 
   return (
-    <Background background={theme.background}>
+    <Background background={theme.background} themeName={themeName}>
       <div
         style={{
           display: "flex",

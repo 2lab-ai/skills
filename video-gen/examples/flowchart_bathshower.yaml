@@ -1,0 +1,57 @@
+title: "Bath or shower?"
+theme: "minimal"
+fps: 30
+width: 1080
+height: 1920
+voices:
+  narrator: "cwon"
+
+script:
+  - speaker: "narrator"
+    scene: "flowchart"
+    text: "샤워할까 목욕할까. 이걸로 정해보자. 먼저, 욕조 있어? 응, 있어. 그럼 다음. 스트레스 받았어? 응, 많이. 그러면 답은 나왔어. 오늘은 따뜻하게 목욕하자. 간단하지?"
+    data:
+      title: "Bath or shower?"
+      width: 860
+      height: 1220
+      rules: true
+      boxes:
+        - { id: "q1", x: 300, y: 110, w: 260, h: 58, text: "Do you have a bath?", style: "question" }
+        - { id: "q2", x: 55,  y: 320, w: 300, h: 58, text: "Do you have a shower?", style: "question", font_size: 20 }
+        - { id: "q3", x: 560, y: 320, w: 200, h: 58, text: "Stressed?", style: "question" }
+        - { id: "a_shower1", x: 60, y: 520, w: 220, h: 56, text: "Have a shower", style: "action" }
+        - { id: "a_sink", x: 60, y: 640, w: 220, h: 56, text: "Wash in a sink", style: "action" }
+        - { id: "a_bath1", x: 470, y: 520, w: 200, h: 56, text: "Have a bath", style: "action" }
+        - { id: "q4", x: 530, y: 640, w: 300, h: 58, text: "Do you have a shower?", style: "question", font_size: 20 }
+        - { id: "a_shower2", x: 470, y: 860, w: 220, h: 56, text: "Have a shower", style: "action" }
+        - { id: "a_bath2", x: 470, y: 980, w: 200, h: 56, text: "Have a bath", style: "action" }
+      diamonds:
+        - { id: "d_q1n", x: 195, y: 250, label: "N" }
+        - { id: "d_q1y", x: 560, y: 250, label: "Y" }
+        - { id: "d_q2y", x: 120, y: 440, label: "Y" }
+        - { id: "d_q2n", x: 240, y: 440, label: "N" }
+        - { id: "d_q3y", x: 540, y: 440, label: "Y" }
+        - { id: "d_q3n", x: 665, y: 440, label: "N" }
+        - { id: "d_q4y", x: 600, y: 770, label: "Y" }
+        - { id: "d_q4n", x: 720, y: 770, label: "N" }
+      edges:
+        - { id: "e_q1_n", points: [[430,168],[430,210],[195,210],[195,234]], color: "black" }
+        - { id: "e_q1_y", points: [[430,168],[430,210],[560,210],[560,234]], color: "orange" }
+        - { id: "e_q1_to_q2", points: [[195,266],[195,320]], color: "black" }
+        - { id: "e_q1_to_q3", points: [[560,266],[560,320]], color: "orange" }
+        - { id: "e_q2_y", points: [[120,378],[120,424]], color: "orange" }
+        - { id: "e_q2_n", points: [[240,378],[240,424]], color: "black" }
+        - { id: "e_q2_to_shower", points: [[120,456],[120,520]], color: "orange" }
+        - { id: "e_q2_to_sink", points: [[240,456],[240,600],[170,600],[170,640]], color: "black" }
+        - { id: "e_q3_y", points: [[540,378],[540,424]], color: "orange" }
+        - { id: "e_q3_n", points: [[665,378],[665,424]], color: "black" }
+        - { id: "e_q3_to_bath", points: [[540,456],[540,520]], color: "orange" }
+        - { id: "e_q3_to_q4", points: [[665,456],[665,600],[685,600],[685,640]], color: "black" }
+        - { id: "e_q4_y", points: [[600,698],[600,744]], color: "orange" }
+        - { id: "e_q4_n", points: [[720,698],[720,744]], color: "black" }
+        - { id: "e_q4_to_shower2", points: [[600,786],[600,860]], color: "orange" }
+        - { id: "e_q4_to_bath2", points: [[720,786],[720,940],[620,940],[620,980]], color: "black" }
+      path:
+        - { box: "q1", choice: "Y", diamonds: ["d_q1y"], edges: ["e_q1_y", "e_q1_to_q3"] }
+        - { box: "q3", choice: "Y", diamonds: ["d_q3y"], edges: ["e_q3_y", "e_q3_to_bath"] }
+        - { result: "a_bath1" }

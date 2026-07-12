@@ -1,0 +1,105 @@
+name: textcard
+display_name: "Text Card"
+description: "Minimal text-on-dark design. Square 1:1 format. Article reader / quote card style."
+
+format:
+  width: 1080
+  height: 1080
+  aspect: "1:1"
+  fps: 30
+
+script:
+  tone: "clear, engaging, direct, authoritative"
+  pacing: "moderate, well-paced for reading along"
+  perspective: "third person, editorial narrative"
+  word_count: "120 to 160"
+  sentence_style: "short, punchy sentences. Max 15 words per sentence."
+  hooks:
+    - id: insight
+      template: "Here's what most people miss about {topic}."
+      when: "contrarian or analytical topic"
+    - id: fact
+      template: "{shocking_stat}. Let that sink in."
+      when: "surprising data or stat"
+    - id: story
+      template: "The story behind {topic} is wilder than you think."
+      when: "narrative-driven"
+    - id: question
+      template: "Why does {topic} matter right now?"
+      when: "timely/relevant topic"
+  cta_variants:
+    - "Follow for more."
+    - "Save this for later."
+    - "Share if you agree."
+  forbidden_phrases:
+    - "like and subscribe"
+    - "smash that bell"
+    - "what's up guys"
+    - "without further ado"
+    - "in this video"
+  structure:
+    opening: "Hook sentence. No intro, no filler."
+    middle: "3-4 key points, each one sentence. Build tension."
+    closing: "Punchline insight, then one-line CTA."
+
+visuals:
+  style: "minimal, text-focused, dark background, no images"
+  mood: "clean, editorial, distraction-free"
+  background_color: "#0A0A0E"
+  color_palette: ["#0A0A0E", "#FFFFFF", "#C85050"]
+  subjects:
+    prefer:
+      - "solid dark background"
+      - "no images, text only"
+    avoid:
+      - "any b-roll"
+      - "stock photos"
+      - "busy backgrounds"
+  prompt_suffix: ""
+
+voice:
+  pace: "measured, approximately 140 words per minute"
+  energy: "calm, authoritative, podcast-like"
+  suggested_voices:
+    edge_tts:
+      en: "en-US-GuyNeural"
+    fish_tts:
+      voice: "cwon"
+
+captions:
+  mode: "centered"
+  highlight_color: "#C85050"
+  text_color: "#FFFFFF"
+  font_size: 64
+  font_weight: "bold"
+  words_per_group: 4
+  line_max_words: 5
+  position: "center"
+  background: "none"
+
+source:
+  font_size: 24
+  color: "#666666"
+  position: "top_left"
+  margin_top: 50
+  margin_left: 60
+
+music:
+  mood: "ambient, minimal, lo-fi, no lyrics"
+  energy: "low"
+  tags: ["ambient", "minimal", "reading"]
+  duck_volume_speech: 0.08
+  duck_volume_gap: 0.18
+
+thumbnail:
+  style: "dark background, white bold text, accent word"
+  text_color: "#FFFFFF"
+  accent_color: "#C85050"
+  max_words: 4
+
+discovery:
+  reddit:
+    subreddits: ["technology", "Futurology", "science", "worldnews"]
+  rss:
+    feeds:
+      - "https://hnrss.org/frontpage"

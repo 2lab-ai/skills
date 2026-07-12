@@ -1,0 +1,20 @@
+[
+  {
+    "id": "clip1",
+    "start": "00:05:30",
+    "end": "00:05:45",
+    "label": "key quote about space"
+  },
+  {
+    "id": "clip2",
+    "start": "01:23:10",
+    "end": "01:23:25",
+    "label": "prediction about AI"
+  },
+  {
+    "id": "clip3",
+    "start": "330",
+    "end": "345",
+    "label": "interesting moment using seconds format"
+  }
+]

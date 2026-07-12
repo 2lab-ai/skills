@@ -43,7 +43,7 @@ export const Chat: React.FC<ChatProps> = ({ data, accentColor, themeName }) => {
   const titleOpacity = useFadeIn(0, 12);
 
   return (
-    <Background>
+    <Background themeName={themeName}>
       <div
         style={{
           display: "flex",

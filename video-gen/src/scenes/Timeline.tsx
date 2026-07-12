@@ -46,7 +46,7 @@ export const Timeline: React.FC<TimelineProps> = ({
 
   if (variant === "horizontal") {
     return (
-      <Background background={theme.background}>
+      <Background background={theme.background} themeName={themeName}>
         <div
           style={{
             display: "flex",
@@ -192,7 +192,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   const isAlternating = variant === "alternating";
 
   return (
-    <Background background={theme.background}>
+    <Background background={theme.background} themeName={themeName}>
       <div
         style={{
           display: "flex",

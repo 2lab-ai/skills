@@ -1,0 +1,10 @@
+{
+  "images": ["loop-images/placeholder.png"],
+  "tileWidth": 1080,
+  "pxPerSec": 200,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "direction": "rtl",
+  "background": "#000000"
+}

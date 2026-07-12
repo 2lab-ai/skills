@@ -68,14 +68,13 @@ export const BigText: React.FC<BigTextProps> = ({
 
   // Base text styles shared across variants
   const baseTextStyle: React.CSSProperties = {
-    fontFamily: theme.headingFont,
-    fontSize: 110,
+    fontSize: 120,
     fontWeight: 900,
     lineHeight: 1.05,
     letterSpacing: "-0.04em",
     margin: 0,
     textAlign: "center",
-    maxWidth: 1060,
+    maxWidth: 1100,
     textTransform: "uppercase",
   };
 
@@ -157,52 +156,34 @@ export const BigText: React.FC<BigTextProps> = ({
         const detOffsetX = isGlitching ? ((seed % 6) - 3) : 0;
         const detOffsetY = isGlitching ? (((seed * 1.3) % 4) - 2) : 0;
 
+        // Use text-shadow for glitch channels instead of absolute layers
+        // This properly handles multiline text (\n)
+        const glitchLines = data.text.split("\n");
+
         return (
-          <div style={{ position: "relative", opacity: entryOpacity, transform: `scale(${entryScale})` }}>
-            {/* Red channel layer (offset) */}
-            <h1
-              style={{
-                ...baseTextStyle,
-                color: hexToRgba("#ff0040", 0.7),
-                position: "absolute",
-                left: -3 + detOffsetX,
-                top: detOffsetY,
-                zIndex: 1,
-                mixBlendMode: "screen",
-              }}
-            >
-              {data.text}
-            </h1>
-
-            {/* Cyan channel layer (offset opposite) */}
-            <h1
-              style={{
-                ...baseTextStyle,
-                color: hexToRgba("#00ffff", 0.7),
-                position: "absolute",
-                left: 3 - detOffsetX,
-                top: -detOffsetY,
-                zIndex: 1,
-                mixBlendMode: "screen",
-              }}
-            >
-              {data.text}
-            </h1>
-
-            {/* Main white text layer */}
-            <h1
-              style={{
-                ...baseTextStyle,
-                color: theme.textPrimary,
-                position: "relative",
-                zIndex: 2,
-                textShadow: isGlitching
-                  ? `${detOffsetX}px ${detOffsetY}px 0 ${hexToRgba("#ff0040", 0.5)}, ${-detOffsetX}px ${-detOffsetY}px 0 ${hexToRgba("#00ffff", 0.5)}`
-                  : "none",
-              }}
-            >
-              {data.text}
-            </h1>
+          <div style={{
+            position: "relative",
+            opacity: entryOpacity,
+            transform: `scale(${entryScale})`,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative", zIndex: 2 }}>
+              {glitchLines.map((line, li) => (
+                <span key={li} style={{
+                  ...baseTextStyle,
+                  color: theme.textPrimary,
+                  display: "block",
+                  whiteSpace: "pre",
+                  textShadow: isGlitching
+                    ? `${-3 + detOffsetX}px ${detOffsetY}px 0 ${hexToRgba("#ff0040", 0.7)}, ${3 - detOffsetX}px ${-detOffsetY}px 0 ${hexToRgba("#00ffff", 0.7)}`
+                    : `-3px 0 0 ${hexToRgba("#ff0040", 0.35)}, 3px 0 0 ${hexToRgba("#00ffff", 0.35)}`,
+                }}>
+                  {line}
+                </span>
+              ))}
+            </div>
 
             {/* Scan line overlay during glitch */}
             {isGlitching && (
@@ -237,7 +218,7 @@ export const BigText: React.FC<BigTextProps> = ({
   };
 
   return (
-    <Background background={theme.background}>
+    <Background background={theme.background} themeName={themeName}>
       <div
         style={{
           display: "flex",
@@ -288,11 +269,10 @@ export const BigText: React.FC<BigTextProps> = ({
           <p
             style={{
               color: theme.textSecondary,
-              fontFamily: theme.fontFamily,
-              fontSize: 28,
+              fontSize: 32,
               fontWeight: 500,
               margin: 0,
-              marginTop: 24,
+              marginTop: 28,
               opacity: subtitleFade,
               transform: `translateY(${subtitleSlide}px)`,
               letterSpacing: "0.01em",

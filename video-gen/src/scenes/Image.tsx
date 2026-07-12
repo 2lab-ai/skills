@@ -82,7 +82,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
   // --- FULLSCREEN LAYOUT ---
   if (layout === "fullscreen") {
     return (
-      <Background background={theme.background}>
+      <Background background={theme.background} themeName={themeName}>
         <div
           style={{
             width: "100%",
@@ -253,7 +253,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
     );
 
     return (
-      <Background background={theme.background}>
+      <Background background={theme.background} themeName={themeName}>
         <div
           style={{
             display: "flex",
@@ -273,7 +273,7 @@ export const Image: React.FC<ImageProps> = ({ data, accentColor, themeName }) =>
 
   // --- CENTERED LAYOUT (default) ---
   return (
-    <Background background={theme.background}>
+    <Background background={theme.background} themeName={themeName}>
       <div
         style={{
           display: "flex",

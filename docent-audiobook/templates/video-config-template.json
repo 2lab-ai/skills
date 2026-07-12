@@ -1,0 +1,49 @@
+{
+  "title": "{BOOK_TITLE} — {BOOK_AUTHOR}",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "theme": "{THEME}",
+  "subtitleVariant": "stroke",
+  "defaultStyle": {
+    "background": "#1a0a2e",
+    "accentColor": "#e8a87c",
+    "textColor": "#ffffff",
+    "fontFamily": "'Pretendard', 'Noto Sans KR', sans-serif"
+  },
+  "scenes": [
+    {
+      "id": "s00-cover",
+      "type": "hero",
+      "entrance": "zoomIn",
+      "narration": "{BOOK_TITLE}. {BOOK_AUTHOR}.",
+      "durationInSeconds": 4,
+      "data": {
+        "title": "{BOOK_TITLE}",
+        "subtitle": "{BOOK_AUTHOR}",
+        "badge": "BOOK DOCENT",
+        "emoji": "📚"
+      }
+    }
+  ],
+  "_scene_type_reference": {
+    "hero": { "data": { "title": "str", "subtitle": "str", "badge": "str", "emoji": "str" } },
+    "timeline": { "data": { "title": "str", "events": [{ "date": "str", "title": "str", "description": "str", "emoji": "str" }] } },
+    "list": { "data": { "title": "str", "items": ["str"], "ordered": "bool?" } },
+    "stat": { "data": { "title": "str", "stats": [{ "value": "str|num", "label": "str", "emoji": "str?" }] } },
+    "comparison": { "data": { "title": "str", "left": { "title": "str", "items": ["str"], "emoji": "str?" }, "right": { "title": "str", "items": ["str"], "emoji": "str?" } } },
+    "flow": { "data": { "title": "str", "steps": [{ "label": "str", "description": "str?", "emoji": "str?" }] } },
+    "quote": { "data": { "quote": "str", "author": "str", "source": "str?" } },
+    "bigtext": { "data": { "text": "str", "subtitle": "str?" } },
+    "emoji": { "data": { "emoji": "str", "title": "str", "subtitle": "str?" } },
+    "grid": { "data": { "title": "str", "items": [{ "title": "str", "description": "str?", "emoji": "str?" }] } }
+  },
+  "_theme_options": ["default", "notion", "minimal", "cinematic", "playful", "neon", "warm", "nature", "neural"],
+  "_defaultStyle_examples": {
+    "cinematic": { "background": "#1a0a2e", "accentColor": "#e8a87c" },
+    "warm": { "background": "#1a1008", "accentColor": "#f0a050" },
+    "neon": { "background": "#0a0a1a", "accentColor": "#00d4ff" },
+    "minimal": { "background": "#f5f5f5", "accentColor": "#333333", "textColor": "#111111" },
+    "notion": { "background": "#ffffff", "accentColor": "#2f80ed", "textColor": "#37352f" }
+  }
+}
