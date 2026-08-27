@@ -23,6 +23,14 @@ Remotion-based video generation skill.
 - TTS integration
 - Configurable via JSON
 
+### 📰 editorial-machine
+Builds a standalone product/founder landing page in an editorial composition grammar
+(warm-paper canvas, serif-led thesis, one authored proof object per product), synthesized
+from char.com, anarlog.so, fastrepl.com, agentpub.dev, and johnjeong.com.
+- Fact ledger → thesis + unique proof object → page brief → implementation → validator → browser QA
+- Deterministic `scripts/validate.py` gate (title/description/main/h1/skip link/install snippet/reduced-motion/overflow)
+- Shares grammar, never a cloned DOM/template, across pages
+
 ## Installation
 
 Each skill can be installed independently:
@@ -31,6 +39,7 @@ Each skill can be installed independently:
 claude install-skill https://github.com/2lab-ai/skills/scraping
 claude install-skill https://github.com/2lab-ai/skills/sns-scraping
 claude install-skill https://github.com/2lab-ai/skills/video-gen
+claude install-skill https://github.com/2lab-ai/skills/editorial-machine
 ```
 
 ## Prerequisites
