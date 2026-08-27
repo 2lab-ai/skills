@@ -19,7 +19,8 @@ Read both in full, not skimmed:
 2. [`references/composition-system.md`](references/composition-system.md) — the
    MUST/SHOULD/MAY rules a page is checked against: token contract (§2), section
    grammar (§4), proof-object catalogue (§5), responsive/motion/accessibility rules
-   (§7–9), anti-copy guardrails (§10), and the pre-ship checklist (§11).
+   (§7–9), the performance floor (§10), anti-copy guardrails (§11), and the pre-ship
+   checklist (§12).
 
 Everything below is the workflow; the rules themselves live in those two files —
 do not duplicate them here, cite them.
@@ -50,7 +51,9 @@ do not duplicate them here, cite them.
    ```
    Zero issues required. It deterministically rejects a missing `<title>`,
    `<meta name="description">`, `<main>`, exactly-one `<h1>`, skip link, install
-   snippet, `prefers-reduced-motion` handling, and horizontal-overflow guard.
+   snippet, `prefers-reduced-motion` handling, and horizontal-overflow guard —
+   plus the **reduced-motion trap**: an element left at `opacity: 0` whose only
+   route to visible is an animation the reduced-motion block switches off.
    **Passing the validator is necessary, not sufficient.**
 6. **Browser QA.** Real renders, not a hypothetical review:
    - Desktop (1440×1000) and mobile (390×844): no `<body>` horizontal scroll,
@@ -59,7 +62,10 @@ do not duplicate them here, cite them.
      visible `:focus-visible` state; skip link is reachable and visible on focus.
    - Contrast: `--ink` on `--canvas` ≥ 12:1, computed, not eyeballed.
    - `prefers-reduced-motion: reduce` emulated in the browser: non-essential motion
-     stops, every state stays reachable.
+     stops, every state stays reachable, and **every revealed element is still
+     visible** — check computed `opacity`, not the screenshot alone.
+   - Script blocked (`--disable-javascript` or a context with JS off): the page
+     still renders its content. A reveal may be hidden by script, never by default.
    Capture both viewport receipts per page — one screenshot is not readiness.
 7. **Fix loop.** Any validator issue or QA failure sends you back to step 4. Re-run
    the validator and re-check QA until both are clean before calling the page done.
@@ -76,7 +82,7 @@ do not duplicate them here, cite them.
 
 - Every factual claim traces to a source in the page brief. No invented metrics.
 - No cloned DOM, no shared section template, no text-swapped page across products.
-  Share the grammar; never the structure (composition-system.md §10).
+  Share the grammar; never the structure (composition-system.md §11).
 - Exactly one accent per page; never the sole signal for any state; absent from body
   copy (composition-system.md §2.2).
 - `prefers-reduced-motion: reduce` disables all non-essential animation.

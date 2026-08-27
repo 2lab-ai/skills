@@ -60,6 +60,27 @@ VALID_HTML = """<!doctype html>
 """
 
 
+# A page whose reveal elements are hidden by default (`opacity: 0`) and made
+# visible only by an animation, while the reduced-motion block kills the
+# animation without restoring the visible state. Under
+# `prefers-reduced-motion: reduce` the content never appears.
+REVEAL_TRAP_HTML = VALID_HTML.replace(
+    ".command { overflow-x: auto; max-width: 100%; }",
+    """.command { overflow-x: auto; max-width: 100%; }
+.reveal { opacity: 0; animation: fade 600ms ease-out forwards; }
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }""",
+).replace("<main id=\"main\">", '<main id="main" class="reveal">')
+
+# The same page, with the reduced-motion block restoring the visible state.
+REVEAL_RESTORED_HTML = REVEAL_TRAP_HTML.replace(
+    "* { animation: none !important; transition: none !important; }",
+    """* { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }""",
+)
+
+EXAMPLES_DIR = Path(__file__).resolve().parent.parent / "examples"
+
+
 def _write(content: str) -> Path:
     fd = tempfile.NamedTemporaryFile(
         mode="w", suffix=".html", delete=False, encoding="utf-8"
@@ -162,6 +183,24 @@ class ValidateFileTests(unittest.TestCase):
         issues = self._validate(html)
         self.assertEqual(len(issues), 1, issues)
         self.assertIn("overflow", issues[0].lower())
+
+    def test_reduced_motion_that_hides_content_is_flagged_alone(self):
+        issues = self._validate(REVEAL_TRAP_HTML)
+        self.assertEqual(len(issues), 1, issues)
+        joined = issues[0].lower()
+        self.assertIn("reduced-motion", joined)
+        self.assertIn("opacity", joined)
+        self.assertIn(".reveal", issues[0])
+
+    def test_reduced_motion_that_restores_visible_state_passes(self):
+        self.assertEqual(self._validate(REVEAL_RESTORED_HTML), [])
+
+    def test_shipped_example_pages_pass(self):
+        for name in ("llmux.html", "xfx.html"):
+            page = EXAMPLES_DIR / name
+            with self.subTest(page=name):
+                self.assertTrue(page.is_file(), f"missing example page: {page}")
+                self.assertEqual(validate_file(page), [])
 
     def test_cli_exits_nonzero_on_issues_and_zero_when_clean(self):
         invalid_path = _write(INVALID_HTML)

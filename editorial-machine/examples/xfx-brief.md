@@ -44,7 +44,9 @@ This is intentionally unlike the llmux page: field-sheet rather than essay, vert
 
 ## Motion
 
-Two durations only: `150ms` interaction feedback and `300ms` artifact reveal. Eight reveal targets are authored; the exact density depends on browser-measured final page height and belongs in Task 5 receipts. Reduced-motion removes transforms and transitions while preserving every state.
+Two durations only: `150ms` interaction feedback and `300ms` artifact reveal. **Six `[data-reveal]` targets** over a browser-measured 6,201px page at 1440×1000 — **0.97 animated elements per 1,000px**, below the corpus working range of 5.0–15.8 for the same reason as the llmux page: this is an inspection document, and the only motion is the first appearance of each artifact.
+
+Reveal is **opt-in from script**: the inline head script adds a `js` class to `<html>`, and only `.js [data-reveal]` starts at `opacity: 0`. With JavaScript blocked, that class never lands and every section renders in its final visible state — the earlier draft hid all six artifacts permanently when the inline script did not run. `prefers-reduced-motion: reduce` disables animation and transition globally and restores `.js [data-reveal]` to `opacity: 1; transform: none`, matching the specificity of the hidden rule so the restoration actually wins.
 
 ## Claim ledger
 
@@ -63,7 +65,8 @@ Two durations only: `150ms` interaction feedback and `300ms` artifact reveal. Ei
 | AGENTS.md context is bounded and refreshed every turn | `README.md:51-51` |
 | `status` and `doctor` work without credentials and without creating anything | `README.md:52-52` |
 | Named absences error rather than quietly no-op | `README.md:54-68` |
-| No OS sandbox; permission modes govern what starts, not what a child process can do | `README.md:72-79` |
+| No OS sandbox **in any mode**; `status` reports `sandbox=none`; permission modes govern what starts, not what a child process can do | `README.md:76-80` |
+| Precedence when documents disagree: README yields to `docs/parity.md`, ledger yields to the code, both documents are then bugs | `README.md:67-70` |
 | ask requires a real terminal for every change/command and fails closed in pipes/CI | `README.md:80-82` |
 | auto admits bounded reversible writes and a narrow reporting command grammar | `README.md:83-87` |
 | yolo skips checks and warns on stderr | `README.md:88-89` |
@@ -82,4 +85,6 @@ Two durations only: `150ms` interaction feedback and `300ms` artifact reveal. Ei
 
 ## Performance and accessibility notes
 
-Standalone HTML, no framework, script CDN, external image, webfont, analytics, or widget. All diagrams are authored HTML. Wide command rows scroll locally, never the body. One main, one h1, ordered headings, skip link, visible focus, 44px primary actions, text-reachable proof object, and reduced-motion fallback are required. Task 5 must record final bytes, requests, desktop/mobile scroll widths, focus order, and screenshots.
+Standalone HTML, no framework, script CDN, external image, webfont, analytics, or widget. All diagrams are authored HTML. Wide command rows scroll locally, never the body. One main, one h1, ordered headings, skip link, visible focus, 44px primary actions, text-reachable proof object, and reduced-motion fallback are required.
+
+Browser-measured in headless Chromium over loopback HTTP: at 1440×1000 `scrollWidth == clientWidth == 1440`, height 6,201px; at 390×844 `scrollWidth == clientWidth == 390`, height 7,148px. No body horizontal overflow at either width. Across six render conditions (default, `reduce`, script-blocked, `reduce`+script-blocked, and both mobile cases) 0 of 6 `[data-reveal]` artifacts stay below `opacity: 0.99`, and body text length is identical in all six — the page carries the same content with or without script.
