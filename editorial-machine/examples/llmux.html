@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>llmux — The harness is capital.</title>
+  <meta name="description" content="Local Anthropic-compatible proxy. Keep your Claude Code harness unchanged while routing model names across independent backends: Claude, Codex, Grok, OpenRouter.">
+  <style>
+    /* Reset and base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f4efe3;
+      color: #1a1814;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Typography hierarchy */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Iowan Old Style", Baskerville, "Times New Roman", serif;
+      line-height: 1.2;
+      margin: 1.5em 0 0.5em 0;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-top: 0;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-top: 2em;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 1em 0;
+      max-width: 100%;
+    }
+
+    code, kbd, pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.9em;
+    }
+
+    code {
+      background-color: #fbf8f1;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      color: #1a1814;
+    }
+
+    pre {
+      background-color: #fbf8f1;
+      border-left: 3px solid #c3311d;
+      padding: 1em;
+      overflow-x: auto;
+      margin: 1em 0;
+      border-radius: 4px;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: #1a1814;
+    }
+
+    a {
+      color: #c3311d;
+      text-decoration: underline;
+      transition: color 150ms ease-out;
+    }
+
+    a:hover {
+      color: #8a2416;
+    }
+
+    a:focus {
+      outline: 2px solid #c3311d;
+      outline-offset: 2px;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #c3311d;
+      color: #ffffff;
+      padding: 8px 16px;
+      text-decoration: none;
+      z-index: 100;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .skip-link:focus {
+      top: 0;
+      outline: none;
+    }
+
+    /* Layout */
+    main {
+      max-width: 100%;
+      min-width: 0;
+      padding: 2rem;
+    }
+
+    section {
+      margin: 4rem 0;
+      padding: 0 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      margin: 4rem auto 6rem;
+      padding: 2rem 0;
+      animation: reveal-fade 600ms ease-out forwards;
+      opacity: 0;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero .subtitle {
+      font-size: 1.25rem;
+      color: #625d52;
+      margin: 1rem 0 2rem;
+    }
+
+    .install-command {
+      background: #fbf8f1;
+      border: 1px solid #cbc3b3;
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin: 2rem auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .install-command pre {
+      border: none;
+      padding: 0;
+      margin: 0;
+      background: none;
+      font-size: 1rem;
+      overflow-x: auto;
+    }
+
+    .install-command code {
+      background: none;
+      padding: 0;
+      color: #1a1814;
+      font-size: 1rem;
+    }
+
+    /* Routing ledger */
+    .routing-ledger {
+      background: #fbf8f1;
+      border: 1px solid #cbc3b3;
+      padding: 3rem 2rem;
+      border-radius: 8px;
+      margin: 3rem 0;
+      overflow-x: auto;
+      animation: reveal-fade 800ms ease-out 200ms forwards;
+      opacity: 0;
+    }
+
+    .ledger-table {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      text-align: center;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.9rem;
+      min-width: 600px;
+      width: 100%;
+    }
+
+    .ledger-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ledger-item {
+      padding: 0.75rem;
+      background: #f4efe3;
+      border: 1px solid #cbc3b3;
+      border-radius: 4px;
+      word-break: break-word;
+    }
+
+    .ledger-arrow {
+      color: #c3311d;
+      font-weight: bold;
+      align-self: center;
+      font-size: 1.25rem;
+    }
+
+    .ledger-label {
+      color: #625d52;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Section content */
+    section h2 {
+      color: #1a1814;
+      border-bottom: 2px solid #cbc3b3;
+      padding-bottom: 0.5rem;
+    }
+
+    .section-content {
+      animation: reveal-fade 600ms ease-out forwards;
+      opacity: 0;
+    }
+
+    .section-content:nth-of-type(1) { animation-delay: 400ms; }
+    .section-content:nth-of-type(2) { animation-delay: 600ms; }
+    .section-content:nth-of-type(3) { animation-delay: 800ms; }
+    .section-content:nth-of-type(4) { animation-delay: 1000ms; }
+    .section-content:nth-of-type(5) { animation-delay: 1200ms; }
+    .section-content:nth-of-type(6) { animation-delay: 1400ms; }
+    .section-content:nth-of-type(7) { animation-delay: 1600ms; }
+
+    .feature-list {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+
+    .feature-list li {
+      padding: 0.75rem 0 0.75rem 1.5rem;
+      position: relative;
+      margin: 0.5rem 0;
+    }
+
+    .feature-list li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #c3311d;
+      font-weight: bold;
+    }
+
+    /* Receipt example */
+    .receipt-example {
+      background: #fbf8f1;
+      border-left: 3px solid #c3311d;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    /* Button/action styles */
+    button, .button {
+      background: #c3311d;
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      min-height: 44px;
+      min-width: 44px;
+      transition: background-color 150ms ease-out;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    button:hover, .button:hover {
+      background: #8a2416;
+    }
+
+    button:focus, .button:focus {
+      outline: 2px solid #1a1814;
+      outline-offset: 2px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #625d52;
+      font-size: 0.9rem;
+      border-top: 1px solid #cbc3b3;
+      margin-top: 4rem;
+    }
+
+    footer p {
+      margin: 0.5rem 0;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* Responsive layout */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      section {
+        padding: 0 1rem;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      .ledger-table {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        min-width: auto;
+      }
+
+      .ledger-arrow {
+        transform: rotate(90deg);
+        margin: 0.5rem 0;
+      }
+
+      .hero .subtitle {
+        font-size: 1rem;
+      }
+
+      .install-command {
+        font-size: 0.85rem;
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+
+      main {
+        padding: 0.75rem;
+      }
+
+      section {
+        padding: 0;
+        margin: 2rem 0;
+      }
+
+      .install-command {
+        padding: 1rem;
+      }
+
+      .routing-ledger {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* Accessibility: high contrast for focus states */
+    *:focus-visible {
+      outline: 2px solid #c3311d;
+      outline-offset: 2px;
+    }
+
+    /* Animation keyframes */
+    @keyframes reveal-fade {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <!-- Hero / Thesis -->
+    <section class="hero">
+      <div class="container">
+        <h1>The harness is capital.</h1>
+        <p class="subtitle">Models change every month. Your Claude Code hooks, subagents, and CLAUDE.md conventions shouldn't.</p>
+        <div class="install-command">
+          <pre><code>$ brew install 2lab-ai/tap/llmux</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Routing Ledger -->
+    <section class="section-content">
+      <div class="container">
+        <h2>Routing ledger</h2>
+        <p>One daemon. Five model-name signals. Four independent backend groups. The harness stays on your machine.</p>
+        <div class="routing-ledger">
+          <div class="ledger-column">
+            <div style="color: #625d52; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Harness</div>
+            <div class="ledger-item">Claude Code</div>
+            <div class="ledger-item">localhost:3456</div>
+          </div>
+
+          <div class="ledger-arrow">→</div>
+
+          <div class="ledger-column">
+            <div style="color: #625d52; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">llmux daemon</div>
+            <div class="ledger-item">/model claude-opus</div>
+            <div class="ledger-item">/model claude-sonnet</div>
+            <div class="ledger-item">/model claude-haiku</div>
+            <div class="ledger-item" style="color: #c3311d; font-weight: 600;">/model gpt-4o</div>
+            <div class="ledger-item">/model grok-3</div>
+          </div>
+
+          <div class="ledger-arrow">→</div>
+
+          <div class="ledger-column">
+            <div style="color: #625d52; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Backends</div>
+            <div class="ledger-item">Anthropic</div>
+            <div class="ledger-item">OpenAI (Codex)</div>
+            <div class="ledger-item">xAI (Grok)</div>
+            <div class="ledger-item">OpenRouter</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why the harness matters -->
+    <section class="section-content">
+      <div class="container">
+        <h2>Why the harness matters</h2>
+        <p>When you chose Claude Code, you also chose your conventions: slash commands, MCP servers, subagents, hooks, and CLAUDE.md rules. Changing model providers should not require rewiring your entire agent stack.</p>
+        <p>llmux proxies the Anthropic API locally. Every request routes through your daemon, which reads your model name, consults its ledger, and forwards to the appropriate backend. The result comes back as if it came from Anthropic—unchanged to your harness.</p>
+        <ul class="feature-list">
+          <li>One Rust binary: daemon, TUI, login, updater, launcher</li>
+          <li>Multi-account quota-aware scheduling and cooldown parking</li>
+          <li>Stable Homebrew channel; optional preview releases</li>
+          <li>Native macOS Islands companion and KDE/Qt port</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Request receipts -->
+    <section class="section-content">
+      <div class="container">
+        <h2>Request receipts and debugging</h2>
+        <p>Routing is not magic. Every request produces a receipt: the original model name you asked for, the backend it resolved to, latency, token counts, and the raw response body.</p>
+        <p>The live TUI shows you all four legs of every call in real time. A built-in viewer displays raw request/response bodies. Copy as <code>curl</code> to replay or hand off to another tool.</p>
+        <div class="receipt-example">
+          <code>
+Route: claude-opus → Anthropic<br>
+Request ID: req_024ac9c8f3e8a1b2<br>
+Status: 200<br>
+Latency: 1240ms<br>
+Tokens: 342 input, 156 output<br>
+Timestamp: 2026-08-27T03:14:22Z
+          </code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Remote topology and Islands -->
+    <section class="section-content">
+      <div class="container">
+        <h2>Remote-first topology and Islands</h2>
+        <p>The llmux daemon runs on one machine (your desktop, a cloud instance, or a shared box). Clients on any other machine can connect to it via <code>--remote</code> flag and per-machine API keys. One account, multiple machines, one routing decision point.</p>
+        <p>macOS gets a native Islands companion app. Set your accounts once, and every Claude Code instance on the network knows how to reach the daemon. KDE and Qt ports handle Linux and other platforms with the same clean separation.</p>
+        <ul class="feature-list">
+          <li>Pure clients: zero shared secrets on client machines</li>
+          <li>Per-machine auth keys tied to hardware</li>
+          <li>Native UIs for macOS, KDE/Qt, and command-line dashboards</li>
+          <li>Multi-account Fable ceiling controls</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Install and operate -->
+    <section class="section-content">
+      <div class="container">
+        <h2>Install, operate, and first steps</h2>
+        <p>Get the stable binary from Homebrew:</p>
+        <pre><code>$ brew install 2lab-ai/tap/llmux</code></pre>
+        <p>Start the daemon and launch Claude Code in one command:</p>
+        <pre><code>$ llmux run</code></pre>
+        <p>Log in or import existing accounts:</p>
+        <pre><code>$ llmux login
+$ llmux import --account <span style="color: #625d52;">&lt;email@example.com&gt;</span></code></pre>
+        <p>Open the live dashboard in your terminal:</p>
+        <pre><code>$ llmux dashboard</code></pre>
+        <p>Or use the foreground mode to watch requests in the TUI as Claude Code runs.</p>
+        <p>For preview releases and optional Islands install:</p>
+        <pre><code>$ brew tap 2lab-ai/tap
+$ brew install llmux@preview
+$ brew install llmux-islands</code></pre>
+      </div>
+    </section>
+
+    <!-- Candor: policy, ownership, affiliation -->
+    <section class="section-content">
+      <div class="container">
+        <h2>Candor</h2>
+        <p><strong>Ownership:</strong> llmux is built and maintained by 2lab.ai. Your accounts and API keys stay under your control. One human uses their own credentials; no pooling, resale, or third-party token sharing.</p>
+        <p><strong>Policy:</strong> Third-party flat-rate subscription tokens (e.g., shared Codex, OpenRouter flex) are policy-dependent and opt-in. You decide which backends to enable.</p>
+        <p><strong>Affiliation:</strong> llmux is not affiliated with Anthropic, OpenAI, xAI, or OpenRouter. It is a routing proxy that implements their published APIs.</p>
+        <p>Read the full README at <code>2lab-ai/llmux</code> on GitHub. Report issues, file feature requests, or inspect the source.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2lab.ai, 2026. llmux is provided as-is.</p>
+    <p><a href="https://github.com/2lab-ai/llmux">GitHub</a> · <a href="https://github.com/2lab-ai/llmux/issues">Issues</a> · <a href="https://github.com/2lab-ai/llmux/blob/main/README.md">README</a></p>
+  </footer>
+
+  <script>
+    // Minimal tap feedback for interactive elements
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mousedown', function() {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 150);
+      });
+    });
+
+    // Route state change demo (passive observation, no actual routing)
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const ledgerItems = document.querySelectorAll('.ledger-item');
+      ledgerItems.forEach((item, index) => {
+        if (index === 3) { // gpt-4o item
+          item.style.transition = 'color 300ms ease-out, background-color 300ms ease-out';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
