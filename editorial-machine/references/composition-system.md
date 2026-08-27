@@ -239,7 +239,10 @@ standard, and the skill MUST NOT claim reference parity on mobile.
   parallax for its own sake, no decorative loops. **[evidence]** — nothing ambient was measured.
 - **Density budget:** 5.0–15.8 animated elements per 1,000 px of page height across the corpus.
   Developer-tool pages sit at the low end (agentpub: 5.0, the sparsest). Count yours and put the
-  number in the brief. **[evidence]**
+  number in the brief. **[evidence]** — **caveat: this range is built from four sites, not five.**
+  char.com's animated-element count was never captured (only its two durations), and char is the
+  longest page in the corpus at 10,660 px, so it may fall outside 5.0–15.8. Treat the range as a
+  working budget, not as a measured bound.
 - **`prefers-reduced-motion: reduce` MUST disable all non-essential animation** — transitions,
   transforms, autoplay — while the page stays fully legible and every state stays reachable.
   **[decision]**; no reduced-motion handling was observed in the corpus.
@@ -273,7 +276,92 @@ sufficient — browser QA (Task 5) is the real gate.
 
 ---
 
-## 10. Anti-copy guardrails **[decision]**
+## 10. Performance floor — all `[decision]`
+
+No performance property was measured on any of the five sites — no transfer sizes, request counts,
+font-loading strategy, or paint timings are in the ledger. Everything here is our own standard,
+adopted for the same reason as §9: an editorial page that arrives as a flash of invisible text, or
+that hangs on a third-party font host, has failed the reader regardless of how it looks. Do not
+describe any of it as "how the reference sites do it".
+
+The three constraints below are ordered by how often they are actually violated.
+
+### 10.1 Webfont strategy
+
+This is the single largest risk in this system, because §2.4 licenses up to four type families.
+
+1. **`font-display: swap` on every `@font-face` (MUST).** Fallback text paints immediately and is
+   replaced when the webfont arrives. Never `block`, never the default. A 96 px hero (agentpub) that
+   is invisible for two seconds is worse than the same hero in Georgia.
+2. **At most two families may be remote webfonts (MUST).** Of the ≤ 4 families in §2.4, the other
+   two use system or locally-installed stacks. In practice: `--font-display` and at most one other.
+   `--font-body` and `--font-mono` SHOULD be system stacks — anarlog and johnjeong both ship a
+   system body face, so this costs nothing stylistically. Four render-blocking families is out of
+   system.
+3. **Preconnect, or self-host (MUST — one of the two).**
+   - Linked Google Fonts: `<link rel="preconnect" href="https://fonts.googleapis.com">` **and**
+     `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>` in `<head>`, before the
+     stylesheet link. The second one needs `crossorigin` or it does nothing for the font files.
+   - Self-hosted: `woff2` only, subset to the glyphs actually used, `rel="preload" as="font"
+     crossorigin` for the display face. Preferred when the page must survive offline.
+4. **Never `@import` fonts from inside CSS (MUST NOT).** It serializes discovery behind the
+   stylesheet and delays first paint. Use `<link>`.
+5. **Weights and styles are budgeted (SHOULD).** Load only what is used. The corpus heroes are
+   single weights — 400 (agentpub, johnjeong), 500 (char), 600 (anarlog). Do not pull a nine-weight
+   variable family to set one headline.
+6. **Real local fallback stacks, with matched metrics where it matters (MUST).** Already required by
+   §2.4 for legibility; here it is also the swap target. Check the page at both ends: fonts loaded,
+   and fonts blocked. Hierarchy must survive both.
+
+### 10.2 Proof-object complexity and payload ceiling
+
+Proof objects (§5) are authored in HTML/CSS/SVG, which makes them free of image requests but not
+free of weight or paint cost.
+
+| Budget | Ceiling | Note |
+|---|---|---|
+| Total HTML file, uncompressed, excluding webfonts | **≤ 250 KB** | It is one standalone file; this is generous. |
+| Any single inline SVG | **≤ 15 KB** | Past this, simplify the drawing — do not minify around it. |
+| All inline SVG combined | **≤ 40 KB** | |
+| Inline JS | **≤ 5 KB**, vanilla, `defer` or at end of `<body>` | Copy-to-clipboard and reveal logic is all this system needs. |
+| External requests | **≤ 3** (font CSS + font files), **0** when self-hosted | |
+
+Construction rules:
+
+- **Simplify vector paths before shipping them.** Traced/exported SVG carries thousands of points
+  and decimal noise; an authored diagram carries dozens. If a path string is unreadable, it was
+  exported, not authored — redraw it.
+- **The grain overlay (§2.3) MUST be cheap:** a CSS gradient or a small tiled SVG data-URI, one
+  layer, `pointer-events:none`, `aria-hidden="true"`. It covers the viewport, so it must never
+  repaint — no animation on it, no `backdrop-filter` under it.
+- **No `filter`/`box-shadow` stacks on large or animated surfaces.** Framed app windows get one soft
+  shadow, not four.
+- **Long transcripts and command lines get a scoped scroll container** (§7), not a wider page.
+- **Base64 raster images are banned**, including as data-URIs. They defeat the no-external-images
+  rule by moving the same bytes inline.
+
+### 10.3 No-build, no-external-images baseline
+
+This is the delivery contract, restated here because it is also what keeps the page fast.
+
+- **One standalone `.html` file.** No bundler, no build step, no package manifest. It must render
+  correctly opened directly from disk and served over plain HTTP.
+- **No framework, no CDN script tag.** Vanilla JS only, within the budget above. A landing page that
+  ships a runtime to animate three reveals has inverted its own cost.
+- **No externally hosted images, ever** — no CDN, no image host, no hotlinked source asset (§11).
+  Every visual is CSS, HTML, or inline SVG authored for this page.
+- **No analytics, tag manager, embedded video, iframe, or third-party widget** unless the page brief
+  names it and the reason.
+- **Fonts are the only permitted third-party origin**, and only under §10.1.
+
+**Verification (MUST, at Task 5 browser QA):** record final transferred bytes and request count;
+load once with the font origin blocked and confirm the page is fully legible and hierarchy holds;
+confirm no layout shift after fonts swap in beyond the expected reflow of the display line. Put all
+three results in the page brief. Unmeasured performance claims are not claims.
+
+---
+
+## 11. Anti-copy guardrails **[decision]**
 
 Reproduce the method. Never the artifact.
 
@@ -292,7 +380,7 @@ wrong.
 
 ---
 
-## 11. Pre-ship checklist
+## 12. Pre-ship checklist
 
 - [ ] Thesis (S1) is a belief or tension, not a feature list.
 - [ ] Proof object (S4) is real, authored, above/near the fold, and text-reachable.
@@ -304,5 +392,10 @@ wrong.
 - [ ] Two motion durations; density counted and recorded; reduced-motion honored.
 - [ ] 390×844 and 1440×1000: no body horizontal scroll, nothing clipped, hierarchy intact.
 - [ ] Skip link, focus-visible, 44px targets, landmarks, `lang`, title, description.
+- [ ] `font-display: swap` everywhere; ≤ 2 remote families; preconnect or self-host; no CSS `@import`.
+- [ ] Page legible and hierarchy intact with the font origin blocked (§10.1).
+- [ ] Within payload ceilings: ≤ 250 KB HTML, ≤ 15 KB per SVG, ≤ 40 KB SVG total, ≤ 5 KB JS,
+      ≤ 3 external requests. Bytes and request count recorded in the brief.
+- [ ] No build step, no framework, no external images, no base64 rasters, no third-party widgets.
 - [ ] Every factual claim traced to a source line in the page brief.
 - [ ] No copied asset, palette+type+order triple, or borrowed roster.
