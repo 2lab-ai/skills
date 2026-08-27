@@ -21,3 +21,7 @@ video-gen/public/tts
 video-gen/public/media
 video-gen/out
 video-gen/configs/
+
+.worktrees/
+
+.worktrees/
