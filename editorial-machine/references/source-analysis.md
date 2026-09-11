@@ -46,6 +46,11 @@ Every claim below carries one of four grades. Nothing is stated without one.
 recorded. They were **not** re-derived by this ledger; where a `[capture]` observation disagrees with
 a `[computed]` one, both are kept and the conflict is stated (§9) rather than silently resolved.
 
+**Dated grades.** A grade may carry a run date — `[computed 2026-09-11]` — when it comes from a
+later re-measurement. §4–§9 below are the 2026-08-27 run and are **not** rewritten by later runs;
+a newer number is appended in §11 next to the older one, so both the value and the drift stay
+readable. If §11 contradicts §4–§9, §11 is the current live state and §4–§9 is the history.
+
 ---
 
 ## 3. Capture set and its limits
@@ -68,10 +73,14 @@ All five sites are covered, anarlog included. Two limits apply to all of them:
    `johnjeong` — matching SHA-256). The other two (`anarlog`, `fastrepl`) differ by 15 and 40 bytes,
    which is emoji/icon re-rasterization at the same layout, not a different layout. [capture]
 
-**Therefore mobile behavior is NOT OBSERVED for any of the five sites.** Every responsive rule in
-`composition-system.md` is `[inferred]` from desktop structure plus general responsive practice, and
-is marked as such there. Do not let the skill claim "matches the reference on mobile" — there is no
-reference on mobile.
+**Therefore mobile behavior is NOT OBSERVED for any of the five sites *in this 2026-08-27 capture
+set*.** Every responsive rule in `composition-system.md` was written `[inferred]` from desktop
+structure plus general responsive practice, and is marked as such there.
+
+Superseded in part on 2026-09-11: a later run rendered all five sites at a real 390 px viewport and
+recorded hero sizes and `scrollWidth` there (§11). Narrow-viewport *type scaling* and *body overflow*
+are now observed; breakpoint values, container widths and layout reflow still are not. Do not let the
+skill claim "matches the reference on mobile" beyond the two properties §11 actually measured.
 
 3. Each capture is **viewport-only, above the fold** — not a full-page render. Section ordering
    below therefore comes from `[computed]` DOM order, not from the images. [capture]
@@ -140,7 +149,7 @@ Above-the-fold, in order: `anarlog` wordmark in a geometric-round display face; 
 handwriting-script hero (`The AI notepad for private meetings.`) at roughly a third of the viewport
 height; a two-line plain-system subhead doing the actual explaining; a black `Download for Apple
 Silicon` button with an attached dropdown chevron for other builds; then a macOS-chrome window
-showing a real note with a live audio waveform. [capture]
+showing a real note with an audio waveform. [capture]
 
 Signature techniques:
 
@@ -295,19 +304,33 @@ Mobile behavior: not observed (§3).
    `#f2f1ef`, warm-black `#332d23`), never from lowering contrast. This is the single most
    transferable finding in the corpus, and the easiest one to get wrong by imitating the mood
    instead of the numbers.
+   *Scope:* what is observed is this five-site range. The **12:1 floor** in `composition-system.md`
+   §2.1 is our own threshold chosen below the corpus minimum (13.63:1) — a `[decision]` informed by
+   the measurement, not a law these five sites obey or publish.
 2. **Near-white warm-neutral canvas, near-black text.** No site uses a mid-tone canvas or a dark
    theme. Range of canvas lightness across the corpus: `#f2f1ef` → `#ffffff`.
 3. **Serif or script carries character; system or mono carries information.** Which family sits in
    which slot varies; the *split* does not.
-4. **No stock photography anywhere.** Proof is a real UI window, a real transcript, or a real
-   command. [capture]
+4. **No stock photography in any above-the-fold capture.** Proof is a real UI window, a real
+   transcript, or a real command. [capture]
+   *Scope:* this is an absence of *stock* imagery in ten viewport-only captures — not an absence of
+   images. The 2026-09-11 run counts image elements per page: anarlog 47, char 18, fastrepl 13,
+   agentpub 5, johnjeong 0 (§11). These sites ship images and, being live apps, ship build tooling
+   and frameworks too (never observed either way — §8). The **no-external-images / no-framework /
+   no-build** rules in `composition-system.md` §10.3 are *our* standalone-lane delivery choices;
+   they are not properties measured on this corpus. Never present them as "how the reference sites
+   do it".
 5. **The proof object appears above or immediately below the fold**, never after a features grid.
 6. **Concrete transformation over adjectives.** agentpub's identical-question before/after is the
-   purest instance; char's dated note and anarlog's live waveform are the same move.
+   purest instance; char's dated note and anarlog's waveform are the same move.
 7. **Explicit boundaries as credibility.** anarlog names privacy/local-first/open-source before
    pricing; fastrepl's roster names individuals who can be checked.
 8. **Motion is discrete and short.** Two speeds on char (0.15 s / 0.30 s); single-digit transition
    counts on the short pages.
+   *Scope:* the two durations are **one site's** measurement (char), not a corpus invariant — no
+   duration was recorded for the other four. "Exactly two durations" in `composition-system.md` §8
+   is our own budget `[decision]`, adopted because char's pair is legible, not because five sites
+   were found to use two.
 
 ### What varies — and therefore must be a decision, not a default
 
@@ -337,7 +360,7 @@ The reusable part. Each was observed in at least one site.
 | Framed app window | char, anarlog | macOS chrome + **real dated/named content**, never lorem |
 | Held-constant before/after | agentpub | Identical input, two outputs, labeled by the reader's question |
 | Copyable command surface | agentpub | `$` prefix, mono, copy button, repeated later in the page |
-| Live-state indicator | anarlog | Audio waveform inside the window — proves it is running |
+| Live-state indicator | anarlog | Audio waveform inside the window. It **reads as** live capture; it is a rendered animation, and no backend state was observed behind it. Use the pattern for its *legibility*, and never claim a running process as proven by an on-screen animation. |
 | Named-people trust roster | fastrepl | Underlined links in running prose, not a logo grid |
 | Shipped-work cards | fastrepl | Each product in its own wordmark |
 | Founder letter | anarlog | Closes the page in first person |
@@ -405,9 +428,14 @@ were taken at a different viewport than the screenshots. `Besley 56px/500` is th
 
 ---
 
-## 10. Coverage
+## 10. Coverage — name presence only
 
 Sites required: `char.com`, `anarlog.so`, `fastrepl.com`, `agentpub.dev`, `johnjeong.com`.
+
+**What the check below proves:** each of the five host strings appears somewhere in this file.
+**What it does not prove:** that any site was analyzed thoroughly, that its ledger is current, that
+the numbers are right, or that a section exists for it. It is a spelling/omission guard, nothing
+more. Its output is a name-presence count; do not quote it as evidence of analysis depth.
 
 ```bash
 python3 - <<'PY'
@@ -415,6 +443,71 @@ from pathlib import Path
 p=Path('editorial-machine/references/source-analysis.md').read_text()
 for host in ['char.com','anarlog.so','fastrepl.com','agentpub.dev','johnjeong.com']:
     assert host in p, host
-print('5/5 reference sites covered')
+print('5/5 reference site names present in the ledger')
 PY
 ```
+
+---
+
+## 11. Re-measurement — 2026-09-11 `[computed 2026-09-11]`
+
+A second run rendered all five live sites at two real viewports (1440×1000 and 390×844) and read
+the DOM. It **appends to** §4–§9; nothing above was rewritten. Raw receipt:
+[`2026-09-11-measurements.json`](2026-09-11-measurements.json) (10 records, one per site×viewport).
+
+### 11.1 Source paths
+
+| Evidence | Path | In repo? |
+|---|---|---|
+| Measurement receipt (this run) | `editorial-machine/references/2026-09-11-measurements.json` | yes — byte-identical copy of the run's output |
+| Renders, 1440×1000 | `<session scratchpad>/reference-{char.com,anarlog.so,fastrepl.com,agentpub.dev,johnjeong.com}-1440.png` | no |
+| Renders, 390×844 | `<session scratchpad>/reference-{…}-390.png` | no |
+| 2026-08-27 capture set | `*-desktop.jpg` / `*-mobile.jpg`, §3 | no |
+
+Screenshot binaries stay in the session scratchpad on purpose: they are third-party page renders,
+and §7 forbids re-hosting source imagery. Cite them by path and date; do not commit them.
+
+### 11.2 What was measured
+
+| Site | HTTP | Hero size 1440 → 390 | scrollWidth @390 | Background (1440) | Image elements |
+|---|---|---|---|---|---|
+| char.com | 200 / 304 | 72px → 30px | 390 | `rgb(255,255,255)` | 18 |
+| anarlog.so | 200 / 304 | 72px → 48px | 390 | `rgb(242,241,239)` | 47 |
+| fastrepl.com | 200 / 200 | *(no heading elements at either width)* | 390 | `rgb(250,248,246)` | 13 |
+| agentpub.dev | 200 / 200 | 96px → 58px | **525** | `rgb(250,248,246)` | 5 |
+| johnjeong.com | 200 / 304 | 36px → 36px | 390 | `rgba(0,0,0,0)` | 0 |
+
+All five returned a rendered page at both widths, so this is a live-state check as well as a
+measurement. Backgrounds match the 2026-08-27 `[computed]` canvases (`#ffffff`, `#f2f1ef`,
+`#faf8f6`, `#faf8f6`, transparent) — T1/T2 in §9 were capture-vs-computed conflicts and stay open;
+this run agrees with the *computed* side and says nothing about the grain overlay.
+
+### 11.3 Readings
+
+1. **Fluid type is real, and its ramp is a per-site decision.** char halves its hero (72→30),
+   anarlog cuts a third (72→48), agentpub cuts ~40% (96→58), johnjeong does not move at all
+   (36→36). §7 of `composition-system.md` requires `clamp()` and a recorded mobile end; this run
+   shows the corpus spread is 0%–58% reduction. Pick a ramp and record both ends — there is no
+   house number to copy.
+2. **agentpub.dev overflows at 390 px: `scrollWidth` 525 against a 390 px viewport.** A 135 px
+   horizontal overflow on the narrow viewport. **Do not copy this.** It is the exact failure
+   `composition-system.md` §7 forbids ("no horizontal scroll on `<body>` at either width") and it
+   confirms the rule is ours, not the corpus's — a reference site fails it. Our gate viewports stay
+   390×844 and 1440×1000, and a page that reproduces this is rejected.
+3. **fastrepl.com still exposes no heading elements**, at either width — the heading list is empty
+   in both records, consistent with the 2026-08-27 `[computed]` finding "no `<h1>` on the page at
+   all". Its typographic hierarchy is therefore visual only: no semantic heading a screen reader or
+   a search engine can use. `composition-system.md` §3.3's "exactly one `h1`" is a *deliberate
+   deviation from the corpus*, restated here with a second, independent measurement behind it.
+4. **johnjeong's 36 px nameplate is unchanged** since 2026-08-27 and does not scale down — the
+   smallest hero in the corpus is small enough to need no mobile ramp.
+5. **Image counts are not zero** (§5 item 4 scope note): anarlog 47, char 18, fastrepl 13,
+   agentpub 5. These pages ship images; our no-external-images rule is a delivery choice of ours.
+
+### 11.4 Still not observed after this run
+
+The receipt stores `host`, viewport, `scrollWidth`, `title`, background, a heading list
+(text/font/size) and an image-element count. It does **not** store: tag level for each heading
+(h1 vs h2 — item 3 above leans on the 2026-08-27 `[computed]` reading for that), page height,
+motion counts, durations, breakpoints, font-loading strategy, transfer sizes, request counts, or
+any accessibility property. §8's "not observed" list otherwise stands.

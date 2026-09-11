@@ -181,7 +181,7 @@ photography — zero instances across the corpus. No externally hosted images. *
 | **Held-constant before/after** | Output quality is the claim | Identical input in both columns; only the output differs. Label each column with the reader's own question (`You don't read all this, right?`). Strongest pattern in the corpus. **[evidence]** |
 | **Framed app window** | There is a real UI | Chrome + **real dated, named content**. char shows a specific August 27 note; anarlog shows a live waveform. Lorem or `Feature One` kills it. **[evidence]** |
 | **Copyable command** | It installs from a terminal | Mono surface, `$` prefix, copy button, real command. Above the fold, repeated at S7. **[evidence]** |
-| **Live-state indicator** | It runs continuously | A waveform, a counter, a pulse — proof it is not a picture. **[evidence]** |
+| **Live-state indicator** | It runs continuously | A waveform, a counter, a pulse. **[evidence]** for the pattern's presence (anarlog); **not** evidence of liveness — an on-screen animation shows motion, not a running process. If the page claims "it is running", bind the indicator to real state (a timestamp, a counted value, a status the reader can check) and say what drives it in the page brief. |
 | **Named-people roster** | Credibility is borrowed | Underlined links in running prose. Never a grayscale logo grid. **[evidence]** |
 | **Shipped-work cards** | The proof is other work | Each item in its own wordmark. **[evidence]** |
 | **Capability boundary table** | The claim is smallness/auditability | Enumerate what exists and what does not, in the same table. **[decision]** |
@@ -212,9 +212,15 @@ johnjeong is the only left-aligned page in the corpus and the only personal one.
 
 ## 7. Responsive rules — all `[decision]`
 
-**The corpus contains no mobile evidence.** All ten captures are 1292×924, and three "mobile" files
-are byte-identical to their desktop twin (ledger §3). Nothing below is imitation; it is our own
-standard, and the skill MUST NOT claim reference parity on mobile.
+**The 2026-08-27 corpus contains no mobile evidence.** All ten captures are 1292×924, and three
+"mobile" files are byte-identical to their desktop twin (ledger §3). Nothing below is imitation; it
+is our own standard, and the skill MUST NOT claim reference parity on mobile.
+
+A 2026-09-11 re-measurement (ledger §11) adds exactly two narrow-viewport facts: hero type does
+scale down (0%–58% between 1440 px and 390 px, per site), and **agentpub.dev itself overflows at
+390 px** (`scrollWidth` 525). That is a reference site failing the no-horizontal-scroll rule below —
+evidence that the rule is ours to hold, not theirs to copy. Everything else here remains
+`[decision]`.
 
 - Support **390×844** and **1440×1000** as the two gate viewports.
 - **No horizontal scroll on `<body>` at either width.** Guard it: `overflow-x:hidden` on the
@@ -286,6 +292,12 @@ describe any of it as "how the reference sites do it".
 
 The three constraints below are ordered by how often they are actually violated.
 
+**Lane scope.** §10.1 (webfonts) applies to both delivery lanes. §10.2 and §10.3 are
+written for the **standalone lane** — one self-contained file with no host application.
+A page built into an existing app inherits that app's bundler, runtime and budgets
+instead; its measures are in **§10.4**. Do not quote a standalone ceiling at an app
+route, and do not use "the app has a bundler anyway" as licence to skip §10.4.
+
 ### 10.1 Webfont strategy
 
 This is the single largest risk in this system, because §2.4 licenses up to four type families.
@@ -313,12 +325,15 @@ This is the single largest risk in this system, because §2.4 licenses up to fou
    §2.4 for legibility; here it is also the swap target. Check the page at both ends: fonts loaded,
    and fonts blocked. Hierarchy must survive both.
 
-### 10.2 Proof-object complexity and payload ceiling
+### 10.2 Proof-object complexity and payload ceiling — standalone lane
 
 Proof objects (§5) are authored in HTML/CSS/SVG, which makes them free of image requests but not
 free of weight or paint cost.
 
-| Budget | Ceiling | Note |
+The ceilings in this table are **standalone-lane** numbers: they describe one self-contained file.
+In the existing-app lane the equivalent budget is what the route *adds* — see §10.4.
+
+| Budget (standalone lane) | Ceiling | Note |
 |---|---|---|
 | Total HTML file, uncompressed, excluding webfonts | **≤ 250 KB** | It is one standalone file; this is generous. |
 | Any single inline SVG | **≤ 15 KB** | Past this, simplify the drawing — do not minify around it. |
@@ -340,9 +355,10 @@ Construction rules:
 - **Base64 raster images are banned**, including as data-URIs. They defeat the no-external-images
   rule by moving the same bytes inline.
 
-### 10.3 No-build, no-external-images baseline
+### 10.3 Standalone lane: no-build, no-external-images baseline
 
-This is the delivery contract, restated here because it is also what keeps the page fast.
+This is the delivery contract **for the standalone lane**, restated here because it is also what
+keeps the page fast. It does not describe a page that ships inside an existing application (§10.4).
 
 - **One standalone `.html` file.** No bundler, no build step, no package manifest. It must render
   correctly opened directly from disk and served over plain HTTP.
@@ -358,6 +374,31 @@ This is the delivery contract, restated here because it is also what keeps the p
 load once with the font origin blocked and confirm the page is fully legible and hierarchy holds;
 confirm no layout shift after fonts swap in beyond the expected reflow of the display line. Put all
 three results in the page brief. Unmeasured performance claims are not claims.
+
+### 10.4 Existing-app lane: delta and regression — all `[decision]`
+
+When the page is a route inside a real application, the app already owns the bundler, the runtime,
+the router and the font pipeline. "No build step, no framework" is not achievable there and is not
+the goal; the goal is that this route does not degrade the app.
+
+- **Measure the delta, not the absolute.** Record the route's **transferred bytes** and request
+  count (browser network panel, cold load, cache disabled) and — where the app reports it — the
+  build's per-route JS/CSS output before and after the change. What this page *adds* is the number
+  that belongs in the page brief. There is no fixed kilobyte ceiling here; an unexplained increase
+  is the failure, not a threshold crossing.
+- **Reuse before adding.** Use the app's existing font pipeline, styling system, image/asset
+  handling and component primitives. A new runtime dependency (animation library, UI kit, icon
+  package) needs a named reason in the page brief; "the theme wanted it" is not one.
+- **Regression gates are the app's own, unmodified.** Run its build, lint, type-check and test
+  commands and quote the output; if the repo has route-budget, bundle-size, Lighthouse or visual
+  regression checks, those are the performance gates — do not substitute a hand-measured number for
+  a check the repo already runs, and never relax a threshold to make this page pass.
+- **Preserved behavior stays preserved.** Other routes, the shared shell/layout, metadata and
+  sitemap generation, i18n, and analytics behave as before. Confirm at least one other route still
+  renders after the change.
+- **The content rules do not relax.** No externally hosted images, no stock photography, no base64
+  rasters, no third-party widget beyond what the app already ships (§10.3's content clauses, §11).
+  The accessibility floor (§9) and motion rules (§8) apply identically.
 
 ---
 
@@ -394,8 +435,12 @@ wrong.
 - [ ] Skip link, focus-visible, 44px targets, landmarks, `lang`, title, description.
 - [ ] `font-display: swap` everywhere; ≤ 2 remote families; preconnect or self-host; no CSS `@import`.
 - [ ] Page legible and hierarchy intact with the font origin blocked (§10.1).
-- [ ] Within payload ceilings: ≤ 250 KB HTML, ≤ 15 KB per SVG, ≤ 40 KB SVG total, ≤ 5 KB JS,
-      ≤ 3 external requests. Bytes and request count recorded in the brief.
-- [ ] No build step, no framework, no external images, no base64 rasters, no third-party widgets.
+- [ ] *(standalone lane)* Within payload ceilings: ≤ 250 KB HTML, ≤ 15 KB per SVG, ≤ 40 KB SVG
+      total, ≤ 5 KB JS, ≤ 3 external requests. Bytes and request count recorded in the brief.
+- [ ] *(standalone lane)* No build step, no framework, no external images, no base64 rasters, no
+      third-party widgets.
+- [ ] *(existing-app lane)* Route delta measured (transferred bytes + requests, before/after), no
+      unexplained new dependency, the app's own build/lint/type/test and budget gates green, one
+      other route re-checked (§10.4).
 - [ ] Every factual claim traced to a source line in the page brief.
 - [ ] No copied asset, palette+type+order triple, or borrowed roster.

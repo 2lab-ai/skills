@@ -23,24 +23,39 @@ Remotion-based video generation skill.
 - TTS integration
 - Configurable via JSON
 
-### 📰 editorial-machine
-Builds a standalone product/founder landing page in an editorial composition grammar
-(warm-paper canvas, serif-led thesis, one authored proof object per product), synthesized
+### 🧭 landing-page — **the entrypoint for landing pages**
+Start every landing/product/launch/founder page request here. It pins the target contract
+(site, repo + path, route, framework, preserved behavior, delivery URL), picks the delivery
+lane, and routes to a theme workflow.
+- Lanes: **existing app** (built in the app's own stack, gated by the app's own build/lint/test)
+  vs **standalone** (one self-contained HTML file, gated by the editorial validator)
+- Theme routing: named theme → its workflow; **no theme named → `editorial-machine`, the default**;
+  unregistered theme → stop and ask, never a silent substitution
+- A live target this repo cannot reach is reported, not downgraded to a standalone file
+
+### 📰 editorial-machine — the default theme
+The theme workflow `landing-page` routes to when no theme is named: an editorial composition
+grammar (warm-paper canvas, serif-led thesis, one authored proof object per product), synthesized
 from char.com, anarlog.so, fastrepl.com, agentpub.dev, and johnjeong.com.
-- Fact ledger → thesis + unique proof object → page brief → implementation → validator → browser QA
-- Deterministic `scripts/validate.py` gate (title/description/main/h1/skip link/install snippet/reduced-motion/overflow)
+- Fact ledger → thesis + unique proof object → page brief → implementation → per-lane gates → browser QA
+- Deterministic `scripts/validate.py` gate, **standalone lane only**
+  (title/description/main/h1/skip link/install snippet/reduced-motion/overflow)
 - Shares grammar, never a cloned DOM/template, across pages
 
 ## Installation
 
-Each skill can be installed independently:
+Most skills can be installed independently:
 
 ```bash
 claude install-skill https://github.com/2lab-ai/skills/scraping
 claude install-skill https://github.com/2lab-ai/skills/sns-scraping
 claude install-skill https://github.com/2lab-ai/skills/video-gen
-claude install-skill https://github.com/2lab-ai/skills/editorial-machine
 ```
+
+**Landing pages are the exception:** `landing-page` resolves its theme assets by relative path,
+so the router and its themes must live in the **same skills directory**. Copy both directories
+together — `cp -R landing-page editorial-machine ~/.claude/skills/` — or clone this repository
+and point your skills directory at it. `landing-page` installed alone cannot build anything.
 
 ## Prerequisites
 

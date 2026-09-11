@@ -1,0 +1,280 @@
+[
+  {
+    "host": "char.com",
+    "status": 200,
+    "url": "https://char.com/",
+    "width": 1440,
+    "height": 1000,
+    "scrollWidth": 1440,
+    "title": "Char — AI notepad that gets things done.",
+    "background": "rgb(255, 255, 255)",
+    "headings": [
+      {
+        "text": "AI notepad that gets things done.",
+        "font": "Besley, Georgia, serif",
+        "size": "72px"
+      },
+      {
+        "text": "Everyone is becoming a manager. Our tools haven't caught up.",
+        "font": "Besley, Georgia, serif",
+        "size": "52px"
+      },
+      {
+        "text": "To dto dne.",
+        "font": "Besley, Georgia, serif",
+        "size": "72px"
+      }
+    ],
+    "images": 18
+  },
+  {
+    "host": "char.com",
+    "status": 304,
+    "url": "https://char.com/",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "title": "Char — AI notepad that gets things done.",
+    "background": "rgb(255, 255, 255)",
+    "headings": [
+      {
+        "text": "AI notepad that gets things done.",
+        "font": "Besley, Georgia, serif",
+        "size": "30px"
+      },
+      {
+        "text": "Everyone is becoming a manager. Our tools haven't caught up.",
+        "font": "Besley, Georgia, serif",
+        "size": "24px"
+      },
+      {
+        "text": "To dto dne.",
+        "font": "Besley, Georgia, serif",
+        "size": "30px"
+      }
+    ],
+    "images": 18
+  },
+  {
+    "host": "anarlog.so",
+    "status": 200,
+    "url": "https://anarlog.so/",
+    "width": 1440,
+    "height": 1000,
+    "scrollWidth": 1440,
+    "title": "Private AI Meeting Notetaker | Anarlog",
+    "background": "rgb(242, 241, 239)",
+    "headings": [
+      {
+        "text": "The AI notepad for private meetings.",
+        "font": "Caveat, cursive",
+        "size": "72px"
+      },
+      {
+        "text": "people love us at",
+        "font": "\"Reenie Beanie\", \"Patrick Hand\", cursive",
+        "size": "22px"
+      },
+      {
+        "text": "Private from call to file",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "What people say",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "Open source by default",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "Simple pricing",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "Keep your meeting notes yours.",
+        "font": "Caveat, cursive",
+        "size": "48px"
+      }
+    ],
+    "images": 47
+  },
+  {
+    "host": "anarlog.so",
+    "status": 304,
+    "url": "https://anarlog.so/",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "title": "Private AI Meeting Notetaker | Anarlog",
+    "background": "rgb(242, 241, 239)",
+    "headings": [
+      {
+        "text": "The AI notepad for private meetings.",
+        "font": "Caveat, cursive",
+        "size": "48px"
+      },
+      {
+        "text": "people love us at",
+        "font": "\"Reenie Beanie\", \"Patrick Hand\", cursive",
+        "size": "22px"
+      },
+      {
+        "text": "Private from call to file",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "What people say",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "Open source by default",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "Simple pricing",
+        "font": "Caveat, cursive",
+        "size": "30px"
+      },
+      {
+        "text": "Keep your meeting notes yours.",
+        "font": "Caveat, cursive",
+        "size": "36px"
+      }
+    ],
+    "images": 47
+  },
+  {
+    "host": "fastrepl.com",
+    "status": 200,
+    "url": "https://fastrepl.com/",
+    "width": 1440,
+    "height": 1000,
+    "scrollWidth": 1440,
+    "title": "Fastrepl",
+    "background": "rgb(250, 248, 246)",
+    "headings": [],
+    "images": 13
+  },
+  {
+    "host": "fastrepl.com",
+    "status": 200,
+    "url": "https://fastrepl.com/",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "title": "Fastrepl",
+    "background": "rgb(250, 248, 246)",
+    "headings": [],
+    "images": 13
+  },
+  {
+    "host": "agentpub.dev",
+    "status": 200,
+    "url": "https://agentpub.dev/",
+    "width": 1440,
+    "height": 1000,
+    "scrollWidth": 1440,
+    "title": "AgentPub",
+    "background": "rgb(250, 248, 246)",
+    "headings": [
+      {
+        "text": "AgentPub",
+        "font": "\"Goudy Bookletter 1911\", \"Iowan Old Style\", \"Palatino Linotype\", Palatino, serif",
+        "size": "96px"
+      },
+      {
+        "text": "Examples",
+        "font": "\"Goudy Bookletter 1911\", \"Iowan Old Style\", \"Palatino Linotype\", Palatino, serif",
+        "size": "34px"
+      }
+    ],
+    "images": 5
+  },
+  {
+    "host": "agentpub.dev",
+    "status": 200,
+    "url": "https://agentpub.dev/",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 525,
+    "title": "AgentPub",
+    "background": "rgb(250, 248, 246)",
+    "headings": [
+      {
+        "text": "AgentPub",
+        "font": "\"Goudy Bookletter 1911\", \"Iowan Old Style\", \"Palatino Linotype\", Palatino, serif",
+        "size": "58px"
+      },
+      {
+        "text": "Examples",
+        "font": "\"Goudy Bookletter 1911\", \"Iowan Old Style\", \"Palatino Linotype\", Palatino, serif",
+        "size": "34px"
+      }
+    ],
+    "images": 5
+  },
+  {
+    "host": "johnjeong.com",
+    "status": 200,
+    "url": "https://johnjeong.com/",
+    "width": 1440,
+    "height": 1000,
+    "scrollWidth": 1440,
+    "title": "John Jeong",
+    "background": "rgba(0, 0, 0, 0)",
+    "headings": [
+      {
+        "text": " John Jeong ",
+        "font": "\"Instrument Serif\", serif",
+        "size": "36px"
+      },
+      {
+        "text": "Things I'm working on and interested in",
+        "font": "\"Instrument Serif\", serif",
+        "size": "24px"
+      },
+      {
+        "text": "Find me in",
+        "font": "\"Instrument Serif\", serif",
+        "size": "24px"
+      }
+    ],
+    "images": 0
+  },
+  {
+    "host": "johnjeong.com",
+    "status": 304,
+    "url": "https://johnjeong.com/",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "title": "John Jeong",
+    "background": "rgba(0, 0, 0, 0)",
+    "headings": [
+      {
+        "text": " John Jeong ",
+        "font": "\"Instrument Serif\", serif",
+        "size": "36px"
+      },
+      {
+        "text": "Things I'm working on and interested in",
+        "font": "\"Instrument Serif\", serif",
+        "size": "24px"
+      },
+      {
+        "text": "Find me in",
+        "font": "\"Instrument Serif\", serif",
+        "size": "24px"
+      }
+    ],
+    "images": 0
+  }
+]
