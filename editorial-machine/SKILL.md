@@ -1,12 +1,28 @@
 ---
 name: editorial-machine
-description: Use when the user asks to build a product, project, or personal landing page in the editorial style researched from char.com, anarlog.so, fastrepl.com, agentpub.dev, and johnjeong.com — a warm-paper canvas, serif-led thesis, one authored proof object, one rationed accent. Triggers on requests for a "landing page", "product page", "launch page", "founder page", or an explicit ask to build a page "in that style" (e.g. for llmux, xfx, or a personal site).
+description: Use when the editorial theme is explicitly named, or when the landing-page skill routes here as its default theme — a warm-paper canvas, serif-led thesis, one authored proof object, one rationed accent, in the style researched from char.com, anarlog.so, fastrepl.com, agentpub.dev, and johnjeong.com. A generic "landing page"/"product page" request starts at landing-page, not here.
 ---
 
 # editorial-machine
 
-Builds one standalone HTML landing page per product, in the composition *grammar*
-synthesized from five reference sites — never a shared template, never a cloned DOM.
+The default theme workflow behind [`landing-page`](../landing-page/SKILL.md). It
+builds a page in the composition *grammar* synthesized from five reference sites
+— never a shared template, never a cloned DOM.
+
+## Lanes
+
+The target contract and lane come from [`landing-page/SKILL.md`](../landing-page/SKILL.md)
+§1–§2. They are not cosmetic; they change the implementation surface and the gates.
+
+- **Existing-app lane** — the page is a route inside a real app or site repo. It
+  is built in the app's own stack, ships through the app's own build, and is
+  checked by the app's own gates.
+- **Standalone lane** — the page is a self-contained `.html` file with no host
+  app: no build step, no framework, one file.
+
+If no lane was established, go back to `landing-page/SKILL.md` before writing
+markup. Delivering a standalone file for a target that is an app route is a
+failed delivery, not a partial one.
 
 ## Required reading (before drafting anything)
 
@@ -42,20 +58,46 @@ do not duplicate them here, cite them.
    eyeballed), the type roles, the motion count/density, and a source line for every
    factual claim from step 1. This brief is what an external reviewer checks the page
    against — it is not optional paperwork.
-4. **Implementation.** Standalone HTML/CSS/JS, no framework or build step. Tokens
-   from composition-system.md §2, section grammar §4. No cloned DOM/template — not
-   from a reference site, and not from another page this skill previously produced.
-5. **Validator.**
-   ```bash
-   python3 editorial-machine/scripts/validate.py <page.html>
-   ```
-   Zero issues required. It deterministically rejects a missing `<title>`,
-   `<meta name="description">`, `<main>`, exactly-one `<h1>`, skip link, install
-   snippet, `prefers-reduced-motion` handling, and horizontal-overflow guard —
-   plus the **reduced-motion trap**: an element left at `opacity: 0` whose only
-   route to visible is an animation the reduced-motion block switches off.
-   **Passing the validator is necessary, not sufficient.**
-6. **Browser QA.** Real renders, not a hypothetical review:
+4. **Implementation.** Tokens from composition-system.md §2, section grammar §4.
+   No cloned DOM/template — not from a reference site, and not from another page
+   this skill previously produced. The surface depends on the lane:
+   - *Standalone lane:* one self-contained HTML/CSS/JS file, no framework or
+     build step (composition-system.md §10.3).
+   - *Existing-app lane:* the target repo's actual stack — its framework, router,
+     component layer and styling system. Add no new runtime dependency unless the
+     page brief names it and why. Keep the app's shell, metadata, i18n and
+     analytics behavior intact (composition-system.md §10.4).
+5. **Gates by lane.** Run them before any readiness claim.
+   - *Standalone lane only* — the deterministic validator, invoked by **absolute
+     path**. This skill's directory is not inside the target repo, so a
+     repo-relative `editorial-machine/scripts/…` resolves only when the shell
+     happens to sit in the skills checkout:
+     ```bash
+     # EM_ROOT = the directory that holds this SKILL.md, resolved absolutely —
+     # e.g. ~/.claude/skills/editorial-machine or <skills-checkout>/editorial-machine.
+     EM_ROOT="$(cd "$(dirname '/abs/path/to/editorial-machine/SKILL.md')" && pwd)"
+     python3 "$EM_ROOT/scripts/validate.py" /abs/path/to/page.html
+     ```
+     Both arguments absolute; do not `cd` into the target repo and hope. If
+     `$EM_ROOT/scripts/validate.py` is missing, the theme's assets were not
+     installed alongside the router — say so and stop, do not skip the gate.
+     Zero issues required. It rejects a missing `<title>`,
+     `<meta name="description">`, `<main>`, exactly-one `<h1>`, skip link, install
+     snippet, `prefers-reduced-motion` handling, and horizontal-overflow guard —
+     plus the **reduced-motion trap**: an element left at `opacity: 0` whose only
+     route to visible is an animation the reduced-motion block switches off.
+     It assumes one whole HTML document and a copyable install command, so it is
+     **not** run against an app route or a component file: a studio or marketing
+     site inside an app has no mandatory install snippet, and the page is not one
+     file. Do not weaken the validator to make an app route pass it.
+   - *Existing-app lane only* — the app's own gates, unmodified: its build,
+     lint, type-check and test commands, plus whatever CI runs on a PR. Quote
+     their output. A page that breaks the app's build is not shipped.
+   - Both lanes: the composition-system.md §12 pre-ship checklist (its
+     standalone-only rows are marked there) and step 6 below.
+   **Passing the gates is necessary, not sufficient.**
+6. **Browser QA.** Real renders at the delivery URL from the target contract, not
+   a hypothetical review:
    - Desktop (1440×1000) and mobile (390×844): no `<body>` horizontal scroll,
      nothing clipped, hierarchy intact.
    - Keyboard: tab order reaches every action; every interactive element shows a
@@ -67,16 +109,29 @@ do not duplicate them here, cite them.
    - Script blocked (`--disable-javascript` or a context with JS off): the page
      still renders its content. A reveal may be hidden by script, never by default.
    Capture both viewport receipts per page — one screenshot is not readiness.
-7. **Fix loop.** Any validator issue or QA failure sends you back to step 4. Re-run
-   the validator and re-check QA until both are clean before calling the page done.
-   Readiness is the named receipts above, not self-opinion.
+7. **Fix loop.** Any failed gate or QA failure sends you back to step 4. Re-run
+   the lane's gates and re-check QA until both are clean before calling the page
+   done. Readiness is the named receipts above, not self-opinion.
 
 ## Output contract
 
-- One standalone `.html` file per page — no build step, no external image hosting.
+Both lanes:
+
 - The page brief (markdown) from step 3, alongside the page.
-- The validator command and its output, captured verbatim.
 - Two browser receipts per page (desktop + mobile), not one side-by-side screenshot.
+- No external image hosting; every visual authored as CSS/HTML/SVG.
+
+Standalone lane adds:
+
+- One standalone `.html` file per page, no build step.
+- The validator command and its output, captured verbatim.
+
+Existing-app lane adds:
+
+- The route as it exists in the target repo (files changed, path, and the route
+  it serves).
+- The app's own gate commands and their output, captured verbatim.
+- The delivery URL actually loaded for the browser receipts.
 
 ## Hard rules
 
