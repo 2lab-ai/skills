@@ -20,6 +20,7 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 - **NEVER** use letter-spaced all-caps monospace labels as a house style, `//` decorations, or the stock generated-design faces (Inter, JetBrains Mono). Rows: H3, B5, R12, R13.
 - **SHOULD** choose the mono by developer reaction first, then filter by byte budget and licence (a subset of an OFL font with a Reserved Font Name is a renamed font). Rows: B3, T10, A13, T11.
 - **SHOULD** self-host fonts with the framework's font pipeline so they load with no layout shift and no third-party request. Rows: T11, S7.
+- **SHOULD** load a webfont for display type only and keep running prose in the system stack; if prose must use a webfont, compare CLS with and without it before choosing, because a swap that rewraps a paragraph moves everything below it. Rows: S7, T11.
 
 ## 3. Composition
 
@@ -28,6 +29,8 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 - **SHOULD** give the page one operable proof object built from the product's own documented behaviour, labelled as such, instead of an abstract animation. Rows: B10, H12, H14, B3, R16, R6.
 - **SHOULD** present specifications as dense tables or trees in monospace. Rows: B4, H23, B1.
 - **MUST** make every clickable element look clickable without hue: underline, border, fill or weight, plus visible focus and pressed states. Rows: S22, A4, R17.
+- **MUST** delete product claims the code or documentation cannot back (speed, security, scale) — in inherited sections too — rather than disclaiming them; no hype taglines, and headings that say what the section is. Rows: B5, B13.
+- **NEVER** let a fixed element (easter-egg trigger, chat bubble, floating bar) cover content or tap targets at any width; below the width where its corner is empty margin, move it into the gutter or into the page flow. Rows: B18.
 
 ## 4. Motion
 
@@ -37,6 +40,7 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 - **NEVER** run looping or always-on animation, custom cursors, pulsing or blinking status dots, or a WebGL scene as the page itself. Rows: B9, H10, B17, B5, T13, R18.
 - **MAY** add a 1 px reading-progress line driven by CSS scroll-driven animation, as a progressive enhancement only. Rows: H16, T3.
 - **MUST** honour `prefers-reduced-motion`: movement stops, colour and opacity feedback stays, every element stays visible. Rows: S13, S14, H18, S11.
+- **NEVER** autoplay the proof object at idle (a self-typing console, a looping demo); its operable presets are the demo button. Rows: H14, H15, H16, B9.
 
 ## 5. Responsiveness and performance
 
@@ -60,3 +64,4 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 - [ ] Content renders with JavaScript disabled.
 - [ ] Lighthouse mobile + desktop before/after, same version.
 - [ ] No horizontal overflow at 390 px.
+- [ ] No fixed element over content at 390 px, 768 px and 1024 px.

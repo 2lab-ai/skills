@@ -202,6 +202,8 @@ Unit verdict: first paint must look finished (S1–S3), conventional structure w
   while developers punish motion that starts on its own or on scroll (H15 10 of 14 against, H16 7 of 10, H12,
   H13, B9, H10; about 4 clean positives against 55 negatives since 2024-09). For developer-tool pages the
   theme follows the developer rows: motion answers input, stays inside a figure, never loops.
+  A reader who equates "dynamic" with motion at rest will grade such a page as static; the theme accepts that
+  grade rather than add self-starting motion (H14).
 - **Dark vs light.** Self-selected polls prefer dark (S17 73%), controlled studies find light more legible
   (S15, S16), developers ask to follow the system setting (H19). The theme follows the OS and offers a toggle.
 - **Monospace.** Mono fonts are the strongest positive in the developer rows (B1, B2, B3, T10) and the most
