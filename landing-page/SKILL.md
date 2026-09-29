@@ -61,8 +61,9 @@ claim the live page changed.
 | Theme | Workflow | Requires |
 |---|---|---|
 | `editorial-machine` *(default)* | [`workflows/editorial-machine.md`](workflows/editorial-machine.md) | The sibling `editorial-machine/` skill directory, installed alongside this one. |
+| `mono-instrument` (also named by "mono", "monochrome", "모노") | [`workflows/mono-instrument.md`](workflows/mono-instrument.md) | The sibling `mono-instrument/` skill directory, installed alongside this one. |
 
-This table has exactly one row because exactly one theme exists. A row here is
+Each row exists because its theme exists. A row here is
 a promise that the workflow file is on disk; `tests/test_contract.py` fails on
 a row that names a file this repo does not ship.
 
