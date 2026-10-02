@@ -42,6 +42,17 @@ from char.com, anarlog.so, fastrepl.com, agentpub.dev, and johnjeong.com.
   (title/description/main/h1/skip link/install snippet/reduced-motion/overflow)
 - Shares grammar, never a cloned DOM/template, across pages
 
+### ◼ mono-instrument — a registered theme
+Monochrome, monospace-as-structure pages for developer tools, with one operable proof object.
+Motion answers input or a state change; a self-starting demo is optional and bounded
+(`composition-system.md` §4). Every rule cites a row of a **reaction ledger** — measured public
+reactions (Hacker News tallies, award scores, survey and study numbers) plus standards, guidelines
+and platform facts. A contract test fails when a rule cites no row, a row the ledger lacks, or only
+rows marked `unverified`; when a reaction row's signal cell holds no number and no `unverified`
+marker; or when a row's link cell is not a well-formed https URL. It checks that citations resolve,
+not that a cited row supports its rule.
+- Named by `mono`, `monochrome`, `모노`, or `mono-instrument`; install it together with `landing-page`
+
 ## Installation
 
 Most skills can be installed independently:
@@ -54,7 +65,7 @@ claude install-skill https://github.com/2lab-ai/skills/video-gen
 
 **Landing pages are the exception:** `landing-page` resolves its theme assets by relative path,
 so the router and its themes must live in the **same skills directory**. Copy both directories
-together — `cp -R landing-page editorial-machine ~/.claude/skills/` — or clone this repository
+together — `cp -R landing-page editorial-machine mono-instrument ~/.claude/skills/` — or clone this repository
 and point your skills directory at it. `landing-page` installed alone cannot build anything.
 
 ## Prerequisites
