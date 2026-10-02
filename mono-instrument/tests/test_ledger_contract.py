@@ -6,14 +6,15 @@ The theme's rules must come from ledger rows, not from the author's taste. These
 the plumbing of that promise:
 
 - the ledger states its capture date and its method, so staleness is checkable;
-- ledger rows exist, from several source families, and every row links its source with an
-  https URL in its link cell;
+- ledger rows exist, from several source families, and every row links its source with a
+  well-formed https URL in its link cell (a host with a dot, no whitespace; syntax only,
+  nothing is fetched);
 - every reaction row (A, H, R, B, and S rows tagged as a measurement) carries a number (at
   least one digit) in its signal cell, or the Method's `unverified` marker;
 - fact rows (T, and S rows tagged [STD], [GUIDE] or [QUAL]) are exempt from the number and rest
   on their primary link; every S row carries one of the known class tags;
 - every rule in composition-system.md cites at least one row, every cited row exists, and no
-  rule rests on `unverified` rows alone;
+  rule rests only on rows that are `unverified` or break the row contract;
 - SKILL.md ships no decision without a ledger row and offers no escape clause for one.
 
 Passing means the citations resolve; it does not certify that a cited row supports its rule.
@@ -24,6 +25,7 @@ from __future__ import annotations
 import re
 import unittest
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "SKILL.md"
@@ -69,6 +71,23 @@ def rule_lines() -> list[str]:
     return [line for line in read(COMPOSITION).splitlines() if RULE.match(line)]
 
 
+def link_problem(link: str) -> str | None:
+    """Why a link cell is not a usable https URL, or None if it is. Syntax only: nothing is fetched."""
+    if not link or re.search(r"\s", link):
+        return f"link cell {link!r} is empty or contains whitespace"
+    try:
+        parts = urlsplit(link)
+        host = parts.hostname or ""
+    except ValueError:
+        return f"link cell {link!r} does not parse as a URL"
+    if parts.scheme != "https":
+        return f"link cell {link!r} is not an https URL"
+    # A host with a dot between non-empty labels, e.g. news.ycombinator.com; not localhost.
+    if not re.fullmatch(r"[^.]+(?:\.[^.]+)+", host):
+        return f"link cell {link!r} names no host with a dot"
+    return None
+
+
 def row_problems(cells: list[str]) -> list[str]:
     """What keeps one ledger row from meeting the contract; an empty list means it meets it.
 
@@ -78,8 +97,9 @@ def row_problems(cells: list[str]) -> list[str]:
     if len(cells) != 6:
         return [f"has {len(cells)} cells; expected id | source | signal | finding | link | date"]
     problems = []
-    if not cells[LINK].startswith("https://"):
-        problems.append(f"link cell {cells[LINK]!r} is not an https URL")
+    bad_link = link_problem(cells[LINK])
+    if bad_link:
+        problems.append(bad_link)
     family = cells[ID][0]
     if family == "S":
         tag = S_TAG.search(cells[SOURCE])
@@ -97,8 +117,12 @@ def row_problems(cells: list[str]) -> list[str]:
 
 
 def verified_citations(rule_line: str, rows: dict[str, list[str]]) -> list[str]:
-    """Row ids a rule cites that exist and are not marked `unverified`."""
-    return [r for r in ROW_ID.findall(rule_line) if r in rows and rows[r][SIGNAL] != UNVERIFIED]
+    """Row ids a rule cites that exist, meet the row contract and are not marked `unverified`."""
+    return [
+        r
+        for r in ROW_ID.findall(rule_line)
+        if r in rows and rows[r][SIGNAL] != UNVERIFIED and not row_problems(rows[r])
+    ]
 
 
 class LedgerTests(unittest.TestCase):
@@ -178,6 +202,17 @@ class RowContractTests(unittest.TestCase):
         }
         self.assertEqual(verified_citations("- **MUST** x. Rows: S94.", rows), [])
         self.assertEqual(verified_citations("- **MUST** x. Rows: S94, H98.", rows), ["H98"])
+
+    def test_row_with_an_unusable_https_link_fails(self):
+        # Each starts with "https://" yet names no usable host: empty, split by a space, no dot.
+        for link in ("https://", "https:// example.com", "https://localhost/docs"):
+            line = f"| T97 | a framework feature | stable | no external request | {link} | current |"
+            with self.subTest(link=link):
+                self.assertTrue(self.problems(line))
+
+    def test_rule_citing_only_a_row_with_an_unusable_link_has_no_verified_citation(self):
+        rows = {"T97": split_cells("| T97 | a framework feature | stable | x | https:// | current |")}
+        self.assertEqual(verified_citations("- **MUST** x. Rows: T97.", rows), [])
 
 
 class CompositionTests(unittest.TestCase):

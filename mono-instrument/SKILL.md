@@ -8,7 +8,8 @@ description: Use when the mono-instrument theme is explicitly named, or when a l
 A theme workflow behind [`landing-page`](../landing-page/SKILL.md). It builds a page in a
 monochrome, instrument-panel grammar for developer tools: black/white/grey only, type that
 reads like a well-set terminal, one live proof object the visitor can operate, and motion
-that answers input instead of decorating the scroll.
+that answers input or a state change instead of decorating the scroll; a self-starting demo
+is optional and bounded (`composition-system.md` §4).
 
 What makes this theme different from a taste-driven one: **every visual decision must cite
 a row of the reaction ledger** — measured public reactions (Hacker News points and comment
@@ -88,7 +89,8 @@ The rules live in those two files — cite them, do not restate them here.
 - Monochrome means no chromatic hue in the page's own palette. Status colour inside an
   embedded product UI is allowed only where the ledger records it as information, and never
   as decoration.
-- Motion answers input or explains the product. No scroll-hijacking, no smooth-scroll
+- Motion answers input or a state change; a self-starting demo of the proof object is
+  optional and bounded (`composition-system.md` §4). No scroll-hijacking, no smooth-scroll
   library, no custom cursor, no preloader — see the ledger rows that punished them.
 - `prefers-reduced-motion: reduce` keeps every state reachable and every element visible.
 - Skip link, visible `:focus-visible`, 44×44px primary targets, exactly one `<h1>`, one

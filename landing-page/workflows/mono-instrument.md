@@ -1,8 +1,9 @@
 # Workflow: mono-instrument
 
 A registered theme for [`landing-page`](../SKILL.md): monochrome, monospace-as-structure, one operable
-proof object, motion that answers input. Its rules come from a reaction ledger — measured public
-reactions — so the theme can be re-derived when audiences change.
+proof object; motion answers input or a state change, and a self-starting demo is optional and bounded
+(`composition-system.md` §4). Its rules come from a reaction ledger — measured public reactions — so
+the theme can be re-derived when audiences change.
 
 **Dependency:** the sibling skill directory `mono-instrument/`, installed alongside `landing-page/`. If it
 is absent, stop and say so; this workflow has no embedded copy of the rules.

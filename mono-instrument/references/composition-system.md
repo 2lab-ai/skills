@@ -34,12 +34,13 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 
 ## 4. Motion
 
-- **MUST** use motion only to answer input or show a state change, and keep it inside the figure it explains. Rows: H9, H18, B6, S23.
+- **MUST** use motion only to answer input or show a state change — a single, non-repeating pulse on load may mark the initial state — and keep it inside the figure it explains; the bounded proof-object demo below is the only self-starting exception. Rows: H9, H18, B6, S23.
 - **MUST** keep durations short: press ≈100–120 ms, state 150–200 ms, movement ≤300 ms; nothing the user has to wait for. Rows: S10, B6, S11.
 - **NEVER** hijack or smooth the scroll, fade or reveal content on scroll, use parallax, hide the header on scroll, or show a preloader or scroll-triggered counters. Rows: H15, H16, H17, H8, S12, T8, B16, H25, R1, R2, R4, R19, H13.
 - **NEVER** run looping or always-on animation, custom cursors, pulsing or blinking status dots, or a WebGL scene as the page itself. Rows: B9, H10, B17, B5, T13, R18.
 - **MAY** add a 1 px reading-progress line driven by CSS scroll-driven animation, as a progressive enhancement only. Rows: H16, T3.
 - **MUST** honour `prefers-reduced-motion`: movement stops, colour and opacity feedback stays, every element stays visible. Rows: S13, S14, H18, S11, H14.
+- **MAY** run one self-starting demo of the proof object — optional, a judgment call under mixed evidence — only if it is bounded: it starts in the first viewport and never on scroll, runs once per visit for 5 s or less in total, stops on the first input, never loops, never runs under `prefers-reduced-motion: reduce`, and keeps any live region quiet while it runs; each movement in it keeps the durations above. Rows: B6, H14, B9, H15, H16, B8, S25.
 
 ## 5. Responsiveness and performance
 

@@ -84,7 +84,7 @@ Population: developers on HN + design Twitter.
 | id | item | signal | praised / criticized | link | date |
 |---|---|---|---|---|---|
 | B1 | PlanetScale mono/markdown site (thread by marketing lead) | X 2,227 likes, 424,085 views; self-reported signups +103%, qualified inbound +57% vs prior 4 mo (no control) | + text-first, engineer-direct, no fluff; − readability complaints → added TOC, spacing, size | https://x.com/hollylawly/status/1897332070571250144 | 2025-03-05 |
-| B2 | Vercel Geist (Sans + Mono) launch | X 2,657 likes, 684,261 views; HN only 36 pts / 16 c | + precise letter details, sans pairs with mono; weak HN pickup | https://x.com/vercel/status/1717980331989491992 | 2023-10-27 |
+| B2 | Vercel Geist (Sans + Mono) launch | X 2,657 likes, 684,261 views; HN only 36 pts / 16 c (38063157) | + precise letter details, sans pairs with mono; weak HN pickup | https://x.com/vercel/status/1717980331989491992 | 2023-10-27 |
 | B3 | Monaspace (GitHub Next) | HN 651 pts / 199 c; 19,674 stars | + texture healing, demo page | https://news.ycombinator.com/item?id=38210574 | 2023-11-09 |
 | B4 | The Monospace Web | HN 612 pts / 152 c; top-7: 3 critical, 1 mixed, 2 positive | + tree/table CSS; − mono body text less legible, tight leading, walls of text on phones | https://news.ycombinator.com/item?id=41370020 | 2024-08-27 |
 | B5 | "Tells of a Slop UI" | HN 381 pts / 241 c | − gradients, rainbow colour, pulsing badges, rounded "fingernail" cards, emoji, misaligned ASCII/SVG, Inter/JetBrains Mono with `//`, redundant text, glassmorphism, hype taglines | https://news.ycombinator.com/item?id=49867038 | 2026-09-27 |
@@ -150,7 +150,7 @@ Population: State of CSS/HTML/JS respondents, HN.
 | T7 | Anchor positioning | Limited (core keys in Chrome/Firefox 147/Safari 26) | #1 favourite and #1 avoided-for-support (121 answers) in State of CSS 2026 | https://2026.stateofcss.com/en-US/features/ | 2026 |
 | T8 | Lenis smooth scroll | JS library | launch 22 pts vs 50 comments; top comments: breaks swipe-back, spins fans | https://news.ycombinator.com/item?id=33622411 | 2022-11-16 |
 | T9 | HN comment volume on scroll hijacking | — | "scroll hijacking" 352, "scrolljacking" 301 comment mentions (volume, not sentiment) | https://hn.algolia.com/api/v1/search?query=scrolljacking&tags=comment | 2026-09-29 |
-| T10 | Mono fonts on HN | — | Monaspace 651 (see B3), JetBrains Mono 506, Berkeley Mono 355 (30557557), Commit Mono 231 (36689756), Departure Mono 185 (41379985), Geist 36 (see B2; skeptical: yet another dev font, 0 vs O) | https://news.ycombinator.com/item?id=22053998 | 2020–2024 |
+| T10 | Mono fonts on HN | — | Monaspace 651 (see B3), JetBrains Mono 506, Berkeley Mono 355 (30557557), Commit Mono 231 (36689756), Departure Mono 185 (41379985), Geist 36 (38063157; skeptical: yet another dev font, 0 vs O) | https://news.ycombinator.com/item?id=22053998 | 2020–2024 |
 | T11 | next/font self-hosting | stable | no layout shift, no external request | https://nextjs.org/docs/app/getting-started/fonts | current |
 | T12 | Motion (framer-motion 12, installed) | JS; WAAPI mini animate 2.3 kb | motion 25.4 M/wk + framer-motion 53.4 M/wk; animating non-transform/opacity hits main thread | https://motion.dev/docs/performance | 2026 |
 | T13 | Dither/ASCII shaders | WebGL | Ditherpunk 1,290 pts; R3F 3D portfolio 80 pts with fan-noise + "can't tell what's clickable" | https://news.ycombinator.com/item?id=25633483 | 2021 / 2025 |
@@ -190,6 +190,7 @@ Population: general users (lab, online, representative).
 | S22 | NN/g flat UI eyetracking [LAB] | 71 | weak clickable cues: +22% time, +25% fixations | https://www.nngroup.com/articles/flat-ui-less-attention-cause-uncertainty/ | — |
 | S23 | Heer & Robertson animated transitions [LAB] | unverified | animated transitions can significantly improve graphical perception | https://doi.org/10.1109/tvcg.2007.70539 | 2007 |
 | S24 | Skeleton screens A/B [LAB] | unverified | no statistically significant perceived-speed gain | https://doi.org/10.1145/3232078.3232086 | 2018 |
+| S25 | WCAG 2.2 SC 2.2.2 Pause, Stop, Hide [STD] | — | motion that starts automatically, lasts more than five seconds and runs beside other content needs a way to pause, stop or hide it; so does auto-updating content that starts automatically | https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html | current |
 
 ## Tensions
 
@@ -197,13 +198,14 @@ Population: general users (lab, online, representative).
   while the developer rows punish four kinds of motion: tied to scroll (H15 10 of 14 against, H16 7 of 10, H13),
   never stopping (B9), ignoring reduced motion (H14) and making the reader wait (B6). H10's 3D homepage is
   mixed (+9 −3; the negatives: slow to load, a frozen tab, spinning fans). For developer-tool pages the
-  theme follows the developer rows: motion answers input, stays inside a figure, never loops.
+  theme follows the developer rows: motion answers input or a state change, stays inside a figure, never loops.
   No row tests a bounded, first-viewport, reduced-motion-respecting demo of the proof object. The closest
   direct evidence, B6's two comments on a first-viewport autoplay explainer, is negative, and H14 punishes
   animation that ignores reduced motion. Among the developer rows here, B8 is the one positive autoplay case, and
   it is mixed: an ASCII animation drove a download, but 6 of its 9 sampled site comments were negative. R6 (a
   "thinking" animation during a wait) and R7 (an ASCII effect driven by hand tracking) reward motion driven by a
-  state or by input. Adding such a demo is a judgment call; record it as one.
+  state or by input. Adding such a demo stays a judgment call; a page that adds one follows the bounded-demo
+  MAY rule in `composition-system.md` §4.
 - **Dark vs light.** Self-selected polls prefer dark (S17 73%), a controlled study and a review find light
   more legible (S15, S16), developers ask to follow the system setting (H19). The theme follows the OS and
   offers a toggle.
