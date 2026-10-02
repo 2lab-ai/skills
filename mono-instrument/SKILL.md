@@ -31,7 +31,8 @@ If no lane was established, go back to `landing-page/SKILL.md` before writing ma
 
 1. [`references/reaction-ledger.md`](references/reaction-ledger.md) — the evidence: what
    developer and design audiences rewarded and punished, each row with its population, its
-   number, its link and its date. Population weighting and known conflicts are stated there.
+   signal, its link and its date (a reaction row's signal is a number or `unverified`; a fact
+   row rests on its link). Population weighting and known conflicts are stated there.
 2. [`references/composition-system.md`](references/composition-system.md) — the MUST/SHOULD
    rules derived from the ledger. Every rule carries the ledger rows it rests on.
 
@@ -50,8 +51,9 @@ The rules live in those two files — cite them, do not restate them here.
 4. **Page brief.** Record: the proof object and what the visitor can do with it, the tokens
    with the *computed* ink-on-canvas contrast, the type roles, the motion inventory (each
    motion: trigger, duration, what it tells the visitor), the performance budget, and a
-   **decision → ledger row** table. A row-less decision is removed or justified as a
-   stated deviation.
+   **decision → ledger row** table. A decision with no supporting row does not ship: either
+   research the missing row first (add it to the ledger with its source and signal) or drop
+   the decision.
 5. **Implementation.** Tokens and rules from `composition-system.md`.
    - *Existing-app lane:* the app's framework, router, component and styling system. Add no
      runtime dependency the page brief does not name and justify.

@@ -45,8 +45,11 @@ from char.com, anarlog.so, fastrepl.com, agentpub.dev, and johnjeong.com.
 ### ◼ mono-instrument — a registered theme
 Monochrome, monospace-as-structure pages for developer tools, with one operable proof object and
 motion that only answers input. Every rule cites a row of a **reaction ledger** — measured public
-reactions (Hacker News tallies, award scores, survey and study numbers) — and a contract test fails
-on any rule without evidence.
+reactions (Hacker News tallies, award scores, survey and study numbers) plus standards, guidelines
+and platform facts. A contract test fails when a rule cites no row, a row the ledger lacks, or only
+rows marked `unverified`; when a reaction row's signal cell holds no number and no `unverified`
+marker; or when a row has no https source link. It checks that citations resolve, not that a cited
+row supports its rule.
 - Named by `mono`, `monochrome`, `모노`, or `mono-instrument`; install it together with `landing-page`
 
 ## Installation

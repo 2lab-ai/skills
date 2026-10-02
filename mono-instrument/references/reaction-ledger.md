@@ -10,7 +10,9 @@ cite a row here does not ship (see `composition-system.md`).
 ## Method
 
 - One research agent per source family: A awards, B benchmark sites, H Hacker News, T web-tech
-  reception, S controlled studies, R Reddit. Each returns rows with a numeric signal and a link.
+  reception, S controlled studies, R Reddit. Each returns rows with a link. Reaction rows (A, H, R,
+  B, and S rows tagged [LAB], [ONLINE], [OBS], [REP], [CRAWL] or [POLL]) also carry a number in the
+  signal cell; fact rows (T, and S rows tagged [STD], [GUIDE] or [QUAL]) rest on their primary link.
 - Numbers are never invented: a figure the agent could not see on a loaded page is `unverified`.
 - The orchestrator spot-checks numbers against the source before a row is used.
 - **Population weighting:** for developer-tool pages, H/B/T rows outrank A rows when they conflict;
@@ -40,10 +42,7 @@ Population: designers / award juries.
 | A14 | collection: Black and White Websites | 68 items; p1 26 SOTD, 1 SOTM | loaded pages 2017–21 | https://www.awwwards.com/awwwards_collections/collections/black-and-white-websites/ | 2017–21 |
 | A15 | listing: artificial-intelligence | 26 items: 2 SOTD (2024), 8 HM, 16 none | no AI lab at award level | https://www.awwwards.com/websites/artificial-intelligence/ | –2026 |
 | A16 | CSSDA WOTY 2025 | Dropbox Brand 9.03; Exat Typeface Best UI 8.83 | type-driven specimen won Best UI; no dev tool top 10 | https://www.cssdesignawards.com/blog/2025-website-of-the-year-winners/430/ | 2026-02 |
-| A17 | juror write-up (hontran.dev) | secondhand | bar = art direction, directed motion, ~60fps on mid phones | https://www.hontran.dev/blog/best-award-winning-websites-2026 | 2026 |
 | A18 | HN "scrolljacking" stories | Tell HN never enjoyed scrolljacking 44 pts/10c; Ask HN block scroll-jacking 44 pts/15c | developer hostility | https://hn.algolia.com/api/v1/search?query=scrolljacking&tags=story&hitsPerPage=10 | 2017–2025 |
-
-Unit verdict on "mono": pure B&W + monospace = reliable SOTD band (7.38–7.42) with the largest
 
 ## R — Reddit (archive snapshots)
 
@@ -74,8 +73,6 @@ research host; numbers are Arctic Shift archive snapshots.
 | R20 | r/web_design: Awwwards satire | 1,034 / 90 | (362) award sites are couture — unusable but inspiring; (104) judges reward painful navigation | https://www.reddit.com/r/web_design/comments/xcszr8/ | 2022-09-13 |
 | R21 | r/web_design: Berkshire Hathaway site "beautiful" | 974 / 157 | top 10: 6 positive — plain, simple, effective | https://www.reddit.com/r/web_design/comments/hpacyk/ | 2020-07-11 |
 
-Unit verdict: confirms H/B. Mono as restraint — neutral base, proportional prose, mono for commands/data,
-
 ## B — Benchmark developer-tool and AI-lab sites
 
 Population: developers on HN + design Twitter.
@@ -87,7 +84,7 @@ Population: developers on HN + design Twitter.
 | B3 | Monaspace (GitHub Next) | HN 651 pts / 199 c; 19,674 stars | + texture healing, demo page | https://news.ycombinator.com/item?id=38210574 | 2023-11-09 |
 | B4 | The Monospace Web | HN 612 pts / 152 c; top-7: 3 critical, 1 mixed, 2 positive | + tree/table CSS; − mono body text less legible, tight leading, walls of text on phones | https://news.ycombinator.com/item?id=41370020 | 2024-08-27 |
 | B5 | "Tells of a Slop UI" | HN 381 pts / 241 c | − gradients, rainbow colour, pulsing badges, rounded "fingernail" cards, emoji, misaligned ASCII/SVG, Inter/JetBrains Mono with `//`, redundant text, glassmorphism, hype taglines | https://news.ycombinator.com/item?id=49867038 | 2026-09-27 |
-| B6 | "Purposeful animations" (emilkowal.ski) | HN 546 pts / 134 c | + purposeful motion; − make it faster (300 ms already slow), remove waits, provide off switch | https://news.ycombinator.com/item?id=45139088 | 2025-09-05 |
+| B6 | "Purposeful animations" (emilkowal.ski) | HN 546 pts / 134 c | + purposeful motion; − make it faster (300 ms already slow), remove waits, provide off switch; the two comments quoting the article's first-viewport Linear explainer both criticise it (plays while you read, doesn't explain, can't be rewound: 45142494, 45154668) | https://news.ycombinator.com/item?id=45139088 | 2025-09-05 |
 | B7 | craft micro-interaction libraries | sonner 13,017 ★, cmdk 12,994 ★, vaul 8,629 ★ | wide adoption of interaction craft | https://github.com/emilkowalski/sonner | 2026-09-29 |
 | B8 | Ghostty 1.0 site | HN 2,319 pts; 18 site comments, 9 sampled: 2 +, 6 − | + ASCII ghost animation drove a download; − JS-only, no noscript, mobile confusion, pitch unclear | https://news.ycombinator.com/item?id=42517447 | 2024-12-26 |
 | B9 | Oxide homepage | HN 876 pts / 256 c | + aesthetics; − never-stopping scroll animations kept ~2.5 CPU cores busy | https://news.ycombinator.com/item?id=27294471 | 2021-05-26 |
@@ -100,8 +97,6 @@ Population: developers on HN + design Twitter.
 | B16 | HN comments: scrolljacking | 43 + 42 mentions since 2024-09; 6/6 sampled negative | − one said it alone deters them from the product | https://hn.algolia.com/api/v1/search?query=%22scrolljacking%22&tags=comment&numericFilters=created_at_i%3E1725148800 | 2024-09–2026-09 |
 | B17 | HN comments: custom cursor | 8 mentions; 2/2 site samples negative | − needs JS, links hard to follow | https://hn.algolia.com/api/v1/search?query=%22custom%20cursor%22&tags=comment&numericFilters=created_at_i%3E1725148800 | 2024-09–2026-09 |
 | B18 | "Invisible Details of Interaction Design" (rauno.me) | HN 160 pts; top-5 comments skeptical | − low contrast, floating bar covers text, don't animate taps | https://news.ycombinator.com/item?id=36669249 | 2023-07-10 |
-
-Unit verdict: largest design-specific positives are mono (B1, B2). Consistent mono complaint = body-text
 
 ## H — Hacker News threads and comment tallies
 
@@ -122,7 +117,7 @@ Population: developers (weighted highest for developer-tool pages).
 | H11 | ASCII characters are not pixels | 1353 / 149 | top 11: +6 −1; ASCII as technique loved | https://news.ycombinator.com/item?id=46657122 | 2026-01-17 |
 | H12 | Ghostty 1.0 (homepage comments) | 2319 / 681 | ~10 critical of the ASCII hero (never says it's a terminal), 0 page praise found | https://news.ycombinator.com/item?id=42517447 | 2024-12-26 |
 | H13 | Claude Opus 5.5 launch page | 1806 / 1129 | 3 critical of parallax/scroll hero, 0 praise | https://news.ycombinator.com/item?id=49803892 | 2026-09-22 |
-| H14 | NEO Emacs animated landing | 51 / 77 | animation killed interest; author added a demo button | https://news.ycombinator.com/item?id=49702779 | 2026-09-14 |
+| H14 | NEO Emacs animated landing | 51 / 77 | − lost interest: page "filled with useless animations in spite of" prefers-reduced-motion; the author only repointed an existing demo link | https://news.ycombinator.com/item?id=49702779 | 2026-09-14 |
 | H15 | Death to Scroll Fade | 412 / 210 | top 14: 10 against scroll animation (fade-in, parallax, hide-on-scroll header), 0 defend; 2 motion sickness | https://news.ycombinator.com/item?id=47426932 | 2026-03-18 |
 | H16 | Scroll-Driven Animations showcase | 62 / 56 | top 10: −7 +2 (+ = scroll progress bar, NYT long-form) | https://news.ycombinator.com/item?id=42989635 | 2025-02-09 |
 | H17 | scrolljacking / scroll hijacking comments since 2024-09 | 43 / 72 comments | 7/7 and 4/4 on-topic samples negative | https://hn.algolia.com/api/v1/search?query=scrolljacking&tags=comment&typoTolerance=false&numericFilters=created_at_i%3E1725148800 | 2024-09–2026-09 |
@@ -135,8 +130,6 @@ Population: developers (weighted highest for developer-tool pages).
 | H24 | Dithering Part 1 (scroll explainer) | 461 / 96 | "beautiful" ×3; 2 say harder to read; text over crawling dither strains eyes | https://news.ycombinator.com/item?id=45750954 | 2025-10-29 |
 | H25 | IBM Plex launch page (font thread) | 240 / 170 | top 10: 9 attack the scroll-jacked launch page ("scroll-o-death"), 1 praises the font — a scrolljacking row, not font praise | https://news.ycombinator.com/item?id=16701009 | 2018-03-28 |
 | H26 | Mona Sans and Hubot Sans | 180 / 70 | top 10: lukewarm — "too grotesk", I/l ambiguity, "plenty of free fonts already" | https://news.ycombinator.com/item?id=33834118 | 2022-12-02 |
-
-Unit verdict (developers): monochrome palette + monospace as structure only (commands, model names, data,
 
 ## T — Web-platform support and developer reception
 
@@ -159,8 +152,9 @@ Population: State of CSS/HTML/JS respondents, HN.
 | T13 | Dither/ASCII shaders | WebGL | Ditherpunk 1,290 pts; R3F 3D portfolio 80 pts with fan-noise + "can't tell what's clickable" | https://news.ycombinator.com/item?id=25633483 | 2021 / 2025 |
 | T14 | Speculation Rules | Limited (Chrome only) | usage 4.03%, never heard 72.99%; HN 104 pts with pushback (wasted load, battery) | https://news.ycombinator.com/item?id=44747241 | 2025-07-31 |
 | T15 | Next 15.5 experimental PPR / cacheComponents | throw CanaryOnlyError on stable | — | https://cdn.jsdelivr.net/npm/next@15.5.26/dist/shared/lib/canary-only.js | 2026 |
-
-Unit verdict: developers reward native-platform + typography features (popover, text-wrap, variable
+| T16 | SIL Open Font License 1.1 — FAQ (Reserved Font Name) | licence text | a subset is a Modified Version and would not normally keep a Reserved Font Name (FAQ 2.6); 2.7 allows a Functional-Equivalence exception | https://openfontlicense.org/ofl-faq/ | current |
+| T17 | IBM Plex — OFL with Reserved Font Name "Plex"; subsets published by the RFN holder | licence text | the RFN holder ships its own latin subsets (e.g. IBMPlexMono-Regular-Latin1.woff2, 17,544 B in @ibm/plex-mono 2.5.0), so using those subsets keeps the name | https://cdn.jsdelivr.net/npm/@ibm/plex-mono@2.5.0/LICENSE.txt | 2026-06-11 |
+| T18 | Monaspace — OFL with Reserved Font Name "Monaspace" and its subfamily names; no subsets in its v1.400 repo or release | licence text; repo and release files at v1.400 | the LICENSE reserves "Monaspace" plus "Argon", "Neon", "Xenon", "Radon" and "Krypton"; MonaspaceNeon-Regular.woff2 (static) is 199,508 B and Monaspace Neon Var.woff2 510,832 B; the web fonts in the repo and the release zips are static, variable and Nerd Font builds, with no subset files | https://github.com/githubnext/monaspace/blob/v1.400/LICENSE | 2026-03-28 |
 
 ## S — Controlled studies and large surveys
 
@@ -181,9 +175,9 @@ Population: general users (lab, online, representative).
 | S11 | Apple HIG Motion [GUIDE] | — | brevity and precision; make motion optional; gratuitous motion can cause discomfort | https://developer.apple.com/design/human-interface-guidelines/motion | current |
 | S12 | NN/g "Scrolljacking 101" [QUAL] | not reported | threats to control, discoverability, efficiency, task success | https://www.nngroup.com/articles/scrolljacking-101/ | 2023 |
 | S13 | Agrawal et al. vestibular dysfunction [REP] | 5,086 adults 40+ | 35.4% vestibular dysfunction (balance test) | https://pubmed.ncbi.nlm.nih.gov/19468085/ | 2009 |
-| S14 | Web Almanac accessibility [CRAWL] | millions of pages | prefers-reduced-motion used by 49% desktop / 50% mobile sites | https://almanac.httparchive.org/en/2024/accessibility | 2024 |
+| S14 | Web Almanac accessibility [CRAWL] | unverified | prefers-reduced-motion used by 49% desktop / 50% mobile sites | https://almanac.httparchive.org/en/2024/accessibility | 2024 |
 | S15 | Piepenbrock et al. polarity × size [LAB] | unverified | dark-on-light advantage grows as text gets smaller; avoid small light-on-dark text | https://pubmed.ncbi.nlm.nih.gov/25141597/ | 2014 |
-| S16 | NN/g dark vs light review | review | normal vision performs better in light mode; offer both | https://www.nngroup.com/articles/dark-mode/ | 2020 |
+| S16 | NN/g dark vs light review [GUIDE] | review | normal vision performs better in light mode; offer both | https://www.nngroup.com/articles/dark-mode/ | 2020 |
 | S17 | Android Authority reader poll [POLL] | 3,110 votes | 73% keep dark mode always on | https://www.androidauthority.com/dark-mode-survey-results-3682352/ | 2026 |
 | S18 | Mansfield, Legge & Bane font effects [LAB] | 50 + 42 | proportional read 5% faster (normal vision); fixed-width better near smallest readable size (Times up to 50% slower there) | https://pubmed.ncbi.nlm.nih.gov/8675391/ | 1996 |
 | S19 | "Good fonts for dyslexia" [LAB] | 48 | sans, monospaced, roman improved reading over serif/proportional/italic | https://doi.org/10.1145/2513383.2513447 | 2013 |
@@ -193,25 +187,29 @@ Population: general users (lab, online, representative).
 | S23 | Heer & Robertson animated transitions [LAB] | unverified | animated transitions can significantly improve graphical perception | https://doi.org/10.1109/tvcg.2007.70539 | 2007 |
 | S24 | Skeleton screens A/B [LAB] | unverified | no statistically significant perceived-speed gain | https://doi.org/10.1145/3232078.3232086 | 2018 |
 
-Unit verdict: first paint must look finished (S1–S3), conventional structure with distinctive finish (S3),
-
-
 ## Tensions
 
 - **Motion — designers vs developers.** Award juries score motion craft highest (A4 animations 9.60, A3 8.60),
   while developers punish motion that starts on its own or on scroll (H15 10 of 14 against, H16 7 of 10, H12,
   H13, B9, H10; about 4 clean positives against 55 negatives since 2024-09). For developer-tool pages the
   theme follows the developer rows: motion answers input, stays inside a figure, never loops.
-  A reader who equates "dynamic" with motion at rest will grade such a page as static; the theme accepts that
-  grade rather than add self-starting motion (H14).
-- **Dark vs light.** Self-selected polls prefer dark (S17 73%), controlled studies find light more legible
-  (S15, S16), developers ask to follow the system setting (H19). The theme follows the OS and offers a toggle.
+  No row tests a bounded, first-viewport, reduced-motion-respecting demo of the proof object. The closest
+  direct evidence, B6's two comments on a first-viewport autoplay explainer, is negative, and H14 punishes
+  animation that ignores reduced motion. Among the developer rows here, B8 is the one positive autoplay case, and
+  it is mixed: an ASCII animation drove a download, but 6 of its 9 sampled site comments were negative. R6 (a
+  "thinking" animation during a wait) and R7 (an ASCII effect driven by hand tracking) reward motion driven by a
+  state or by input. Adding such a demo is a judgment call; record it as one.
+- **Dark vs light.** Self-selected polls prefer dark (S17 73%), a controlled study and a review find light
+  more legible (S15, S16), developers ask to follow the system setting (H19). The theme follows the OS and
+  offers a toggle.
 - **Monospace.** Mono fonts are the strongest positive in the developer rows (B1, B2, B3, T10) and the most
   consistent legibility complaint when used for body text (B4, H1, H2); by 2026 stock mono plus terminal
   decoration reads as generated (B5, H3). Mono is structure (commands, ids, data, labels), prose is proportional.
-- **Best mono by reaction vs budget.** Monaspace leads the developer reaction rows (B3, T10) but its webfonts
-  are 199–510 KB and the OFL Reserved Font Name makes a subset a renamed font; the award-evidence runner-up
-  (A13 IBM Plex Mono) ships as a ~10 KB latin subset per weight.
+- **Best mono by reaction vs budget.** Monaspace leads the developer reaction rows (B3, T10), but it reserves
+  its names and its v1.400 repo and release ship no subsets, only static, variable and Nerd Font webfonts (Neon:
+  199,508 B static Regular, 510,832 B variable; T18), and a subset you make would not normally keep a Reserved
+  Font Name (T16). The award-evidence runner-up (A13 IBM Plex Mono) reserves its name too, but the RFN holder
+  publishes its own latin subsets, so a page that ships those subsets keeps the name (T17).
 - **One accent or none.** A small Reddit thread suggests one semantic accent for an all-grey site (R10,
   4 points — weak); award and benchmark rows reward pure black-and-white (A5, A8, B1). The theme keeps zero hue
   and uses inversion (an ink-filled object) as its single emphasis.

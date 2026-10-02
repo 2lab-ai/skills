@@ -18,13 +18,13 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 - **MUST** set commands, model ids, file paths, tables, flags and keyboard hints in monospace. Rows: S18, S19, B4, H1.
 - **MUST** set running prose in a proportional face; monospace body text is the most repeated legibility complaint. Rows: B4, H1, H2, S18, R15, R8.
 - **NEVER** use letter-spaced all-caps monospace labels as a house style, `//` decorations, or the stock generated-design faces (Inter, JetBrains Mono). Rows: H3, B5, R12, R13.
-- **SHOULD** choose the mono by developer reaction first, then filter by byte budget and licence (a subset of an OFL font with a Reserved Font Name is a renamed font). Rows: B3, T10, A13, T11.
-- **SHOULD** self-host fonts with the framework's font pipeline so they load with no layout shift and no third-party request. Rows: T11, S7.
-- **SHOULD** load a webfont for display type only and keep running prose in the system stack; if prose must use a webfont, compare CLS with and without it before choosing, because a swap that rewraps a paragraph moves everything below it. Rows: S7, T11.
+- **SHOULD** choose the mono by developer reaction first, then filter by byte budget and licence (a subset you make of an OFL font with a Reserved Font Name would not normally keep the name; the RFN holder's own subsets do). Rows: B3, T10, A13, T11, T16, T17, T18.
+- **SHOULD** self-host fonts with the framework's font pipeline so they load with no third-party request, and verify its layout-shift claim with the comparison below. Rows: T11, S7.
+- **MUST** compare CLS with and without each webfont before choosing it, against the ≤0.1 threshold (S7); a framework's no-layout-shift claim (T11) is a promise to verify, not a measurement — a prose face that swaps in and rewraps a paragraph moves everything below it. Rows: S7, T11.
 
 ## 3. Composition
 
-- **MUST** state in the first screen, in plain words, what each product is. Rows: H12, H14, B13, H9.
+- **MUST** state in the first screen, in plain words, what each product is. Rows: H12, B13, H9.
 - **MUST** keep a conventional page structure (top navigation, one-line definition, products, links) and put the distinctiveness into type, detail and interaction. Rows: S3, H21, H22, H23.
 - **SHOULD** give the page one operable proof object built from the product's own documented behaviour, labelled as such, instead of an abstract animation. Rows: B10, H12, H14, B3, R16, R6.
 - **SHOULD** present specifications as dense tables or trees in monospace. Rows: B4, H23, B1.
@@ -36,11 +36,10 @@ Worked example: the 2lab.ai homepage (github.com/icedac/2lab.ai, 2026-09-29).
 
 - **MUST** use motion only to answer input or show a state change, and keep it inside the figure it explains. Rows: H9, H18, B6, S23.
 - **MUST** keep durations short: press ≈100–120 ms, state 150–200 ms, movement ≤300 ms; nothing the user has to wait for. Rows: S10, B6, S11.
-- **NEVER** hijack or smooth the scroll, fade or reveal content on scroll, hide the header on scroll, or show a preloader or scroll-triggered counters. Rows: H15, H16, H17, H8, S12, T8, B16, H25, R1, R2, R4, R19.
+- **NEVER** hijack or smooth the scroll, fade or reveal content on scroll, use parallax, hide the header on scroll, or show a preloader or scroll-triggered counters. Rows: H15, H16, H17, H8, S12, T8, B16, H25, R1, R2, R4, R19, H13.
 - **NEVER** run looping or always-on animation, custom cursors, pulsing or blinking status dots, or a WebGL scene as the page itself. Rows: B9, H10, B17, B5, T13, R18.
 - **MAY** add a 1 px reading-progress line driven by CSS scroll-driven animation, as a progressive enhancement only. Rows: H16, T3.
-- **MUST** honour `prefers-reduced-motion`: movement stops, colour and opacity feedback stays, every element stays visible. Rows: S13, S14, H18, S11.
-- **NEVER** autoplay the proof object at idle (a self-typing console, a looping demo); its operable presets are the demo button. Rows: H14, H15, H16, B9.
+- **MUST** honour `prefers-reduced-motion`: movement stops, colour and opacity feedback stays, every element stays visible. Rows: S13, S14, H18, S11, H14.
 
 ## 5. Responsiveness and performance
 
