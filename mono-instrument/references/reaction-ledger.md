@@ -17,6 +17,9 @@ cite a row here does not ship (see `composition-system.md`).
 - The orchestrator spot-checks numbers against the source before a row is used.
 - **Population weighting:** for developer-tool pages, H/B/T rows outrank A rows when they conflict;
   S rows decide perceptual questions (timing, contrast, legibility).
+- **Shared sources:** rows are not independent samples. B4·H1, B5·H3, B8·H12 and H16·T3 each re-read
+  one HN thread; A18, B16, H17 and T9 count slices of the same "scrolljacking" Algolia search. When
+  rows agree, weigh them by source, not by row count.
 - Conflicts are written up in **Tensions**, never resolved silently.
 - Re-run the fan-out when this ledger is older than six months or the audience changes.
 
