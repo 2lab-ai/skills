@@ -78,6 +78,7 @@ def link_problem(link: str) -> str | None:
     try:
         parts = urlsplit(link)
         host = parts.hostname or ""
+        parts.port  # urlsplit checks the port only when it is read: non-integer or >65535 raises
     except ValueError:
         return f"link cell {link!r} does not parse as a URL"
     if parts.scheme != "https":
@@ -204,15 +205,24 @@ class RowContractTests(unittest.TestCase):
         self.assertEqual(verified_citations("- **MUST** x. Rows: S94, H98.", rows), ["H98"])
 
     def test_row_with_an_unusable_https_link_fails(self):
-        # Each starts with "https://" yet names no usable host: empty, split by a space, no dot.
-        for link in ("https://", "https:// example.com", "https://localhost/docs"):
+        # Each starts with "https://" yet is unusable: no host, a space, no dot in the host, or a
+        # port that is not an integer in 0-65535.
+        for link in (
+            "https://",
+            "https:// example.com",
+            "https://localhost/docs",
+            "https://example.com:invalid",
+            "https://example.com:99999",
+        ):
             line = f"| T97 | a framework feature | stable | no external request | {link} | current |"
             with self.subTest(link=link):
                 self.assertTrue(self.problems(line))
 
     def test_rule_citing_only_a_row_with_an_unusable_link_has_no_verified_citation(self):
-        rows = {"T97": split_cells("| T97 | a framework feature | stable | x | https:// | current |")}
-        self.assertEqual(verified_citations("- **MUST** x. Rows: T97.", rows), [])
+        for link in ("https://", "https://example.com:invalid", "https://example.com:99999"):
+            rows = {"T97": split_cells(f"| T97 | a framework feature | stable | x | {link} | current |")}
+            with self.subTest(link=link):
+                self.assertEqual(verified_citations("- **MUST** x. Rows: T97.", rows), [])
 
 
 class CompositionTests(unittest.TestCase):
