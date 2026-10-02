@@ -18,8 +18,9 @@ cite a row here does not ship (see `composition-system.md`).
 - **Population weighting:** for developer-tool pages, H/B/T rows outrank A rows when they conflict;
   S rows decide perceptual questions (timing, contrast, legibility).
 - **Shared sources:** rows are not independent samples. B4·H1, B5·H3, B8·H12 and H16·T3 each re-read
-  one HN thread; A18, B16, H17 and T9 count slices of the same "scrolljacking" Algolia search. When
-  rows agree, weigh them by source, not by row count.
+  one HN thread; A18, B16, H17 and T9 count slices of the same "scrolljacking" Algolia search; T10
+  restates B3's and B2's HN figures beside its own thread. When rows agree, weigh them by source,
+  not by row count.
 - Conflicts are written up in **Tensions**, never resolved silently.
 - Re-run the fan-out when this ledger is older than six months or the audience changes.
 
@@ -149,7 +150,7 @@ Population: State of CSS/HTML/JS respondents, HN.
 | T7 | Anchor positioning | Limited (core keys in Chrome/Firefox 147/Safari 26) | #1 favourite and #1 avoided-for-support (121 answers) in State of CSS 2026 | https://2026.stateofcss.com/en-US/features/ | 2026 |
 | T8 | Lenis smooth scroll | JS library | launch 22 pts vs 50 comments; top comments: breaks swipe-back, spins fans | https://news.ycombinator.com/item?id=33622411 | 2022-11-16 |
 | T9 | HN comment volume on scroll hijacking | — | "scroll hijacking" 352, "scrolljacking" 301 comment mentions (volume, not sentiment) | https://hn.algolia.com/api/v1/search?query=scrolljacking&tags=comment | 2026-09-29 |
-| T10 | Mono fonts on HN | — | Monaspace 651, JetBrains Mono 506, Berkeley Mono 355, Commit Mono 231, Departure Mono 185, Geist 36 (skeptical: yet another dev font, 0 vs O) | https://news.ycombinator.com/item?id=22053998 | 2020–2024 |
+| T10 | Mono fonts on HN | — | Monaspace 651 (see B3), JetBrains Mono 506, Berkeley Mono 355 (30557557), Commit Mono 231 (36689756), Departure Mono 185 (41379985), Geist 36 (see B2; skeptical: yet another dev font, 0 vs O) | https://news.ycombinator.com/item?id=22053998 | 2020–2024 |
 | T11 | next/font self-hosting | stable | no layout shift, no external request | https://nextjs.org/docs/app/getting-started/fonts | current |
 | T12 | Motion (framer-motion 12, installed) | JS; WAAPI mini animate 2.3 kb | motion 25.4 M/wk + framer-motion 53.4 M/wk; animating non-transform/opacity hits main thread | https://motion.dev/docs/performance | 2026 |
 | T13 | Dither/ASCII shaders | WebGL | Ditherpunk 1,290 pts; R3F 3D portfolio 80 pts with fan-noise + "can't tell what's clickable" | https://news.ycombinator.com/item?id=25633483 | 2021 / 2025 |
