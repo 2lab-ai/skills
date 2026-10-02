@@ -115,7 +115,7 @@ Population: developers (weighted highest for developer-tool pages).
 | H9 | New YC homepage | 298 / 157 | top 16: +7 −2; praised clear claim, real photos, hover-triggered video | https://news.ycombinator.com/item?id=46735644 | 2026-01-23 |
 | H10 | Bruno Simon 3D portfolio | 777 / 188 | top 17: +9 −3; as a homepage: slow, tab freeze (15 replies), fans (39 replies) | https://news.ycombinator.com/item?id=46206531 | 2025-12-09 |
 | H11 | ASCII characters are not pixels | 1353 / 149 | top 11: +6 −1; ASCII as technique loved | https://news.ycombinator.com/item?id=46657122 | 2026-01-17 |
-| H12 | Ghostty 1.0 (homepage comments) | 2319 / 681 | ~10 critical of the ASCII hero (never says it's a terminal), 0 page praise found | https://news.ycombinator.com/item?id=42517447 | 2024-12-26 |
+| H12 | Ghostty 1.0 (homepage comments) | 2319 / 681 | ~15 critical of the ASCII hero (never says it's a terminal); 4 praise the page (42519478 "the landing page is just fantastic"; 42519514 downloaded because of the animation; see B8) | https://news.ycombinator.com/item?id=42517447 | 2024-12-26 |
 | H13 | Claude Opus 5.5 launch page | 1806 / 1129 | 3 critical of parallax/scroll hero, 0 praise | https://news.ycombinator.com/item?id=49803892 | 2026-09-22 |
 | H14 | NEO Emacs animated landing | 51 / 77 | − lost interest: page "filled with useless animations in spite of" prefers-reduced-motion; the author only repointed an existing demo link | https://news.ycombinator.com/item?id=49702779 | 2026-09-14 |
 | H15 | Death to Scroll Fade | 412 / 210 | top 14: 10 against scroll animation (fade-in, parallax, hide-on-scroll header), 0 defend; 2 motion sickness | https://news.ycombinator.com/item?id=47426932 | 2026-03-18 |
@@ -190,8 +190,9 @@ Population: general users (lab, online, representative).
 ## Tensions
 
 - **Motion — designers vs developers.** Award juries score motion craft highest (A4 animations 9.60, A3 8.60),
-  while developers punish motion that starts on its own or on scroll (H15 10 of 14 against, H16 7 of 10, H12,
-  H13, B9, H10; about 4 clean positives against 55 negatives since 2024-09). For developer-tool pages the
+  while the developer rows punish four kinds of motion: tied to scroll (H15 10 of 14 against, H16 7 of 10, H13),
+  never stopping (B9), ignoring reduced motion (H14) and making the reader wait (B6). H10's 3D homepage is
+  mixed (+9 −3; the negatives: slow to load, a frozen tab, spinning fans). For developer-tool pages the
   theme follows the developer rows: motion answers input, stays inside a figure, never loops.
   No row tests a bounded, first-viewport, reduced-motion-respecting demo of the proof object. The closest
   direct evidence, B6's two comments on a first-viewport autoplay explainer, is negative, and H14 punishes
