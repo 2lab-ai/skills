@@ -1,7 +1,9 @@
 # fish-tts — Voice Cloning TTS + STT (soma-voice HTTP service)
 
-Fish Speech S2 Pro (4B, GPU) + Cohere STT, served as systemd user service on blade-4090.
+Fish Audio **Drama 3** (default) or **S2 Pro** voice-cloning TTS + Cohere STT, served as systemd user services on blade-4090.
 Text in → cloned voice MP3 out. Audio in → Korean transcript out.
+
+> **Model choice (since 2026-11-14):** every TTS request takes an optional `"model"`: `"drama-3"` (default) or `"s2-pro"` (aliases `drama3`, `s2pro`, `s2`). Omit it to get Drama 3. `GET /api/models` lists them.
 
 **Triggers:** "TTS", "음성 생성", "말해줘", "fish-tts", "soma-voice", "STT", "받아쓰기"
 
@@ -11,6 +13,7 @@ Text in → cloned voice MP3 out. Audio in → Korean transcript out.
 
 **Base URL:** `http://blade-4090:9999`
 **Service:** `ai.2lab.soma-voice.main.service` (systemd user, auto-restart)
+**Drama 3 engine:** `ai.2lab.soma-voice.drama3.service` — audio.cpp `fish_drama3` server on `127.0.0.1:8035` (Q4 GGUF, 24 of 40 expert layers on CPU, `cuda_perf`), config `/opt/soma-voice/main/.local/drama3-server.json`
 **Binary:** `/opt/soma-voice/main/target/release/soma-voice`
 **Status check:** `systemctl --user status ai.2lab.soma-voice.main.service`
 
@@ -21,6 +24,31 @@ Text in → cloned voice MP3 out. Audio in → Korean transcript out.
 curl -s http://blade-4090:9999/health
 # {"status":"ok"}
 ```
+
+---
+
+## Models
+
+```bash
+curl -s http://blade-4090:9999/api/models
+# {"default_model":"drama-3","models":[{"id":"drama-3",...,"default":true},{"id":"s2-pro",...}]}
+```
+
+| `model` | Engine | When to use |
+|---|---|---|
+| `drama-3` (default) | Drama 3 (35B MoE, Q4) on audio.cpp, stays loaded | Everything by default: ~3x faster generation, no per-job load, performs inline tags |
+| `s2-pro` | Fish Speech S2 Pro, loaded per job | Reproducing older S2 Pro takes, or a tool tuned to S2 Pro behaviour |
+
+```bash
+# pin a model per request
+curl -sS -X POST http://blade-4090:9999/api/tts/chunk -H 'Content-Type: application/json' \
+  -d '{"voice":"cwon","text":"S2 Pro로 읽어줘.","model":"s2-pro"}' -o out.mp3
+```
+
+- Responses carry the model: `x-soma-voice-model` header, `"model"` in the async 202 body and in job views.
+- Job results report `response.chunks[].synth_s` (generation seconds) and `audio_s`.
+- Unknown model → 400. Sampling: omit `temperature`/`top_p`/`top_k` for Drama 3 (engine defaults); never send `top_k: 30` to Drama 3 (stalls in silence).
+- An `s2-pro` job first unloads Drama 3 from the GPU (16 GB cannot hold both); the next Drama 3 request reloads it (+25-35 s once).
 
 ---
 
@@ -116,6 +144,7 @@ curl -sS -X POST http://blade-4090:9999/api/new-voice \
 | Method | Path | Purpose |
 |--------|------|---------|
 | GET | `/health` | Liveness |
+| GET | `/api/models` | TTS models, default, configured |
 | GET | `/api/voices` | List all voices + aliases |
 | GET | `/api/voices/{id}` | Voice metadata (alias-aware) |
 | POST | `/api/voices` | Register new voice (multipart) |
@@ -145,7 +174,18 @@ pending → running → succeeded
 
 ## ⏱ Performance (RTX 4090 Laptop 16GB)
 
-**Verified 2026-05-12 from live service:**
+**Measured 2026-11-14, same 7 Korean sentences, cwon, seed 42, one job per sentence:**
+
+| | S2 Pro | Drama 3 |
+|---|---|---|
+| Per-job model load | 36-44 s every job | none (resident); +25-35 s on the first request after 30 min idle or after an S2 Pro job |
+| Generation | 7-30 s per sentence, **2.5 s per 1 s of audio** | 4-9 s per sentence, **0.83 s per 1 s of audio** |
+| Whole job (1-3 sentences) | 48-66 s | 4-11 s |
+| Whisper CER (7 sentences) | 0 | 0 (performs `[sighs]` as a real sigh) |
+| Onset | sound starts at 0 ms (first consonant can clip) | 20-100 ms lead |
+| Memory | RSS peak ~28 GB during a job | VRAM 13.3 GB + RSS 12 GB while loaded |
+
+**S2 Pro history (verified 2026-05-12):**
 
 | Operation | Cold start | Warm |
 |-----------|-----------|------|
@@ -213,6 +253,8 @@ python3 ~/2lab.ai/soul/np1/data/docent-books/scripts/merge_smooth.py \
 ## Inline Tags (Emotion Control)
 
 Place tag **before** the text it affects. Tags embedded in `text` field of any TTS call.
+
+**Drama 3** acts tags out (2026-11-14: `[sighs]` became an audible sigh; S2 Pro skipped it). Drama 3 also takes scoped tags such as `<whisper>…</whisper>` and point tags like `[laughs]`, `[sighs]`, `[coughs]`. The table below is the S2 Pro vocabulary; most of it also works on Drama 3.
 
 ```json
 {"voice":"cwon","text":"안녕. [whispering] 이건 비밀이야. [pause] [excited] 그런데 있잖아!"}
